@@ -558,6 +558,10 @@ TU_User,TU_Com,TU_Store,TU_Role,TU_RoleFun,TU_Fun
 
 ​	清空session
 
+findCom_5
+
+​	查询所有公司，为登录页面的公司下拉组件提供数据
+
 ***
 
 ##### 登录功能 图示说明

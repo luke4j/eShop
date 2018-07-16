@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ public interface ILoginAction {
     String login = "用户登录" ;
     String getInfo = "获取登录信息" ;
     String logout = "用户登出" ;
+    String findCom = "查询所有公司，为登录页面公司下拉组件提供数据" ;
 
 
     /**
@@ -52,22 +54,51 @@ public interface ILoginAction {
      * @throws Exception
      */
     @ApiOperation(value = login)
-    @RequestMapping(path = "login.act",method= RequestMethod.GET)
-    String login_2(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(path = "login.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult login_2(HttpServletRequest request, HttpServletResponse response,
                    @ApiParam(value = login, required = true)  @Valid
                            VOLogin vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
+    /**
+     * 获取当前用户的详细信息
+     * @param request
+     * @param response
+     * @param vo
+     * @param bindingResult
+     * @param actionResult
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = getInfo)
-    @RequestMapping(path = "getInfo.act",method= RequestMethod.GET)
-    String getInfo_3(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(path = "getInfo.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult getInfo_3(HttpServletRequest request, HttpServletResponse response,
                    @ApiParam(value = getInfo, required = true)  @Valid
                            VOLogin vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
 
-//    logout_4
+    /**
+     * 用户登出
+     * @param request
+     * @param response
+     * @param vo
+     * @param bindingResult
+     * @param actionResult
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = logout)
-    @RequestMapping(path = "logout.act",method= RequestMethod.GET)
-    String logout_4(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping(path = "logout.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult logout_4(HttpServletRequest request, HttpServletResponse response,
                      @ApiParam(value = logout, required = true)  @Valid
                              VOLogin vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+
+    @ApiOperation(value = findCom)
+    @RequestMapping(path = "findCom.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult findCom_5(HttpServletRequest request, HttpServletResponse response,
+                    @ApiParam(value = findCom, required = true)  @Valid
+                            VOEmpty vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 }

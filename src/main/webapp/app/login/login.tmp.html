@@ -1,0 +1,49 @@
+<template>
+    <link rel="stylesheet" href="app/login/base.css" />
+    <link rel="stylesheet" href="app/login/style.css" />
+    <div class="bg"></div>
+    <div class="container">
+        <div class="line bouncein">
+            <div class="xs6 xm4 xs3-move xm4-move">
+                <div style="height:150px;"></div>
+                <div class="media media-y margin-big-bottom">
+                </div>
+                <form action="" method="post">
+                    <div class="panel loginbox">
+                        <div class="text-center margin-big padding-big-top">
+                            <h1 id="_app_name"></h1>
+                        </div>
+                        <div class="panel-body" style="padding:30px; padding-bottom:10px; padding-top:10px;">
+                            <div class="form-group">
+                                <div class="field field-icon-right" id="div_com">
+                                    <select class="input input-big form-control" name="com" id="com" placeholder="公司">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                    <span class="icon icon-star margin-small"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="field field-icon-right">
+                                    <input type="text" class="input input-big" name="loginName" id="loginName" placeholder="登录账号">
+                                    <span class="icon icon-user margin-small"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="field field-icon-right">
+                                    <input type="password" class="input input-big" name="password" id="password" placeholder="登录密码">
+                                    <span class="icon icon-key margin-small"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding:30px;">
+                            <input type="button" id="btn_login" class="button button-block bg-main text-big input-big" value="登录">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>

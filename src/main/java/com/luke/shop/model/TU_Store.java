@@ -1,0 +1,138 @@
+package com.luke.shop.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+/**
+ * Created by luke on 2018/3/23.
+ * 部门，站点
+ */
+@Entity
+public class TU_Store extends Model{
+
+//    @Id
+//    @TableGenerator(name = "tu_store_seq",       //sequence name
+//            initialValue=Static.initialValue,
+//            table = "seq_table",              //sequence table
+//            pkColumnName = "seq_name",        //在表中对对应的sequence name 列
+//            pkColumnValue = "tu_store_seq",      //在表中对对应的sequence name 值
+//            valueColumnName = "num",          //值
+//            allocationSize = Static.allocationSize)
+//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tu_store_seq")
+//    private Long id;
+
+    @Column(length = 30,nullable = false)
+    private String name ;
+    @Column(length = 15,nullable = false)
+    private String py ;
+    @Column(length = 90,nullable = false)
+    private String pinYin ;
+
+    @Column(length = 20)
+    private String phone ;
+
+    @Column(length = 100)
+    private String addr ;
+
+    @Column(length = 100)
+    private String phote ;
+    /**是否加工中心*/
+    private Boolean isCenter = false ;
+    /**是否直营站点*/
+    private Boolean isZhiYing = true ;
+    /**是否使用站点价格*/
+    private Boolean isZhanDianJia = false ;
+    /**父级Id*/
+    private Long fid = 0l ;
+
+
+    public Boolean getIsZhanDianJia() {
+        return isZhanDianJia;
+    }
+
+    public void setIsZhanDianJia(Boolean isZhanDianJia) {
+        this.isZhanDianJia = isZhanDianJia;
+    }
+
+    public String getPy() {
+        return py;
+    }
+
+    public void setPy(String py) {
+        this.py = py;
+    }
+
+    public String getPinYin() {
+        return pinYin;
+    }
+
+    public void setPinYin(String pinYin) {
+        this.pinYin = pinYin;
+    }
+
+    public Boolean getIsZhiYing() {
+        return isZhiYing;
+    }
+
+    public void setIsZhiYing(Boolean isZhiYing) {
+        this.isZhiYing = isZhiYing;
+    }
+
+    public Boolean getIsCenter() {
+        return isCenter;
+    }
+
+    public void setIsCenter(Boolean isCenter) {
+        this.isCenter = isCenter;
+    }
+
+    public Long getFid() {
+        return fid;
+    }
+
+    public void setFid(Long fid) {
+        this.fid = fid;
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id ;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public String getPhote() {
+        return phote;
+    }
+
+    public void setPhote(String phote) {
+        this.phote = phote;
+    }
+}
