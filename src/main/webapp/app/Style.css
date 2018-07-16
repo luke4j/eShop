@@ -1,0 +1,73 @@
+.margin-bottom_2{
+    margin-bottom:2px;
+}
+
+.margin-right_1{
+    margin-right:1px;
+}
+.margin-right_2{
+     margin-right:2px;
+ }
+.margin-right_3{
+    margin-right:3px;
+}
+.margin-right_4{
+    margin-right:4px;
+}
+.margin-right_5{
+    margin-right:5px;
+}
+
+.margin-left_1{
+    margin-left:1px;
+}
+.margin-left_2{
+    margin-left:2px;
+}
+.margin-left_3{
+    margin-left:3px;
+}
+.margin-left_4{
+    margin-left:4px;
+}
+.margin-left_5{
+    margin-left:5px;
+}
+.margin-top_2{
+    margin-top: 2px;
+}
+
+.color_rad{
+    color:#FF0000
+}
+.color_green{
+    color:#00FF00
+}
+.color_blue{
+    color:#0000FF
+}
+.a_btn{
+    cursor:hand;
+    cursor:pointer;
+    margin-right:4px;
+}
+.treeView_btn{
+    float: right;
+}
+
+.treeView_panel{
+    /*overflow-y: scroll;*/
+    /*height:500px;*/
+}
+.lensParantDiv{
+    overflow: scroll;
+}
+.td_red{
+    background-color: #ff0000 ;
+}
+.td_blue{
+    background-color: #0000ff ;
+}
+.td_yellow{
+    background-color: #ffff00;
+}

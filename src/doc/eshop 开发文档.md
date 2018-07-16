@@ -124,7 +124,7 @@ try{
 
 ## 测试
 
-### java
+### java 测试 junit
 
 工具类测试代码与在src/test/java/tool
 
@@ -170,7 +170,7 @@ ITestGoods.addGoods_1_1
 
 
 
-## 建目录
+## 整个程序 目录
 
 ### java
 
@@ -207,23 +207,79 @@ src/mian/java/webapp
 
 ***
 
-## Model
+#### app
+
+app.js
+
+程序入口文件
+
+J.js
+
+程序公用方法
+
+
+
+package.js
+
+加载固定的js文件
+
+S.js
+
+程序js静态变量
+
+Style.css
+
+#### api
+
+Swagger   页面文件
+
+#### js
+
+使用的js组件
+
+包括jquery ;bootstrap;require;backbone;underscore
+
+##### jquery
+
+js 组件，支持跨浏览器与代码编写
+
+##### bootstrap
+
+多浏览器与浏览器大小支持，并且很美观
+
+##### require
+
+动态加载js文件
+
+##### backbone
+
+代码组织，一个页面级的mvc
+
+##### underscore
+
+
+
+***
+
+
+
+## 数据库与java映射Model
 
 ### TU_User   //用户信息
 
 ```sql
 id bigint  primary key
-loginName varchar(30)  unique not null
-password varchar(40)  not null
-name varchar(30)  not null 
+loginName varchar(30)  unique not null  --登录名
+password varchar(40)  not null	--登录密码
+name varchar(30)  not null --性别
 sex varchar(2) not null 
-birthday date
-roleId bigint
+birthday date	--	生日
+roleId bigint	--角色id
 phone varchar(15) -- 手机号
 phone2 varchar(15) -- 紧急联系人手机号
-xue_li varchar(10)
-zhi_wu varchar(20)
-photo varchar(50)
+xue_li varchar(10) -- 学历 
+zhi_wu varchar(20) -- 职务
+photo varchar(50)  --照片
 
 ```
 
@@ -257,24 +313,15 @@ name varchar(40)
 c_explain varchar(50)
 ```
 
-T_FUN	//系统可用功能信息
-
-```sql
-id bigint primary key 
-name varchar(40)
-c_explain varchar(50)
-jsFile varchar(120)
-```
-
 
 
 ### TU_Fun 	  //可用功能信息
 
 ```sql
 id bigint primary key 
-name varchar(40)
-c_explain varchar(50)
-jsFile varchar(120)
+name varchar(40)  -- 界面显示名
+c_explain varchar(50)  --说明
+jsFile varchar(120)  --功能js文件入口
 ```
 
 
@@ -295,7 +342,7 @@ funId bigint not null
 
 
 
-## 工具
+## java  自定义工具类
 
 ### 异常 Exception
 
@@ -319,17 +366,33 @@ funId bigint not null
 
 生成uuid
 
-#### Boolean Str_isEmpty(String str)
+#### Boolean StrIsEmpty(String str)
 
-#### Boolean Str_isNotEmpty(String str)
+字符串为空，"" or null 返回true
 
-#### Boolean Str_isEmptyDo(String str,String def)
+#### Boolean StrIsNotEmpty(String str)
 
-#### Boolean Str_isNum(String str)
+字符串不为空，返回true
 
-#### Boolean Str_isDate(String str,String format)
+#### Boolean StrIsEmptyDo(String str,String def)
+
+字符串为空返回默认值 不为空返回本身，为空返回默认值 
+
+#### Boolean StrIsNum(String str)
+
+字符串是否数字 是返回true
+
+是返回 true
+
+#### Boolean StrIsDate(String str,String format)
+
+字符串是否日期
+
+是返回true
 
 #### Date StrToDate(String str,String format)
+
+字符串按指定格式返回日期     2001-01-01  "yyyy-MM-dd"
 
 #### Date StrToDate_YMD(String str)
 
@@ -337,27 +400,51 @@ funId bigint not null
 
 #### String DateToStr(Date date ,String format)
 
+时间格式转字符串
+
 #### String DateToStr_Y(Date date)
+
+时间格式转年
 
 #### String DateToStr_YM(Date date)
 
+时间格式转  年月
+
 #### String DateToStr_YMD(Date date)
+
+时间格式转	年月日
 
 #### String Lens(String str)
 
+字符串转度数格式   0 ;+1.50;-2.00
+
 #### String Lens (Float num)
+
+数字转度数格式   0 ;+1.50;-2.00
 
 #### String NameToPinYinL(String str)
 
+中文名字转拼音  首字母
+
 #### String NameToYinYinS(String str)
+
+中文名字转拼音，全拼
 
 #### String MD5(String str)
 
-#### int DateToAge(Date birthday)
+md5加密
 
-#### int DateToAge(String birthday)
+#### int BirthdayToAge(Date birthday)
+
+生日转年龄
+
+#### int BirthdayToAge(String birthday)
+
+生日转年龄
 
 #### AddDay(Date day,int num)
+
+日期加减
 
 ### DB
 
@@ -419,9 +506,15 @@ funId bigint not null
 
 ​	断言对象相同，如果一个对象是空，不做断言
 
-#### void NotEqualsCanNull(Object obj1,Object obj2,String msg)
+#### void  (Object obj1,Object obj2,String msg)
 
 ​	断言对象不相同，如果一个对象是空，不做断言
+
+
+
+### 后台返回数据格式   ActionResult
+
+### Action类的基类  BaseAction
 
 ***
 
@@ -464,6 +557,49 @@ TU_User,TU_Com,TU_Store,TU_Role,TU_RoleFun,TU_Fun
 ​	登出功能
 
 ​	清空session
+
+***
+
+##### 登录功能 图示说明
+
+```sequence
+title:登录功能
+note left of login.view.js:登录入口文件
+note left of ILoginAction:登录后台接口
+note left of ILoginService:登录业务接口
+note left of ILoginDao:登录查询数据库接口
+
+login.view.js ->login.view.js:initialize 初始化
+login.view.js ->login.view.js:render 加载html,加载后台数据
+login.view.js->login.view.js:events 添加事件
+note left of ILoginAction:login方法接收参数 {loginName:str,password:str,com:str}
+login.view.js->ILoginAction:ajax访问 login/login.act 
+ILoginAction->ILoginService:findLogin  
+ILoginService->ILoginDao:loginDao 查询用户，查询不到抛出异常
+ILoginDao-->ILoginService:返回用户信息
+ILoginService->ILoginDao:getComById userId 返回用户所在公司信息
+ILoginService->ILoginService:判断用户类型，用户信息与公司判断是否可以登录
+ILoginAction-->login.view.js:返回ActionResult
+login.view.js->login.view.js:成功进入main.view
+
+
+```
+
+
+
+```sequence
+title:获取登录详细信息，并初始化程序主界面
+note left of main.view.js:程序主界面
+main.view.js->main.view.js:render 介面初始化 1.获取信息（login/getInfo.act）;2.设置导航条；3。设置时间，公司，站点
+main.view.js->main.view.js:events 添加界面事件 1.导航条.查看用户信息;2.导航条.修改密码;3.导航条.登出;4.返回主界面
+
+```
+
+***
+
+
+
+
 
 
 
