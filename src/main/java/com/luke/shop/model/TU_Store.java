@@ -1,7 +1,6 @@
 package com.luke.shop.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 /**
  * Created by luke on 2018/3/23.
@@ -45,6 +44,41 @@ public class TU_Store extends Model{
     /**父级Id*/
     private Long fid = 0l ;
 
+    @ManyToOne
+    @JoinColumn(name="comId")
+    private TU_Com com ;
+
+    public Boolean getCenter() {
+        return isCenter;
+    }
+
+    public void setCenter(Boolean center) {
+        isCenter = center;
+    }
+
+    public Boolean getZhiYing() {
+        return isZhiYing;
+    }
+
+    public void setZhiYing(Boolean zhiYing) {
+        isZhiYing = zhiYing;
+    }
+
+    public Boolean getZhanDianJia() {
+        return isZhanDianJia;
+    }
+
+    public void setZhanDianJia(Boolean zhanDianJia) {
+        isZhanDianJia = zhanDianJia;
+    }
+
+    public TU_Com getCom() {
+        return com;
+    }
+
+    public void setCom(TU_Com com) {
+        this.com = com;
+    }
 
     public Boolean getIsZhanDianJia() {
         return isZhanDianJia;

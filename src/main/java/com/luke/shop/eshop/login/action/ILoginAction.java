@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,7 +58,7 @@ public interface ILoginAction {
     @RequestMapping(path = "login.act",method= RequestMethod.POST)
     @ResponseBody
     ActionResult login_2(HttpServletRequest request, HttpServletResponse response,
-                   @ApiParam(value = login, required = true)  @Valid
+                   @ApiParam(value = login, required = true) @RequestBody @Valid
                            VOLogin vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
     /**

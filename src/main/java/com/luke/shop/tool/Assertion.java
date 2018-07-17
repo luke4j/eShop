@@ -24,7 +24,14 @@ public class Assertion {
     public static void Equals(Object obj1,Object obj2,String msg){
         NotEmpty(obj1, msg);
         NotEmpty(obj2, msg);
-        if(!obj1.equals(obj2)) throw AppMsgException.create(msg) ;
+        if(!obj1.equals(obj2))
+            AppMsgException.throwAppMsg(msg); ;
+    }
+    public static void Equals(Object obj1,Object obj2,String msg,String info){
+        NotEmpty(obj1, msg);
+        NotEmpty(obj2, msg);
+        if(!obj1.equals(obj2))
+            AppMsgException.throwAppMsg(msg,info); ;
     }
 
     public static void NotEquals(Object obj1,Object obj2,String msg){

@@ -326,14 +326,6 @@ jsFile varchar(120)  --功能js文件入口
 
 
 
-### TU_RoleRun //角色与功能关系信息
-
-```sql
-id bigint primary key 
-roleId bigint not null
-funId bigint not null
-```
-
 
 
 
@@ -530,7 +522,7 @@ md5加密
 
 #### 数据 model
 
-TU_User,TU_Com,TU_Store,TU_Role,TU_RoleFun,TU_Fun
+TU_User,TU_Com,TU_Store,TU_Role,TU_Fun
 
 #### http 对外接口 action
 

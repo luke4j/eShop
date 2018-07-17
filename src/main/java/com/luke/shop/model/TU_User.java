@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.luke.shop.tool.LoginTuken;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,21 +17,7 @@ import java.util.Date;
 )
 public class TU_User extends Model{
 
-    public enum UserType {
-        Root,//系统管理员
-        GSAdmin, //公司管理员
-        normal  //正常用户
-    }
-//    @Id
-//    @TableGenerator(name = "tu_user_seq",       //sequence name
-//            initialValue=Static.initialValue,
-//            table = "seq_table",              //sequence table
-//            pkColumnName = "seq_name",        //在表中对对应的sequence name 列
-//            pkColumnValue = "tu_user_seq",      //在表中对对应的sequence name 值
-//            valueColumnName = "num",          //值
-//            allocationSize = Static.allocationSize)
-//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tu_user_seq")
-//    private Long id;
+
 
     @Column(length = 80,nullable = false)
     private String name ;
@@ -41,16 +29,14 @@ public class TU_User extends Model{
     @Column(length = 36,nullable = false)
     private String password ;
 
+
+
+
+
+
     @Column(nullable = false)
-    private Long roleId = Static.LongDefNull;
-    @Column(length = 20,nullable = false)
-    private String roleName = Static.StrDefNull;
-    @Column(nullable = false)
-    private Long storeId = Static.LongDefNull;
-    @Column(length = 36,nullable = false)
-    private String storeName = Static.StrDefNull;
-    @Column(nullable = false)
-    private UserType userType = UserType.normal ;
+    @Enumerated(EnumType.STRING)
+    private LoginTuken.UserType userType = LoginTuken.UserType.normal ;
 
     private Date brithday ;
 
@@ -69,35 +55,52 @@ public class TU_User extends Model{
 
 
 
-    @Transient
+    @ManyToOne
+    @JoinColumn(name="roleId")
     private TU_Role role ;
 
-    @Transient
-    private TU_FunExt funExt ;
+    @ManyToOne
+    @JoinColumn(name="comId")
+    private TU_Com com ;
 
-    public String getRoleName() {
-        return roleName;
+    @ManyToOne
+    @JoinColumn(name="storeId")
+    private TU_Store store ;
+
+
+    public TU_Role getRole() {
+        return role;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setRole(TU_Role role) {
+        this.role = role;
     }
 
-    public UserType getUserType() {
+    public TU_Com getCom() {
+        return com;
+    }
+
+    public void setCom(TU_Com com) {
+        this.com = com;
+    }
+
+    public TU_Store getStore() {
+        return store;
+    }
+
+    public void setStore(TU_Store store) {
+        this.store = store;
+    }
+
+    public LoginTuken.UserType getUserType() {
         return userType;
     }
 
-    public void setUserType(UserType userType) {
+    public void setUserType(LoginTuken.UserType userType) {
         this.userType = userType;
     }
 
-    public Long getRoleId() {
-        return roleId;
-    }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
 
     public String getPhone() {
         return phone;
@@ -121,38 +124,6 @@ public class TU_User extends Model{
 
     public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public TU_Role getRole() {
-        return role;
-    }
-
-    public void setRole(TU_Role role) {
-        this.role = role;
-    }
-
-    public TU_FunExt getFunExt() {
-        return funExt;
-    }
-
-    public void setFunExt(TU_FunExt funExt) {
-        this.funExt = funExt;
-    }
-
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
     }
 
     @Override

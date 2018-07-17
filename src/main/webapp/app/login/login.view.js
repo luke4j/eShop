@@ -3,7 +3,6 @@ define(function(require, exports, module) {
     require("md5") ;
     require("backbone") ;
     require("bootstrap") ;
-    require('./main.view') ;
     var LoginView = Backbone.View.extend({
         el: $("body"),
         initialize: function () {
@@ -23,7 +22,7 @@ define(function(require, exports, module) {
              * 公司id is com
              */
             J.ajax({
-                url:'login/findAllCom.act',
+                url:'login/findCom.act',
                 success:function(result){
                     var $com = $("#com") ;
                     $com.html("") ;

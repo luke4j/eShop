@@ -1,9 +1,10 @@
 /**
  * 定义文件路径
+ contextPath 是由common.jsp中定义
  */
 var _cp = contextPath.substring(0,contextPath.length-1) ;
 requirejs.config({
-    urlArgs:"jsession="+Math.random(),
+//    urlArgs:"jsession="+Math.random(),
     "baseUrl": _cp,
     map: {
         '*': {
@@ -15,7 +16,7 @@ requirejs.config({
         "S":"app/S",
         "md5":"js/md5",
         "require": "js/require",
-        "jquery": "js/jquery-1.12.4",
+        "jquery": "js/jquery/jquery-1.12.4",
         "underscore": "js/underscore",
         "backbone": "js/backbone",
         "bootstrap": "js/bootstrap/js/bootstrap",
@@ -25,7 +26,7 @@ requirejs.config({
 
         "bootstrap-table-treegrid":"js/bootstrap/plugins/bootstrap-table/extensions/treegrid/bootstrap-table-treegrid",
         "jquery-treegrid":"js/bootstrap/plugins/bootstrap-table/extensions/treegrid/jquery-treegrid",
-        "lensTable":"js/jquery/TableFreeze",
+        "lensTable":"js/jquery/plugins/TableFreeze",
 
         "treeview":'js/bootstrap/plugins/treeview/bootstrap-treeview',
         "picker":"js/bootstrap/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min",

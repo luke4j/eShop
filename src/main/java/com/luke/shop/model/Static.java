@@ -17,6 +17,9 @@ public class Static {
     public static final String GRPassword = "root12" ;
 
     public static final String StrDefNull = "" ;
-    public static final Long LongDefNull = -0l ;
+    /**
+     * 数字默认-1 为没有填写
+     * */
+    public static final Long LongDefNull = -1l ;
 
 }

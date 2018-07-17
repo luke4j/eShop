@@ -2,7 +2,13 @@ package com.luke.shop.eshop.login.service.impl;
 
 import com.luke.shop.eshop.login.dao.ILoginDao;
 import com.luke.shop.eshop.login.service.ILoginService;
+import com.luke.shop.eshop.login.vo.VOLogin;
 import com.luke.shop.model.TU_Com;
+import com.luke.shop.model.TU_User;
+import com.luke.shop.tool.Assertion;
+import com.luke.shop.tool.LK;
+import com.luke.shop.tool.LKMap;
+import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOIdName;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +25,7 @@ public class LoginService implements ILoginService {
     @Override
     public List<VOIdName> findCom_5() throws Exception {
         List<TU_Com> listCom = this.loginDao.findCom_5() ;
-        List<VOIdName> listResult = new ArrayList<>(listCom.size()) ;
+        final List<VOIdName>  listResult = new ArrayList<>(listCom.size()) ;
 
         listCom.forEach((TU_Com com)->{
             VOIdName vo = new VOIdName() ;
@@ -27,6 +33,24 @@ public class LoginService implements ILoginService {
             vo.setName(com.getName());
             listResult.add(vo) ;
         });
-        return null;
+        return listResult;
     }
+
+
+
+
+    @Override
+    public LoginTuken findLogin_2(VOLogin vo) throws Exception {
+        LoginTuken tuken = this.loginDao.findlogin_2_1(vo) ;
+        Assertion.NotEmpty(tuken,"exp-00002");
+        if(LoginTuken.UserType.Root.equals(tuken.getUserType())){
+            return tuken ;
+        }
+        Assertion.NotEmpty(vo.getComId(),"请选择公司");
+        Assertion.Equals(vo.getComId(),tuken.getComId(),"异常：exp-00001");
+        Assertion.NotEmpty(tuken.getStoreId(),"用户没有分配站点，不能登录");
+        return tuken;
+    }
+
+
 }

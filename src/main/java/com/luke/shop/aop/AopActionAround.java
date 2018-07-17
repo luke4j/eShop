@@ -57,8 +57,8 @@ public class AopActionAround {
         if(bindingResult.hasErrors()){
             Assertion.Error(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
-        if(request.getSession().getAttribute(LoginTuken.CurrentUser)!=null){
-            LoginTuken tuken = (LoginTuken)request.getSession().getAttribute(LoginTuken.CurrentUser) ;
+        if(request.getSession().getAttribute(LoginTuken.Tuken)!=null){
+            LoginTuken tuken = (LoginTuken)request.getSession().getAttribute(LoginTuken.Tuken) ;
             actionResult.setLoginName(tuken.getLoginName());
             actionResult.setUserName(tuken.getName());
             actionResult.setUserId(tuken.getId());

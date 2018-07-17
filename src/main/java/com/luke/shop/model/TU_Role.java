@@ -1,8 +1,6 @@
 package com.luke.shop.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -26,7 +24,11 @@ public class TU_Role extends Model {
     @Column(length = 40)
     private String name ;
 
-    @Transient
+    @OneToMany
+    @Column(name = "funId")
+    @JoinTable(name="TU_Role_Fun",
+            joinColumns = {@JoinColumn(name="roleId")},
+            inverseJoinColumns = {@JoinColumn(name="funId")})
     private List<TU_Fun> funs ;
 
     @Override

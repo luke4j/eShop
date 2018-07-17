@@ -30,7 +30,7 @@ public class ActionResult {
         this.request = request ;
         this.response = response ;
         this.actionResult = this ;
-        Object loginTuken = this.request.getSession().getAttribute(LoginTuken.CurrentUser) ;
+        Object loginTuken = this.request.getSession().getAttribute(LoginTuken.Tuken) ;
         if(LK.ObjIsNotNull(loginTuken)){
             LoginTuken tuken  = (LoginTuken)loginTuken ;
             this.userId = tuken.getId() ;
@@ -52,7 +52,7 @@ public class ActionResult {
         actionResult.request = request ;
         actionResult.response = response ;
         actionResult.doing = doing ;
-        Object loginTuken = request.getSession().getAttribute(LoginTuken.CurrentUser) ;
+        Object loginTuken = request.getSession().getAttribute(LoginTuken.Tuken) ;
         if(LK.ObjIsNotNull(loginTuken)){
             LoginTuken tuken = (LoginTuken)loginTuken ;
             actionResult.userId = tuken.getId() ;

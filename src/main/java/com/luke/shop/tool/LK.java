@@ -354,7 +354,7 @@ public class LK {
      * @param obj
      * @return
      */
-    public static Boolean ObjIsNulll(Object obj){
+    public static Boolean ObjIsNull(Object obj){
         return obj == null?true :false ;
     }
 
@@ -364,7 +364,7 @@ public class LK {
      * @return
      */
     public static boolean ObjIsNotNull(Object obj){
-        return !ObjIsNulll(obj) ;
+        return !ObjIsNull(obj) ;
     }
 
     /**

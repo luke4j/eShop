@@ -161,13 +161,8 @@ J.ajax = function(settings){
             //param.success = settings.success
             param.success = function(res, status, xhr){
                 if(res.success){
+                    console.dir(res) ;
                     settings.success(res.data,res) ;
-                    /**这个debug是common.jsp里面定义的*/
-                    if(J.Debug){
-                        console.dir("请求："+settings.url) ;
-                        console.dir(res) ;
-                    }
-
                 }else{
                     if(res.errorMsg.indexOf('请登录')>=0){
                         window.location.href = J.contextPath ;

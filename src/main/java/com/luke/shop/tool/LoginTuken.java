@@ -1,10 +1,60 @@
 package com.luke.shop.tool;
 
+import com.luke.shop.model.TU_Com;
+import com.luke.shop.model.TU_Store;
+import com.luke.shop.model.TU_User;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 public class LoginTuken {
 
-    public static final String CurrentUser = "CurrentUser" ;
-    public static final String CurrentCom = "CurrentCom" ;
-    public static final String CurrentStore = "CurrentStore" ;
+    public static LoginTuken createTuken(TU_User user, TU_Com com , TU_Store store){
+        Assertion.NotEmpty(user,"createTuken方法参数user 为 null 异常");
+
+        LoginTuken tuken = new LoginTuken() ;
+        tuken.id = user.getId();
+        tuken.name = user.getName() ;
+        tuken.userType = user.getUserType() ;
+
+        if(LK.ObjIsNotNull(com)){
+            tuken.comId = com.getId() ;
+            tuken.comName = com.getName() ;
+
+        }
+        if(LK.ObjIsNotNull(store)){
+            tuken.storeId = store.getId() ;
+            tuken.storeName = store.getName() ;
+        }
+        return tuken ;
+    }
+
+    public static LoginTuken createTuken(Long userId,Long comId,Long storeId,String userName,String comName,String storeName,UserType userType){
+        LoginTuken tuken = new LoginTuken() ;
+        tuken.id = userId;
+        tuken.comId = comId ;
+        tuken.storeId = storeId ;
+        tuken.name = userName ;
+        tuken.comName = comName ;
+        tuken.storeName = storeName ;
+        tuken.userType = userType ;
+        return tuken ;
+    }
+
+    public static final String Tuken = "Tuken" ;
+
+    public static  void setSessionTuken(HttpServletRequest request,HttpServletResponse response,LoginTuken tuken){
+        request.setAttribute(Tuken,tuken);
+    }
+
+    public LoginTuken getSessionTuken(HttpServletRequest request){
+        return (LoginTuken)request.getSession().getAttribute(Tuken);
+    }
+
+
+
+
+
 
     public enum UserType {
         Root,//系统管理员

@@ -20,16 +20,6 @@ public abstract class Model  implements java.io.Serializable{
     private Boolean b_isDel = false;
     @Column(nullable = false)
     private Date b_wtime = new Date() ;
-    @Column(nullable = false,columnDefinition = "bigint default -1")
-    private Long b_comId = Static.LongDefNull ;
-
-    public Long getB_comId() {
-        return b_comId;
-    }
-
-    public void setB_comId(Long b_comId) {
-        this.b_comId = b_comId;
-    }
 
     public Boolean getB_isDel() {
         return b_isDel;
