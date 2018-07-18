@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel
-public class VOIdName {
+public class VOIdName  implements VO{
     @ApiModelProperty(value = "name")
     private String name ;
     @ApiModelProperty(value = "id")

@@ -160,7 +160,7 @@ CREATE TABLE `tu_user` (
   `password` varchar(36) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `photo` varchar(120) DEFAULT NULL,
-  `userType` varchar(255) NOT NULL,
+  `userType` varchar(12) NOT NULL,
   `xue_li` varchar(20) DEFAULT NULL,
   `zhi_wu` varchar(20) DEFAULT NULL,
   `comId` bigint(20) DEFAULT NULL,

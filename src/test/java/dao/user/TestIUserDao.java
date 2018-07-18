@@ -2,10 +2,7 @@ package dao.user;
 
 import com.luke.shop.eshop.login.vo.VOLogin;
 import com.luke.shop.eshop.user.dao.impl.UserDao;
-import com.luke.shop.model.TU_Com;
-import com.luke.shop.model.TU_Role;
-import com.luke.shop.model.TU_Store;
-import com.luke.shop.model.TU_User;
+import com.luke.shop.model.*;
 import com.luke.shop.tool.LK;
 import com.luke.shop.tool.LoginTuken;
 import dao.TestBaseDao;
@@ -46,6 +43,34 @@ public class TestIUserDao extends TestBaseDao {
         user.setRole(role);
 
         this.userDao.save(user) ;
+    }
+
+
+    @Test
+    public void saveMessage() throws Exception{
+        TU_User user = this.userDao.get(TU_User.class,1l) ;
+
+        TU_Message msg = null ;
+        msg = new TU_Message() ;
+        msg.setC_type(TU_Message.CType.GeRen);
+        msg.setTitle("个人信息");
+        msg.setMsg("个人信息详细");
+        msg.setReader(user);
+        this.userDao.save(msg) ;
+
+        msg = new TU_Message() ;
+        msg.setC_type(TU_Message.CType.ZhanDian);
+        msg.setTitle("站点信息");
+        msg.setMsg("站点信息详细");
+        msg.setReader(user);
+        this.userDao.save(msg) ;
+
+        msg = new TU_Message() ;
+        msg.setC_type(TU_Message.CType.JiaoSe);
+        msg.setTitle("角色信息");
+        msg.setMsg("角色信息详细");
+        msg.setReader(user);
+        this.userDao.save(msg) ;
     }
 
 

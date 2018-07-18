@@ -321,7 +321,7 @@ J.getJBody = function(){
 /**切换视图，解决事件多次注册问题*/
 J.changeView = function(view,url){
     if(view){
-        view.undelegateEvents() ;
+        view.undelegateEvents() ;//处理事件重复加载问题
     }
     try{
         var Class = requirejs(url);

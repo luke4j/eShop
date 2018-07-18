@@ -62,7 +62,7 @@ public interface ILoginAction {
                            VOLogin vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
     /**
-     * 获取当前用户的详细信息
+     * 获取当前用户的详细信息,系统时间，当前操作人权限 ，信息，配置
      * @param request
      * @param response
      * @param vo

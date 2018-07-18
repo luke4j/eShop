@@ -61,8 +61,11 @@ define(function(require, exports, module) {
                     data:fv,
                     success:function(data){
                         window.LukeApp = {} ;
-                        LukeApp.User = data ;
-                        J.changeView(me,"app/login/main.view") ;
+                        LukeApp.tuken = data ;
+                        console.log("=============LukeApp.tuken start==========================") ;
+                        console.dir( LukeApp.tuken) ;
+                        console.log("=============LukeApp.tuken end============================") ;
+                        J.changeView(me,["app/login/main.view"]) ;
                     }
                 }) ;
             }

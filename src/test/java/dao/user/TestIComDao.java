@@ -25,7 +25,7 @@ public class TestIComDao extends TestBaseDao {
         com.setAddr("北京大六环");
         com.setAdminId(1l);
         com.setAdminPassword("cc");
-        com.setIsJy(false);
+        com.setJy(false);
         com.setName("MyShop");
         com.setPhone("18613806246");
 

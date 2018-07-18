@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
 
 @ApiModel
-public class OVId {
+public class OVId implements VO{
 
     @ApiModelProperty(value = "id")
     @NotNull(message = "id")

@@ -21,6 +21,14 @@ public abstract class Model  implements java.io.Serializable{
     @Column(nullable = false)
     private Date b_wtime = new Date() ;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Boolean getB_isDel() {
         return b_isDel;
     }
@@ -35,16 +43,5 @@ public abstract class Model  implements java.io.Serializable{
 
     public void setB_wtime(Date b_wtime) {
         this.b_wtime = b_wtime;
-    }
-
-//    abstract public Long getId() ;
-//    abstract public void setId(Long id) ;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }

@@ -6,6 +6,7 @@ import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOIdName;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ILoginService {
     /**
@@ -23,4 +24,10 @@ public interface ILoginService {
      */
     LoginTuken findLogin_2(VOLogin vo) throws  Exception;
 
+    /**
+     * 获取当前用户的详细信息,系统时间，当前操作人权限 ，信息，配置
+     * @param sessionTuken
+     * @return
+     */
+    Map<String,Object> getInfo_3(LoginTuken sessionTuken)  throws Exception;
 }

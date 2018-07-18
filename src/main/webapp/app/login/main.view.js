@@ -3,25 +3,15 @@ define(function(require, exports, module) {
     require("J") ;
     require("backbone") ;
     require("bootstrap") ;
-    require("app/menu/menu.view") ;
     var MainView = Backbone.View.extend({
         el: $("body"),
         events: {
-            /**导航条，查看用户信息*/
-            "click #a_mt_userInfo":"a_mt_userInfo_handler",
-            /**导航条，修改密码*/
-            "click #a_mt_updatePwd":"a_mt_updatePwd_handler",
-            /**导航条，登出*/
-            "click #a_mt_logout":"a_mt_logout_handler",
-            /**导航条，用户信息查看*/
-            "click #main_nav_user_info a":"main_nav_user_info__a_handler",
-            /**返回主页*/
-            "click #main_home_btn":'main_home_btn_handler',
-            /**返回主页logo*/
-            "click #main_logo_btn":'main_logo_btn_handler',
+
         },
         initialize: function () {
+         debugger;
             J.getJBody().html("<div id='_main' class='container' style='height:100%;'></div>") ;
+
             this.render() ;
         },
         render:function(){
@@ -42,60 +32,20 @@ define(function(require, exports, module) {
         },
         page_cfg:function(){
             J.ajax({
-                url:'login/findRole',
+                url:'login/getInfo.act',
                 async:false,
                 success:function(d){
                     if(d=='操作成功'){
                         LukeApp.Role = [] ;
                     }else{
-                        LukeApp.Role = d ;
+                        console.log("=============LukeApp.info start==========================") ;
+                        console.dir( LukeApp.info) ;
+                        console.log("=============LukeApp.info end============================") ;
+                        LukeApp.info = d ;
                     }
 
                 }
             }) ;
-            J.ajax({
-                url:'login/findExtRole',
-                async:false,
-                success:function(d){
-                    LukeApp.ExtRole = d ;
-                }
-            }) ;
-            J.ajax({
-                url:'login/findSysTime',
-                async:false,
-                success:function(d){
-                    LukeApp.SysTime = d ;
-                }
-            }) ;
-            J.ajax({
-                url:'login/findCfg',
-                async:false,
-                success:function(d){
-                    LukeApp.Cfg = d ;
-                }
-            }) ;
-            var load_user_info = function(){
-                J.ajax({
-                    url:'login/findMsg',
-                    async:false,
-                    success:function(d){
-                        $("#main_nav_user_info_num").text(d.length) ;
-                        var msgBox = $("#main_nav_user_info") ;
-                        msgBox.html("") ;
-                        for(msg in d){
-                            var li = $("<li>").append(
-                                $("<a>").attr('msgId',d[msg].id).attr('wt',d[msg].b_wtime).attr('msg',d[msg].msg).html(d[msg].title)
-                            ) ;
-                            msgBox.append(li) ;
-                        }
-                    }
-                }) ;
-            } ;
-            if(J._run){
-                load_user_info() ;
-                this.msgInterval = setInterval(load_user_info,2000) ;
-            }
-
         },
         /**添加主导航条*/
         render_add_nav:function(){

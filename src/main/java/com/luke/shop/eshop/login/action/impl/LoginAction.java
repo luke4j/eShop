@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class LoginAction extends BaseAction implements ILoginAction {
@@ -42,7 +43,7 @@ public class LoginAction extends BaseAction implements ILoginAction {
                                 @ApiParam(value = login, required = true) @RequestBody @Valid
                                         VOLogin vo,
                                 BindingResult bindingResult, ActionResult actionResult) throws Exception {
-
+        actionResult.setDoing(login);
         LoginTuken tuken = loginService.findLogin_2(vo) ;
         LoginTuken.setSessionTuken(request,response,tuken);
         actionResult.setData(tuken);
@@ -51,7 +52,10 @@ public class LoginAction extends BaseAction implements ILoginAction {
 
     @Override
     public ActionResult getInfo_3(HttpServletRequest request, HttpServletResponse response, VOLogin vo, BindingResult bindingResult, ActionResult actionResult) throws Exception {
-        return null;
+        actionResult.setDoing(getInfo);
+        Map<String,Object> resultMap = this.loginService.getInfo_3(getSessionTuken(request)) ;
+        actionResult.setData(resultMap);
+        return actionResult;
     }
 
     @Override

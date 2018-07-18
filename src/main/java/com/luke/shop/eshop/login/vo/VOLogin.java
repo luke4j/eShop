@@ -1,5 +1,6 @@
 package com.luke.shop.eshop.login.vo;
 
+import com.luke.shop.tool.vo.VO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.Length;
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 
 @ApiModel
-public class VOLogin {
+public class VOLogin  implements VO {
 
     @ApiModelProperty(value = "登录名")
     @NotNull(message = "登录名不能为空")

@@ -72,6 +72,38 @@ public class TU_Com  extends Model{
     /**累計充值*/
     private Long cz = 0l ;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     public Long getAdminId() {
         return adminId;
     }
@@ -88,36 +120,36 @@ public class TU_Com  extends Model{
         this.adminPassword = adminPassword;
     }
 
-    public Integer getServicePrice() {
-        return servicePrice;
+    public Boolean getJy() {
+        return isJy;
     }
 
-    public void setServicePrice(Integer servicePrice) {
-        this.servicePrice = servicePrice;
+    public void setJy(Boolean jy) {
+        isJy = jy;
     }
 
-    public Date getUseDate() {
-        return useDate;
+    public Date getMaxUseDay() {
+        return maxUseDay;
     }
 
-    public void setUseDate(Date useDate) {
-        this.useDate = useDate;
+    public void setMaxUseDay(Date maxUseDay) {
+        this.maxUseDay = maxUseDay;
     }
 
-    public Long getCz() {
-        return cz;
+    public YeuJieRQ getYueJieRQ() {
+        return yueJieRQ;
     }
 
-    public void setCz(Long cz) {
-        this.cz = cz;
+    public void setYueJieRQ(YeuJieRQ yueJieRQ) {
+        this.yueJieRQ = yueJieRQ;
     }
 
-    public Integer getStoreNum() {
-        return storeNum;
+    public Boolean getYueJie() {
+        return isYueJie;
     }
 
-    public void setStoreNum(Integer storeNum) {
-        this.storeNum = storeNum;
+    public void setYueJie(Boolean yueJie) {
+        isYueJie = yueJie;
     }
 
     public Integer getWebNum() {
@@ -152,83 +184,35 @@ public class TU_Com  extends Model{
         this.padPrice = padPrice;
     }
 
-
-    public Boolean getIsJy() {
-        return isJy;
+    public Integer getStoreNum() {
+        return storeNum;
     }
 
-    public void setIsJy(Boolean isJy) {
-        this.isJy = isJy;
+    public void setStoreNum(Integer storeNum) {
+        this.storeNum = storeNum;
     }
 
-    public Date getMaxUseDay() {
-        return maxUseDay;
+    public Integer getServicePrice() {
+        return servicePrice;
     }
 
-    public void setMaxUseDay(Date maxUseDay) {
-        this.maxUseDay = maxUseDay;
+    public void setServicePrice(Integer servicePrice) {
+        this.servicePrice = servicePrice;
     }
 
-    public YeuJieRQ getYueJieRQ() {
-        return yueJieRQ;
+    public Date getUseDate() {
+        return useDate;
     }
 
-    public void setYueJieRQ(YeuJieRQ yueJieRQ) {
-        this.yueJieRQ = yueJieRQ;
+    public void setUseDate(Date useDate) {
+        this.useDate = useDate;
     }
 
-    public Boolean getIsYueJie() {
-        return isYueJie;
+    public Long getCz() {
+        return cz;
     }
 
-    public void setIsYueJie(Boolean isYueJie) {
-        this.isYueJie = isYueJie;
+    public void setCz(Long cz) {
+        this.cz = cz;
     }
-
-    @Override
-    public Long getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id ;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddr() {
-        return addr;
-    }
-
-    public void setAddr(String addr) {
-        this.addr = addr;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public Integer getPayDayNumber(){
-        return this.servicePrice.intValue()+this.padPrice.intValue()*this.padNum.intValue()+this.webPrice.intValue()*this.webNum.intValue() ;
-    }
-
 }

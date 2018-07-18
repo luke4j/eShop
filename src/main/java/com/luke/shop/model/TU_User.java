@@ -34,7 +34,7 @@ public class TU_User extends Model{
 
 
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 12)
     @Enumerated(EnumType.STRING)
     private LoginTuken.UserType userType = LoginTuken.UserType.normal ;
 

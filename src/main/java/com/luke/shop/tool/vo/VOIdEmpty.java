@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel
-public class VOIdEmpty {
+public class VOIdEmpty  implements VO{
 
     @ApiModelProperty(value = "id")
     private Long id ;

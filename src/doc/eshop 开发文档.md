@@ -295,7 +295,17 @@ public class TestBaseDao {
 -- mysqldump -u root -proot -t eshop2 >d.sql  -- -t只导出表中数据
 ```
 
+***
+
+
+
 ### js
+
+#### require
+
+require(url)  返回一个 backbone  对象，
+
+require([])     返回一个localRequire 对象，这个方法执行完成后，js文件已加载
 
 ***
 
@@ -453,6 +463,17 @@ id bigint primary key
 name varchar(40)  -- 界面显示名
 c_explain varchar(50)  --说明
 jsFile varchar(120)  --功能js文件入口
+```
+
+### TU_Message  //个人信息
+
+```sql
+id bigint primary key
+msg varchar(500) -- 信息内容
+title varchar(50)	-- 信息头
+c_type varchar(12) -- 信息各类
+readerId bigint -- 可读人id
+isRead boolean -- 是否已读
 ```
 
 

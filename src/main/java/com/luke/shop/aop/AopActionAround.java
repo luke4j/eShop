@@ -5,6 +5,7 @@ import com.luke.shop.tool.ActionResult;
 import com.luke.shop.tool.Assertion;
 import com.luke.shop.tool.L;
 import com.luke.shop.tool.LoginTuken;
+import com.luke.shop.tool.vo.VO;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -38,6 +39,9 @@ public class AopActionAround {
         HttpServletRequest request = null ;
         HttpServletResponse response = null ;
         BindingResult bindingResult = null ;
+
+        VO vo = null ;
+
         Object[] args = jp.getArgs();
         for(Object arg :args){
             if(arg instanceof ActionResult){
@@ -51,6 +55,9 @@ public class AopActionAround {
             }
             if(arg instanceof BindingResult){
                 bindingResult = (BindingResult)arg ;
+            }
+            if(arg instanceof VO){
+                vo = (VO)arg ;
             }
         }
 
@@ -66,8 +73,8 @@ public class AopActionAround {
             actionResult.setStoreid(tuken.getStoreId());
 
         }
-
-        actionResult.setJsonParams(JSONObject.fromObject(request.getParameterMap()).toString());
+        if(vo!=null)
+            actionResult.setJsonParams(JSONObject.fromObject(vo).toString());
         actionResult.setUrl(request.getRequestURI());
         actionResult.setSuccess(true);
 
