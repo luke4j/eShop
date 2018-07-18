@@ -1,7 +1,7 @@
 package com.luke.shop.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by luke on 2018/4/10.
@@ -9,16 +9,7 @@ import javax.persistence.Entity;
  */
 @Entity
 public class TU_Fun extends Model{
-//    @Id
-//    @TableGenerator(name = "tu_fun_seq",       //sequence name
-//            initialValue=Static.initialValue,
-//            table = "seq_table",              //sequence table
-//            pkColumnName = "seq_name",        //在表中对对应的sequence name 列
-//            pkColumnValue = "tu_fun_seq",      //在表中对对应的sequence name 值
-//            valueColumnName = "num",          //值
-//            allocationSize = Static.allocationSize)
-//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tu_fun_seq")
-//    private Long id;
+
     /**功能js实现*/
     private String viewPath ;
     /**功能页面*/
@@ -37,39 +28,8 @@ public class TU_Fun extends Model{
     @Column(length = 200)
     private String studyPath ;
 
-    public String getStudyPath() {
-        return studyPath;
-    }
-
-    public void setStudyPath(String studyPath) {
-        this.studyPath = studyPath;
-    }
-
-    public Long getFid() {
-        return fid;
-    }
-
-    public void setFid(Long fid) {
-        this.fid = fid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToMany(mappedBy = "listFun")
+    List<TU_Role> listRole ;
 
     public String getViewPath() {
         return viewPath;
@@ -101,5 +61,37 @@ public class TU_Fun extends Model{
 
     public void setC_group(String c_group) {
         this.c_group = c_group;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getFid() {
+        return fid;
+    }
+
+    public void setFid(Long fid) {
+        this.fid = fid;
+    }
+
+    public String getStudyPath() {
+        return studyPath;
+    }
+
+    public void setStudyPath(String studyPath) {
+        this.studyPath = studyPath;
+    }
+
+    public List<TU_Role> getListRole() {
+        return listRole;
+    }
+
+    public void setListRole(List<TU_Role> listRole) {
+        this.listRole = listRole;
     }
 }

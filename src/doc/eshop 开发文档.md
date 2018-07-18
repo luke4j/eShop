@@ -168,6 +168,137 @@ ITestGoods.addGoods_1_1
 
 ***
 
+## 问题与解决
+
+### java  
+
+#### 重载调用
+
+重载调用不能自动判断类型进行调用
+
+```java
+class A{
+    public void method(Map map) ;
+    public void method(Object obj) ;
+}
+//在调用时，要指定类型，如果不指定参数为Map类型，将一直调用参数为Object类型的方法
+
+```
+
+
+
+
+
+### hibernate
+
+映射类中属性
+
+#### @ManyToOne
+
+```java
+	class TU_User
+	//多个用户对应一个角色
+	@ManyToOne
+    @JoinColumn(name="roleId")
+    private TU_Role role ;
+    
+    // 在TU_User表中生成一个roleId列
+```
+
+#### @OneToMany
+
+```java
+class TU_Role
+//一个角色对应多个功能 
+ @ManyToMany(cascade = {CascadeType.ALL})   
+    @JoinTable(name="TU_Role_Fun",
+            joinColumns = {@JoinColumn(name="roleId")},
+            inverseJoinColumns = {@JoinColumn(name="funId")})
+    private List<TU_Fun> listFun ;
+
+//生成一个TU_Role_Fun表，TU_Role.id为TU_Role_Fun.roleId的外键引用，TU_Role_Fun.funId为TU_Fun的外键引用
+```
+
+#### cascade属性： 指定级联操作的行为(可多选)
+
+- **CascadeType.PERSIST** **级联新增（又称级联保存）**： 
+  获取A对象里也同时也重新获取最新的B时的对象。即会重新查询数据库里的最新数据，并且，只有A类新增时，会级联B对象新增。若B对象在数据库存（跟新）在则抛异常（让B变为持久态），对应EntityManager的presist方法,调用JPA规范中的persist()，不适用于Hibernate的save()方法
+- **CascadeType.MERGE** **级联合并（又称级联更新）** 
+  指A类新增或者变化，会级联B对象（新增或者变化） ，对应EntityManager的merge方法，调用JPA规范中merge()时，不适用于Hibernate的update()方法
+- **CascadeType.REMOVE** **级联删除** 
+  只有A类删除时，会级联删除B类,即在设置的那一端进行删除时，另一端才会级联删除，对应EntityManager的remove方法，调用JPA规范中的remove()时，适用于Hibernate的delete()方法
+- **CascadeType.REFRESH** **级联刷新** 
+  获取order（一或多）对象里也同时也重新获取最新的items（多）的对象，对应EntityManager的refresh(object)，调用JPA规范中的refresh()时，适用于Hibernate的flush()方法
+- **CascadeType.ALL** 
+  包含所有持久化方法
+
+
+
+#### @Enumerated
+
+```java
+@Column(nullable = false)
+@Enumerated(EnumType.STRING)
+private LoginTuken.UserType userType = LoginTuken.UserType.normal ;
+```
+
+***
+
+
+
+### JUnit测试
+
+#### 事务问题
+
+spring 配置为事务
+
+```xml
+<bean id="transactionManager"
+      class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+       <property name="sessionFactory" ref="sessionFactory" />
+</bean>
+<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+```
+
+测试Dao类的基类
+
+```java
+@ContextConfiguration(locations = {
+        "classpath:test_applicationContext.xml",
+        "classpath:test_applicationContext-db.xml",
+})//加载spring的相关配置文件
+@RunWith(SpringJUnit4ClassRunner.class)//指定junit运行环境
+@Transactional   //所有方法添加事务支持
+@Rollback(false) //所有方法事务不回滚事务不回滚
+public class TestBaseDao {
+    @Before
+    public void befor(){
+        PropertyConfigurator.configure(this.getClass().getResource("/test_log4j.properties"));
+    }
+
+}
+```
+
+
+
+***
+
+### mysql数据库
+
+#### 数据导出
+
+```mysql
+-- mysqldump -u root -proot -d eshop2 >t.sql  --  -d只导出表结构
+```
+
+```mysql
+-- mysqldump -u root -proot -t eshop2 >d.sql  -- -t只导出表中数据
+```
+
+### js
+
+***
+
 
 
 ## 整个程序 目录

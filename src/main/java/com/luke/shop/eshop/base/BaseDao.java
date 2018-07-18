@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class BaseDao {
@@ -37,7 +38,8 @@ public class BaseDao {
             session = this.sessionFactory.getCurrentSession() ;
             return session ;
         }catch (Exception e){
-            log.error("当前线程没有HibernateSession");
+
+            log.error("当前线程没有HibernateSession\t"+e.getMessage());
             return sessionFactory.openSession() ;
         }
     }
@@ -58,26 +60,37 @@ public class BaseDao {
     /**
      * hibernate ql　删除
      * @param ql
-     * @param obj
+     * @param param
      * @return
      * @throws Exception
      */
-    public boolean delete_ql(String ql,Object obj) throws Exception{
+    public boolean delete_ql(String ql,Object param) throws Exception{
         if(LK.StrIsEmpty(ql) ) Assertion.Error("delete_ql语句为空");
-        this.getSession().createQuery(ql).setProperties(obj).executeUpdate() ;
+        if(param instanceof Map){
+            Map<String,Object> p = (Map<String,Object>) param ;
+            this.getSession().createQuery(ql).setProperties(p).executeUpdate() ;
+        }else{
+            this.getSession().createQuery(ql).setProperties(param).executeUpdate() ;
+        }
+
         return true ;
     }
 
     /**
      * hibernate qh 更新
      * @param ql
-     * @param obj
+     * @param param
      * @return
      * @throws Exception
      */
-    public boolean update_ql(String ql,Object obj) throws Exception{
+    public boolean update_ql(String ql,Object param) throws Exception{
         if(LK.StrIsEmpty(ql) ) Assertion.Error("dupdate_ql语句为空");
-        this.getSession().createQuery(ql).setProperties(obj).executeUpdate() ;
+        if(param instanceof Map){
+            Map<String,Object> p = (Map<String,Object>) param ;
+            this.getSession().createQuery(ql).setProperties(p).executeUpdate() ;
+        }else{
+            this.getSession().createQuery(ql).setProperties(param).executeUpdate() ;
+        }
         return true ;
     }
 
@@ -127,13 +140,14 @@ public class BaseDao {
      * @return
      * @throws Exception
      */
-    public <T> List<T> saveAlll(List<T> list) throws Exception{
+    public <T> List<T> saveAll(List<T> list) throws Exception{
         for(int i = 0 ;i<list.size();i++){
-            if(i!=0&&i%50==0){
+            if(i!=0&&i%20==0){
                 this.getSession().flush();
             }
             this.save(list.get(i)) ;
         }
+        this.getSession().flush();
         return list ;
     }
 
@@ -147,7 +161,12 @@ public class BaseDao {
      */
     public <T> T getUnique(String ql ,Object param) throws Exception{
         if(LK.StrIsEmpty(ql)) Assertion.Error("getUnique查询语句为空");
-        return (T)this.getSession().createQuery(ql).setProperties(param).uniqueResult() ;
+        if(param instanceof Map){
+            Map<String,Object> p = (Map<String,Object>) param ;
+            return (T)this.getSession().createQuery(ql).setProperties(p).uniqueResult() ;
+        }else{
+            return (T)this.getSession().createQuery(ql).setProperties(param).uniqueResult() ;
+        }
     }
 
     /**
@@ -160,10 +179,15 @@ public class BaseDao {
      */
     public <T> T getUnique(String ql ,Object param,Class<T> toBean) throws Exception{
         if(LK.StrIsEmpty(ql)) Assertion.Error("getUnique查询语句为空");
-        return (T)this.getSession().createQuery(ql).setResultTransformer(Transformers.aliasToBean(toBean)).setProperties(param).uniqueResult() ;
+        if(param instanceof Map){
+            Map<String,Object> p = (Map<String,Object>) param ;
+            return (T)this.getSession().createQuery(ql).setResultTransformer(Transformers.aliasToBean(toBean)).setProperties(param).uniqueResult() ;
+        }else{
+            return (T)this.getSession().createQuery(ql).setResultTransformer(Transformers.aliasToBean(toBean)).setProperties(param).uniqueResult() ;
+        }
     }
     /**
-     * hibernate session ql查询
+     * hibernate session ql查询 <br>  注意，toBean与changeMap都为空时，查询出映射类的列表 toBean与changeMap不能同时使用
      * @param ql
      * @param param
      * @param page
@@ -186,7 +210,13 @@ public class BaseDao {
             query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP) ;
         }
         if(LK.ObjIsNotNull(param)){
-            query.setProperties(param) ;
+            if(param instanceof Map){
+                Map<String,Object> p = (Map<String,Object>) param ;
+                query.setProperties(p) ;
+            }else{
+                query.setProperties(param) ;
+            }
+
         }
         if(LK.ObjIsNotNull(page)){
             query.setMaxResults(page.getLimit()) ;
@@ -196,7 +226,7 @@ public class BaseDao {
     }
 
     /**
-     * hibernate session ql查询
+     * hibernate session ql查询 <br>  注意，toBean与changeMap都为空时，查询出映射类的列表 toBean与changeMap不能同时使用
      * @param ql
      * @param <T>
      * @return
@@ -207,7 +237,7 @@ public class BaseDao {
     }
 
     /**
-     * hibernate session ql查询
+     * hibernate session ql查询   <br>  注意 这是直接查询出映射类的列表
      * @param ql
      * @param param
      * @param <T>

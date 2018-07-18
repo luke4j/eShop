@@ -10,36 +10,18 @@ import java.util.List;
 @Entity
 public class TU_Role extends Model {
 
-//    @Id
-//    @TableGenerator(name = "tu_role_seq",       //sequence name
-//            initialValue=Static.initialValue,
-//            table = "seq_table",              //sequence table
-//            pkColumnName = "seq_name",        //在表中对对应的sequence name 列
-//            pkColumnValue = "tu_role_seq",      //在表中对对应的sequence name 值
-//            valueColumnName = "num",          //值
-//            allocationSize = Static.allocationSize)
-//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tu_role_seq")
-//    private Long id;
-
     @Column(length = 40)
     private String name ;
 
-    @OneToMany
-    @Column(name = "funId")
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name="TU_Role_Fun",
             joinColumns = {@JoinColumn(name="roleId")},
             inverseJoinColumns = {@JoinColumn(name="funId")})
-    private List<TU_Fun> funs ;
+    private List<TU_Fun> listFun ;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "comId")
+    private TU_Com com ;
 
     public String getName() {
         return name;
@@ -49,11 +31,19 @@ public class TU_Role extends Model {
         this.name = name;
     }
 
-    public List<TU_Fun> getFuns() {
-        return funs;
+    public List<TU_Fun> getListFun() {
+        return listFun;
     }
 
-    public void setFuns(List<TU_Fun> funs) {
-        this.funs = funs;
+    public void setListFun(List<TU_Fun> listFun) {
+        this.listFun = listFun;
+    }
+
+    public TU_Com getCom() {
+        return com;
+    }
+
+    public void setCom(TU_Com com) {
+        this.com = com;
     }
 }

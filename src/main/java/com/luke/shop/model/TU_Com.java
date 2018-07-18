@@ -2,6 +2,8 @@ package com.luke.shop.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Date;
 
 /**
@@ -43,12 +45,14 @@ public class TU_Com  extends Model{
     /**公司管理员*/
     private Long adminId ;
     /**公司管理员未加密密码*/
+    @Column(length = 36)
     private String adminPassword ;
     /**是否禁用*/
     private Boolean isJy = true ;
     /**最大可用时间*/
     private Date maxUseDay = new Date();
     /**月结日期*/
+    @Enumerated(EnumType.STRING)
     private YeuJieRQ yueJieRQ = YeuJieRQ._end;
     /**本月是否月结*/
     private Boolean isYueJie = false;

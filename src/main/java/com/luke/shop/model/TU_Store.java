@@ -48,44 +48,13 @@ public class TU_Store extends Model{
     @JoinColumn(name="comId")
     private TU_Com com ;
 
-    public Boolean getCenter() {
-        return isCenter;
+
+    public String getName() {
+        return name;
     }
 
-    public void setCenter(Boolean center) {
-        isCenter = center;
-    }
-
-    public Boolean getZhiYing() {
-        return isZhiYing;
-    }
-
-    public void setZhiYing(Boolean zhiYing) {
-        isZhiYing = zhiYing;
-    }
-
-    public Boolean getZhanDianJia() {
-        return isZhanDianJia;
-    }
-
-    public void setZhanDianJia(Boolean zhanDianJia) {
-        isZhanDianJia = zhanDianJia;
-    }
-
-    public TU_Com getCom() {
-        return com;
-    }
-
-    public void setCom(TU_Com com) {
-        this.com = com;
-    }
-
-    public Boolean getIsZhanDianJia() {
-        return isZhanDianJia;
-    }
-
-    public void setIsZhanDianJia(Boolean isZhanDianJia) {
-        this.isZhanDianJia = isZhanDianJia;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPy() {
@@ -102,48 +71,6 @@ public class TU_Store extends Model{
 
     public void setPinYin(String pinYin) {
         this.pinYin = pinYin;
-    }
-
-    public Boolean getIsZhiYing() {
-        return isZhiYing;
-    }
-
-    public void setIsZhiYing(Boolean isZhiYing) {
-        this.isZhiYing = isZhiYing;
-    }
-
-    public Boolean getIsCenter() {
-        return isCenter;
-    }
-
-    public void setIsCenter(Boolean isCenter) {
-        this.isCenter = isCenter;
-    }
-
-    public Long getFid() {
-        return fid;
-    }
-
-    public void setFid(Long fid) {
-        this.fid = fid;
-    }
-
-    @Override
-    public Long getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id ;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPhone() {
@@ -168,5 +95,45 @@ public class TU_Store extends Model{
 
     public void setPhote(String phote) {
         this.phote = phote;
+    }
+
+    public Boolean getCenter() {
+        return isCenter;
+    }
+
+    public void setCenter(Boolean center) {
+        isCenter = center;
+    }
+
+    public Boolean getZhiYing() {
+        return isZhiYing;
+    }
+
+    public void setZhiYing(Boolean zhiYing) {
+        isZhiYing = zhiYing;
+    }
+
+    public Boolean getZhanDianJia() {
+        return isZhanDianJia;
+    }
+
+    public void setZhanDianJia(Boolean zhanDianJia) {
+        isZhanDianJia = zhanDianJia;
+    }
+
+    public Long getFid() {
+        return fid;
+    }
+
+    public void setFid(Long fid) {
+        this.fid = fid;
+    }
+
+    public TU_Com getCom() {
+        return com;
+    }
+
+    public void setCom(TU_Com com) {
+        this.com = com;
     }
 }
