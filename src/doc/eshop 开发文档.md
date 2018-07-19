@@ -242,6 +242,57 @@ class TU_Role
 private LoginTuken.UserType userType = LoginTuken.UserType.normal ;
 ```
 
+#### 异常
+
+##### Could not write content: Infinite recursion (StackOverflowError)
+
+Caused by: com.fasterxml.jackson.databind.JsonMappingException: Infinite recursion (StackOverflowError) 
+
+在直接返回有多对多属性对象时出现此异常
+
+角色类TU_Role
+
+```java
+@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
+@JoinTable(name="TU_Role_Fun",
+        joinColumns = {@JoinColumn(name="roleId")},
+        inverseJoinColumns = {@JoinColumn(name="funId")})
+private List<TU_Fun> listFun ;
+```
+
+权限类 TU_Fun
+
+```java
+@ManyToMany(mappedBy = "listFun")
+List<TU_Role> listRole ;
+```
+
+用户类 TU_User
+
+```java
+@ManyToOne
+@JoinColumn(name="roleId")
+private TU_Role role ;
+```
+
+调用      loginDao.get(TU_User.class,sessionTuken.getId()) ; 出现异常
+
+org.hibernate.collection.internal.PersistentBag[0]->com.luke.shop.model.TU_Fun["listRole"]->org.hibernate.collection.internal.PersistentBag[0]->com.luke.shop.model.TU_Role["listFun"]->....
+
+由上面可以想到这是权限调用角色，角色对调权限，没完没了死循环了。。。
+
+网上找到解决办法
+
+[参考网址](https://blog.csdn.net/sinat_28454173/article/details/52315581)
+
+```
+在类或基类上添加 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+```
+
+
+
+
+
 ***
 
 
@@ -306,6 +357,14 @@ public class TestBaseDao {
 require(url)  返回一个 backbone  对象，
 
 require([])     返回一个localRequire 对象，这个方法执行完成后，js文件已加载
+
+这两个方法的区别在于
+
+用require([])以数据为参数，那第参数内的 js 文件需要写一段加载完成执行的代码才会执行，不写只加载这个文件，不做任何事
+
+用require(url)以url为参数，那么回一个backbone对象，这个对象加载完成后被加载文件中返回的backbone对象，这个对象只需要new一下，就可以执行，但是这个方法是异步的，也就是说你不能直接在require(url)的下一句就直接new ，因为这个时候还没有加载完
+
+
 
 ***
 
@@ -742,6 +801,37 @@ main.view.js->main.view.js:render 介面初始化 1.获取信息（login/getInfo
 main.view.js->main.view.js:events 添加界面事件 1.导航条.查看用户信息;2.导航条.修改密码;3.导航条.登出;4.返回主界面
 
 ```
+
+页面代码
+
+login.view.js
+
+加载页面所需要的js文件，登录成功后需要进入main.view页面，所以在加载login.view.js时就要加载，如果是点登录并成功后，
+
+```js
+define(function(require, exports, module) {
+    require("J") ;
+    require("md5") ;
+    require("backbone") ;
+    require("bootstrap") ;
+    var main_view = require("app/login/main.view") ;
+     var LoginView = Backbone.View.extend({
+         ...}) ;
+     }) ;
+ )
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ***
 

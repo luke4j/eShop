@@ -1,6 +1,7 @@
 package com.luke.shop.eshop.login.service;
 
 import com.luke.shop.eshop.login.vo.VOLogin;
+import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
 import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOIdName;
@@ -30,4 +31,12 @@ public interface ILoginService {
      * @return
      */
     Map<String,Object> getInfo_3(LoginTuken sessionTuken)  throws Exception;
+
+    /**
+     * 导航条修改密码
+     * @param sessionTuken
+     * @param vo
+     * @throws Exception
+     */
+    void editPassword_6(LoginTuken sessionTuken, VOLoginEditPassword vo) throws Exception;
 }

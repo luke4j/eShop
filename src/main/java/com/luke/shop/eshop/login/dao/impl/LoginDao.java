@@ -3,6 +3,7 @@ package com.luke.shop.eshop.login.dao.impl;
 import com.luke.shop.eshop.base.BaseDao;
 import com.luke.shop.eshop.login.dao.ILoginDao;
 import com.luke.shop.eshop.login.vo.VOLogin;
+import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
 import com.luke.shop.model.TU_Com;
 import com.luke.shop.model.TU_Message;
 import com.luke.shop.model.TU_Store;
@@ -37,5 +38,13 @@ public class LoginDao extends BaseDao implements ILoginDao {
     public List<TU_Message> getInfo_3_message(TU_User user) throws Exception {
         List<TU_Message> listMessage =  this.find("From TU_Message m where m.reader.id =:id",user) ;
         return listMessage;
+    }
+
+
+    @Override
+    public void editPassword_6(VOLoginEditPassword vo,Long userId) throws Exception {
+        TU_User user = this.get(TU_User.class,userId) ;
+        user.setPassword(vo.getPassword().toUpperCase());
+        this.update(user) ;
     }
 }

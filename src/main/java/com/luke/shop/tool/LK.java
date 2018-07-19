@@ -358,6 +358,13 @@ public class LK {
         return obj == null?true :false ;
     }
 
+    public static Object ObjIsNullDo(Object obj ,String def){
+        if(obj==null)
+            return def ;
+        else
+            return obj ;
+    }
+
     /**
      * 对象不是空
      * @param obj

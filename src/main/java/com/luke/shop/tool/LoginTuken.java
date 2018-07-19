@@ -44,7 +44,7 @@ public class LoginTuken {
     public static final String Tuken = "Tuken" ;
 
     public static  void setSessionTuken(HttpServletRequest request,HttpServletResponse response,LoginTuken tuken){
-        request.setAttribute(Tuken,tuken);
+        request.getSession().setAttribute(Tuken,tuken);
     }
 
     public static LoginTuken getSessionTuken(HttpServletRequest request){

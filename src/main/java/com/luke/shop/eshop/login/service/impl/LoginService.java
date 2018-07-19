@@ -3,8 +3,10 @@ package com.luke.shop.eshop.login.service.impl;
 import com.luke.shop.eshop.login.dao.ILoginDao;
 import com.luke.shop.eshop.login.service.ILoginService;
 import com.luke.shop.eshop.login.vo.VOLogin;
+import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
 import com.luke.shop.model.TU_Com;
 import com.luke.shop.model.TU_Message;
+import com.luke.shop.model.TU_Role;
 import com.luke.shop.model.TU_User;
 import com.luke.shop.tool.Assertion;
 import com.luke.shop.tool.LK;
@@ -63,9 +65,20 @@ public class LoginService implements ILoginService {
         Map<String,Object> resultMap = new HashMap<>(10) ;
         TU_User user = this.loginDao.get(TU_User.class,sessionTuken.getId()) ;
         List<TU_Message> listMessage = this.loginDao.getInfo_3_message(user) ;
-        resultMap.put("msgs",listMessage) ;
-        resultMap.put("role",user.getRole().getListFun());
+        resultMap.put("msgs", LK.ObjIsNullDo(listMessage,"")) ;
+
+        if(LK.ObjIsNotNull(user.getRole())){
+            resultMap.put("role",user.getRole().getName()) ;
+        }
+
+        if(LK.ObjIsNotNull(user.getRole()))
+            resultMap.put("funs",LK.ObjIsNullDo(user.getRole().getListFun(),""));
         resultMap.put("sysTime",new Date().getTime()) ;
         return resultMap;
+    }
+
+    @Override
+    public void editPassword_6(LoginTuken sessionTuken, VOLoginEditPassword vo) throws Exception {
+        this.loginDao.editPassword_6(vo,sessionTuken.getId()) ;
     }
 }

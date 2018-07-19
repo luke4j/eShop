@@ -1,6 +1,7 @@
 package com.luke.shop.eshop.login.action;
 
 import com.luke.shop.eshop.login.vo.VOLogin;
+import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
 import com.luke.shop.tool.ActionResult;
 import com.luke.shop.tool.vo.VOEmpty;
 import io.swagger.annotations.Api;
@@ -25,6 +26,7 @@ public interface ILoginAction {
     String getInfo = "获取登录信息" ;
     String logout = "用户登出" ;
     String findCom = "查询所有公司，为登录页面公司下拉组件提供数据" ;
+    String editPassword = "登录界面修改个人密码" ;
 
 
     /**
@@ -76,7 +78,7 @@ public interface ILoginAction {
     @ResponseBody
     ActionResult getInfo_3(HttpServletRequest request, HttpServletResponse response,
                    @ApiParam(value = getInfo, required = true)  @Valid
-                           VOLogin vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+                           VOEmpty vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
 
     /**
@@ -94,7 +96,7 @@ public interface ILoginAction {
     @ResponseBody
     ActionResult logout_4(HttpServletRequest request, HttpServletResponse response,
                      @ApiParam(value = logout, required = true)  @Valid
-                             VOLogin vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+                             VOEmpty vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
     @ApiOperation(value = findCom)
     @RequestMapping(path = "findCom.act",method= RequestMethod.POST)
@@ -102,4 +104,12 @@ public interface ILoginAction {
     ActionResult findCom_5(HttpServletRequest request, HttpServletResponse response,
                     @ApiParam(value = findCom, required = true)  @Valid
                             VOEmpty vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+
+
+    @ApiOperation(value = editPassword)
+    @RequestMapping(path = "editPassword.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult editPassword_6(HttpServletRequest request, HttpServletResponse response,
+                                @ApiParam(value = editPassword, required = true)  @Valid
+                                        VOLoginEditPassword vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 }

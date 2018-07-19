@@ -4,7 +4,7 @@
  */
 var _cp = contextPath.substring(0,contextPath.length-1) ;
 requirejs.config({
-//    urlArgs:"jsession="+Math.random(),
+    urlArgs:"jsession="+Math.random(),
     "baseUrl": _cp,
     map: {
         '*': {

@@ -6,44 +6,50 @@ define(function(require, exports, module) {
     var MainView = Backbone.View.extend({
         el: $("body"),
         events: {
-
+            /**导航条，查看用户信息*/
+            "click #a_mt_userInfo":"a_mt_userInfo_handler",
+            /**导航条，修改密码*/
+            "click #a_mt_updatePwd":"a_mt_updatePwd_handler",
+            /**导航条，登出*/
+            "click #a_mt_logout":"a_mt_logout_handler",
+            /**导航条，用户信息查看*/
+            "click #main_nav_user_info a":"main_nav_user_info__a_handler",
+            /**返回主页*/
+            "click #main_home_btn":'main_home_btn_handler',
+            /**返回主页logo*/
+            "click #main_logo_btn":'main_logo_btn_handler',
         },
         initialize: function () {
-         debugger;
             J.getJBody().html("<div id='_main' class='container' style='height:100%;'></div>") ;
-
             this.render() ;
         },
         render:function(){
-            this.page_cfg() ;
-            /**添加导航*/
+            /**请求数据，数据放在全局变量LukeApp.info中*/
+            this.page_login_getInfo_3() ;
+//            /**添加导航*/
             this.render_add_nav() ;
             /**添加主要工作区*/
             $("#_main").append("<div class='container' id='wm_workspace' style='margin-top:60px;'>main</div>") ;
             /**添加时间*/
             this.render_add_time() ;
-            $("#nav_current_user_name").text(LukeApp.User.CurrentUser.name) ;
-            $("#nav_current_user_role").text(LukeApp.User.CurrentUser.roleName) ;
-            if(LukeApp.User.CurrentCom)
-                $("#nav_current_user_com").text(LukeApp.User.CurrentCom.name) ;
-            if(LukeApp.User.CurrentStore)
-                $("#nav_current_user_store").text(LukeApp.User.CurrentStore.name) ;
+            $("#nav_current_user_name").text("欢迎："+LukeApp.tuken.name) ;
+            if(LukeApp.info.role)
+                $("#nav_current_user_role").text("角色："+LukeApp.info.role) ;
+            if(LukeApp.tuken.comName)
+                $("#nav_current_user_com").text("公司："+LukeApp.tuken.comName) ;
+            if(LukeApp.tuken.storeName)
+                $("#nav_current_user_store").text("站点："+LukeApp.tuken.storeName) ;
 
         },
-        page_cfg:function(){
+        page_login_getInfo_3:function(){
             J.ajax({
                 url:'login/getInfo.act',
                 async:false,
                 success:function(d){
-                    if(d=='操作成功'){
-                        LukeApp.Role = [] ;
-                    }else{
-                        console.log("=============LukeApp.info start==========================") ;
-                        console.dir( LukeApp.info) ;
-                        console.log("=============LukeApp.info end============================") ;
-                        LukeApp.info = d ;
-                    }
-
+                    LukeApp.info = d ;
+                    console.log("=============LukeApp.info start==========================") ;
+                    console.dir( LukeApp.info) ;
+                    console.log("=============LukeApp.info end============================") ;
                 }
             }) ;
         },
@@ -54,7 +60,7 @@ define(function(require, exports, module) {
         },
         /**添加时间*/
         render_add_time:function(){
-            var _now = J.JavaTimeToJsTime(LukeApp.SysTime) ;
+            var _now = J.JavaTimeToJsTime(LukeApp.info.sysTime) ;
             $("#lmt_time").text(J.jsDateToStr(_now)) ;
             function outtime(){
                 _now = new Date(_now.getTime()+1000) ;
@@ -150,9 +156,9 @@ define(function(require, exports, module) {
                     }
                 }
             }) ;
-            $("#user_name").text(LukeApp.User.CurrentUser.name) ;
-            $("#user_loginName").text(LukeApp.User.CurrentUser.loginName) ;
-            $("#user_id").val(LukeApp.User.CurrentUser.id) ;
+
+            $("#user_name").text(LukeApp.tuken.name) ;
+            $("#user_loginName").text(LukeApp.tuken.loginName) ;
         },
         /**头部导航退出登录事件*/
         a_mt_logout_handler:function(e){

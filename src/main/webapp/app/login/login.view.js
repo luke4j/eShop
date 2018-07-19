@@ -3,6 +3,7 @@ define(function(require, exports, module) {
     require("md5") ;
     require("backbone") ;
     require("bootstrap") ;
+    var main_view = require("app/login/main.view") ;
     var LoginView = Backbone.View.extend({
         el: $("body"),
         initialize: function () {
@@ -65,7 +66,7 @@ define(function(require, exports, module) {
                         console.log("=============LukeApp.tuken start==========================") ;
                         console.dir( LukeApp.tuken) ;
                         console.log("=============LukeApp.tuken end============================") ;
-                        J.changeView(me,["app/login/main.view"]) ;
+                        J.changeView(me,"app/login/main.view") ;
                     }
                 }) ;
             }

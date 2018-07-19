@@ -13,7 +13,7 @@ public class TU_Role extends Model {
     @Column(length = 40)
     private String name ;
 
-    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinTable(name="TU_Role_Fun",
             joinColumns = {@JoinColumn(name="roleId")},
             inverseJoinColumns = {@JoinColumn(name="funId")})
