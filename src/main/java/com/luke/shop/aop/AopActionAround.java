@@ -26,6 +26,7 @@ import java.util.Date;
 @Aspect
 public class AopActionAround {
 
+
     private static Logger log = Logger.getLogger(AopActionAround.class);
     private static L l = L.getl(AopActionAround.class) ;
 
@@ -92,7 +93,6 @@ public class AopActionAround {
         if((end-start)>2000){
             log.error("执行方法时间超2秒"+request.getRequestURI());
             log.error("用时："+(end-start)+"毫秒->:"+request.getRequestURI());
-//            Assertion.Error("执行方法时间超2秒"+request.getRequestURI());
         }
         if(actionResult.getData()==null){
             actionResult.setData("操作成功");
