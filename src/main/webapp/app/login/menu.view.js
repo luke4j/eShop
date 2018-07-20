@@ -8,28 +8,32 @@ define(function(require, exports, module) {
             //"click #a_mt_userInfo":"a_mt_userInfo_handler"
         },
         initialize: function () {
-        debugger ;
+            /**页面工作区*/
+            LukeApp.jqWorkSpace = $("#wm_workspace") ;
             this.render() ;
         },
         render:function(){
+
             var $me = this ;
-            LukeApp.jqWorkSpace = $("#wm_workspace") ;
             var menus = $("<div />").addClass('container-fluid').attr("id","main_menu");
             var $groupRow ;
 
-            for(var i in LukeApp.Role){
+            /**动态构建菜单*/
+            for(var i in LukeApp.info.funs){
 
-                var fun = LukeApp.Role[i] ;
+                var fun = LukeApp.info.funs[i] ;
                 if(fun.fid == 0){
                     $groupRow = $("<div >").addClass("row") ;
                     menus.append($groupRow) ;
                     continue ;
                 }
                 if(!fun.viewPath) continue ;
-                var item = menu_item = J.htmlTemp("app/login/menu_item.tmp.html") ;
+                /**加载菜单组件，为后面显示菜单做准备*/
+                var item = J.htmlTemp("app/login/menu_item.tmp.html") ;
                 item = $(item) ;
 
                 item.attr("viewPath",fun.viewPath).attr("viewName",fun.name) ;
+                /**为每一个菜单增加事件*/
                 item.on('click',function(e){
                     requirejs([$(e.currentTarget).attr('viewPath')],function(VClass){
                         $me.undelegateEvents() ;
@@ -45,10 +49,9 @@ define(function(require, exports, module) {
                 }else{
                     $("h3",item).text(fun.name) ;
                 }
-
                 $groupRow.append(item) ;
-
             }
+
             LukeApp.jqWorkSpace.html("") ;
             LukeApp.jqWorkSpace.append(menus) ;
         }

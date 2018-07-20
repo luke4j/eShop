@@ -67,7 +67,7 @@ public class LoginService implements ILoginService {
         Map<String,Object> resultMap = new HashMap<>(10) ;
         TU_User user = this.loginDao.get(TU_User.class,sessionTuken.getId()) ;
         List<TU_Message> listMessage = this.loginDao.getInfo_3_message(user) ;
-        resultMap.put("msgs", LK.ObjIsNullDo(listMessage,"")) ;
+        resultMap.put("msgs", LK.ListObjToListMap(listMessage,new LKMap<String,String>().putEx("reader","reader").putEx("b_isDel","b_isDel").putEx("isRead","isRead"))) ;
 
         if(LK.ObjIsNotNull(user.getRole())){
             resultMap.put("role",LK.getModelId(user.getRole())) ;
@@ -92,7 +92,6 @@ public class LoginService implements ILoginService {
         BeanUtils.copyProperties(user,info);
         info.setBrithday(LK.DateToStr_YMD(user.getBrithday()));
         info.setStoreName(user.getStore().getName());
-
         return info ;
     }
 }

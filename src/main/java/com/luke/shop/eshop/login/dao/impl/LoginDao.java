@@ -36,7 +36,7 @@ public class LoginDao extends BaseDao implements ILoginDao {
 
     @Override
     public List<TU_Message> getInfo_3_message(TU_User user) throws Exception {
-        List<TU_Message> listMessage =  this.find("From TU_Message m where m.reader.id =:id",user) ;
+        List<TU_Message> listMessage =  this.find("From TU_Message m where m.reader.id =:id and isRead=false",user) ;
         return listMessage;
     }
 

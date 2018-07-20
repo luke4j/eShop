@@ -1,5 +1,6 @@
 package com.luke.shop.tool;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luke.shop.model.Model;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -10,6 +11,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import org.springframework.beans.BeanUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -344,9 +346,9 @@ public class LK {
         }
     }
 
+
     /**
      * 生成 json字符串，可以添加其它字符串类型属性
-     *
      * @param o
      * @param m
      * @param cs
@@ -384,7 +386,7 @@ public class LK {
      * @author llg
      */
     public static int DateToAge(String borthDate) {
-        return BirthdayToAge( StrToDate_YMD(borthDate));
+        return BirthdayToAge(StrToDate_YMD(borthDate));
     }
 
 
@@ -414,38 +416,67 @@ public class LK {
     }
 
     /**
-     * 对象转为map
-     * @param obj
+     *
+     * @param list
+     * @param discard       丢弃属性
      * @return
      */
-    public static Map<String, Object> ObjectToMap(Object obj) {
+    public static List<Map<String,Object>> ListObjToListMap(List<?> list,Map<String,String> discard){
+        List<Map<String,Object>> listMap = new ArrayList<Map<String,Object>>(list.size()) ;
+        Map<String,Object> map = null ;
+        for(Object obj :list){
+            map = ObjToMap(obj,discard) ;
+            listMap.add(map) ;
+        }
+        return listMap ;
+    }
+
+    /**
+     * 对象转为map
+     * @param obj
+     * @param discard   丢弃属性
+     * @return
+     */
+    public static Map<String, Object> ObjToMap(Object obj,Map<String,String> discard ) {
         Field[] fields = obj.getClass().getDeclaredFields();
         Map<String, Object> map = new HashMap<String, Object>(fields.length);
+        boolean hasDiscard = discard!=null ;
         try {
             for (Field f : fields) {
+                /**判断属性是否被丢弃*/
+                if(hasDiscard){
+                    if(discard.get(f.getName())!=null)
+                        continue;
+                }
                 f.setAccessible(true);
                 map.put(f.getName(), f.get(obj));
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        ObjectSuperToMap(map,obj.getClass().getSuperclass(),obj);
+        ObjSuperToMap(map,obj.getClass().getSuperclass(),obj,discard);
         return map;
     }
-    private static void ObjectSuperToMap(Map<String,Object> map,Class clazz,Object obj){
+    private static void ObjSuperToMap(Map<String,Object> map,Class clazz,Object obj,Map<String,String> discard){
         if(clazz.equals(Object.class))
             return ;
         else{
             Field[] fields = clazz.getDeclaredFields() ;
             try{
+                boolean hasDiscard = discard!=null ;
                 for(Field f: fields){
+                    /**判断属性是否被丢弃*/
+                    if(hasDiscard){
+                        if(discard.get(f.getName())!=null)
+                            continue;
+                    }
                     f.setAccessible(true);
                     map.put(f.getName(),f.get(obj)) ;
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
-            ObjectSuperToMap(map,clazz.getSuperclass(),obj);
+            ObjSuperToMap(map, clazz.getSuperclass(), obj,discard);
         }
     }
 

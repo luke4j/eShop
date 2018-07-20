@@ -99,6 +99,16 @@ public interface ILoginAction {
                      @ApiParam(value = logout, required = true)  @Valid
                              VOEmpty vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
+    /**
+     * 登录查询所有公司
+     * @param request
+     * @param response
+     * @param vo
+     * @param bindingResult
+     * @param actionResult
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = findCom)
     @RequestMapping(path = "findCom.act",method= RequestMethod.POST)
     @ResponseBody
@@ -107,13 +117,33 @@ public interface ILoginAction {
                             VOEmpty vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
 
+    /**
+     * 导航条修改密码
+     * @param request
+     * @param response
+     * @param vo
+     * @param bindingResult
+     * @param actionResult
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = editPassword)
     @RequestMapping(path = "editPassword.act",method= RequestMethod.POST)
     @ResponseBody
     ActionResult editPassword_6(HttpServletRequest request, HttpServletResponse response,
-                                @ApiParam(value = editPassword, required = true)  @Valid
+                                @ApiParam(value = editPassword, required = true)  @Valid @RequestBody
                                         VOLoginEditPassword vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
+    /**
+     * 导航条用户信息显示
+     * @param request
+     * @param response
+     * @param vo
+     * @param bindingResult
+     * @param actionResult
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = getUserInfo)
     @RequestMapping(path = "getUserInfo.act",method= RequestMethod.POST)
     @ResponseBody

@@ -33,7 +33,6 @@ public class TU_Message extends Model{
 
     private Boolean isRead = false ;
 
-
     public String getMsg() {
         return msg;
     }

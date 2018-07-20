@@ -252,9 +252,11 @@ Caused by: com.fasterxml.jackson.databind.JsonMappingException: Infinite recursi
 
 这是因为jackson在对hibernate映射类做转化是，所有的属性都会调用，如果是多对多，关系A方引用B方，B方也会引用A方，这个就会引起死循环调用，就会报上面的异常
 
-> 解决方法，映射类pojo中，所有非基本属性都需要@JsonIgnore这个标注，表示jackson会忽略此属性不去转化
+> 解决方法1，映射类pojo中，所有非基本属性都需要@JsonIgnore这个标注，表示jackson会忽略此属性不去转化
 >
 > 因为是延时加载，所以在返回Action之前，所有需要的数据都需要调用一次
+>
+> 解决方法2，这个异常是发生在Action方法完成之后，所以在Action方法中可以调用LK.ObjToMap  或LK.ListObjToListMap方法把对象转成Map，在此期间可以丢弃一些不需要的属性
 
 
 
@@ -794,17 +796,19 @@ define(function(require, exports, module) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 ***
+
+### 商品属性
+
+#### http 对外接口 action
+
+@RequestMapping("goodsTree")
+
+##### findNode_1 查询节点
+
+##### addNode_2 添加节点
+
+
 
 
 

@@ -3,6 +3,7 @@ define(function(require, exports, module) {
     require("J") ;
     require("backbone") ;
     require("bootstrap") ;
+    var MenuView = require("app/login/menu.view") ;
     var MainView = Backbone.View.extend({
         el: $("body"),
         events: {
@@ -39,8 +40,11 @@ define(function(require, exports, module) {
                 $("#nav_current_user_com").text("公司："+LukeApp.tuken.comName) ;
             if(LukeApp.tuken.storeName)
                 $("#nav_current_user_store").text("站点："+LukeApp.tuken.storeName) ;
+            /**导航条显示用户消息,这是*/
+            this.page_login_user_msgs() ;
 
         },
+        /**同步获取用户权限，用户消息，系统时间*/
         page_login_getInfo_3:function(){
             J.ajax({
                 url:'login/getInfo.act',
@@ -53,6 +57,7 @@ define(function(require, exports, module) {
                 }
             }) ;
         },
+
         /**添加主导航条*/
         render_add_nav:function(){
             var main_nav = J.htmlTemp('app/login/main.nav.html') ;
@@ -76,7 +81,19 @@ define(function(require, exports, module) {
         },
         /**返回主页*/
         main_home_btn_handler:function(e){
-            J.changeView(J._CurrentWorkSpaceView,"app/menu/menu.view") ;
+            J.changeView(J._CurrentWorkSpaceView,"app/login/menu.view") ;
+        },
+        /**导航条显示用户消息*/
+        page_login_user_msgs:function(){
+            /**消息数理*/
+            var jqMsgNum = $("#main_nav_user_info_num") ;
+            jqMsgNum.text(LukeApp.info.msgs.length) ;
+            var jqMsgUl = $("#main_nav_user_info") ;
+            jqMsgUl.html("") ;
+            for(var i in LukeApp.info.msgs){
+                var msg = LukeApp.info.msgs[i] ;
+                jqMsgUl.append("<li><a msgId='"+msg.id+"' msg='"+msg.msg+"'><span class='margin_right_5 glyphicon glyphicon-star-empty'>"+msg.title+"</span></a></li>") ;
+            }
         },
         /**导航条，用户信息查看*/
         main_nav_user_info__a_handler:function(e){
@@ -84,7 +101,7 @@ define(function(require, exports, module) {
             var msgId = $("<input />").attr('type','hidden').val(jq_a.attr('msgId')) ;
             var jform = J.jForm({fid:'_alert_hideForm',fname:'_alert_hideForm',els:[msgId]}) ;
             var alertCount = jq_a.attr('msg')+"<hr>"
-                                + J.jsDateToStr(J.JavaTimeToJsTime(jq_a.attr('wt')) )
+                                //+ J.jsDateToStr(J.JavaTimeToJsTime(jq_a.attr('wt')) )
                                 +jform.html();
             J.alert({
                 title:jq_a.text(),

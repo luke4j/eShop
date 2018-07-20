@@ -326,10 +326,16 @@ J.changeView = function(view,url){
     }
     try{
         var Class = requirejs(url);
-        if(Class)
-            new Class() ;
+        $(function(){
+            if(Class)
+                new Class() ;
+            else{
+                J.alert("请检查文件："+url) ;
+            }
+        }) ;
     }catch(e){
-       J.alert("找不到文件"+url) ;
+        console.dir(e) ;
+       J.alert("请检查文件："+url) ;
     }
 
 } ;
@@ -349,8 +355,63 @@ J.jForm = function(cfg){
     jform.hide() ;
     return jform ;
 } ;
+/**
+ * @param bootstrapTableSetup{url:'',columns:[{field:'',title:'',visible:''...}]}
+ * http://bootstrap-table.wenzhixin.net.cn/documentation/
+ * @param id
+ * @param bootstrapTableSetup
+ */
+J.bpTable = function(tableId,bootstrapTableSetup){
+    var defaults = {
+        showSelectTitle:true,       //show the title of column with 'radio' or 'singleSelect' 'checkbox' option.
+            striped:true,               //设置为条文行
+            search:true,                //显示页面查询
+            searchOnEnterKey:true,      //回车执行查询
+            showColumns:true,           //显示所有已加载的数据
+            showPaginationSwitch:true,
+            showRefresh:true,           //显示刷新，此功能重新访问后台
+            showToggle:true,            //显示为行
+            pagination:true,            //显示分页
+            locale:'zh-CN',
+            paginationLoop:true,       //enable pagination continuous loop mode.
+            totalField:'total',
+            dataField:'data',
+            method:'post',
+            ajaxOptions:{
+            contentType: 'application/json', //很重要
+                traditional: true
+        },
+        rowStyle:function(row, index){
+            if(index%2==0){
+                return {classes:"info"} ;
+            }else{
+                return {} ;
+            }
+        },
+        responseHandler:function(res){
+            if(res.success){
+                return res ;
+            }else{
+                J.alert({
+                    title:'异常问题',
+                    msg: res.errorMsg,
+                    btns:'YN',
+                    okFunction:function(e,$alert1){
+                        if(res.errorMsg.indexOf('请登录')>=0){
+                            window.location.href = J.contextPath ;
+                        }
+                    }
+                }) ;
+                return res ;
+            }
+        }
+    } ;
 
+    var setup = $.extend({},defaults,bootstrapTableSetup) ;
+    setup.url = J.contextPath+setup.url ;
+    $("#"+tableId).bootstrapTable(setup) ;
 
+} ;
 /**
  *
  * @param id
@@ -381,8 +442,8 @@ J.tableCfg = function(id,tableCfg,columns,columnCfg){
         }
     }) ;
     var myTableCfg = {
-        showSelectTitle:false,
-        striped:true,
+        showSelectTitle:true,       //show the title of column with 'radio' or 'singleSelect' 'checkbox' option.
+        striped:true,               //设置为条文行
         search:true,                //显示页面查询
         searchOnEnterKey:true,      //回车执行查询
         showColumns:true,           //显示所有已加载的数据
@@ -391,7 +452,7 @@ J.tableCfg = function(id,tableCfg,columns,columnCfg){
         showToggle:true,            //显示为行
         pagination:true,            //显示分页
         locale:'zh-CN',
-        //paginationLoop:true,
+        paginationLoop:true,       //enable pagination continuous loop mode.
         totalField:'total',
         dataField:'data',
         method:'post',
@@ -438,6 +499,9 @@ J.tableCfg = function(id,tableCfg,columns,columnCfg){
 J.SelectOptions = function(type){
     if(type=='空'){
         return [{val:'',text:''}] ;
+    }
+    if(type=='商品属性分组'){
+        return [{val:'',text:''},{val:'品类',text:'品类'},{val:"品牌",text:'品牌'},{val:"型号",text:'型号'},{val:"颜色",text:'颜色'}] ;
     }
     if(type=='是否'){
         return [{val:'',text:''},{val:true,text:'是'},{val:false,text:'否'}] ;
