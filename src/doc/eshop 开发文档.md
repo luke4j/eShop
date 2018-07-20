@@ -244,52 +244,17 @@ private LoginTuken.UserType userType = LoginTuken.UserType.normal ;
 
 #### 异常
 
-##### Could not write content: Infinite recursion (StackOverflowError)
+##### Json 需要忽略属性    
+
+Could not write content: Infinite recursion (StackOverflowError)
 
 Caused by: com.fasterxml.jackson.databind.JsonMappingException: Infinite recursion (StackOverflowError) 
 
-在直接返回有多对多属性对象时出现此异常
+这是因为jackson在对hibernate映射类做转化是，所有的属性都会调用，如果是多对多，关系A方引用B方，B方也会引用A方，这个就会引起死循环调用，就会报上面的异常
 
-角色类TU_Role
-
-```java
-@ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
-@JoinTable(name="TU_Role_Fun",
-        joinColumns = {@JoinColumn(name="roleId")},
-        inverseJoinColumns = {@JoinColumn(name="funId")})
-private List<TU_Fun> listFun ;
-```
-
-权限类 TU_Fun
-
-```java
-@ManyToMany(mappedBy = "listFun")
-List<TU_Role> listRole ;
-```
-
-用户类 TU_User
-
-```java
-@ManyToOne
-@JoinColumn(name="roleId")
-private TU_Role role ;
-```
-
-调用      loginDao.get(TU_User.class,sessionTuken.getId()) ; 出现异常
-
-org.hibernate.collection.internal.PersistentBag[0]->com.luke.shop.model.TU_Fun["listRole"]->org.hibernate.collection.internal.PersistentBag[0]->com.luke.shop.model.TU_Role["listFun"]->....
-
-由上面可以想到这是权限调用角色，角色对调权限，没完没了死循环了。。。
-
-网上找到解决办法
-
-[参考网址](https://blog.csdn.net/sinat_28454173/article/details/52315581)
-
-```
-在类或基类上添加 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
-```
-
-
+> 解决方法，映射类pojo中，所有非基本属性都需要@JsonIgnore这个标注，表示jackson会忽略此属性不去转化
+>
+> 因为是延时加载，所以在返回Action之前，所有需要的数据都需要调用一次
 
 
 
@@ -344,6 +309,12 @@ public class TestBaseDao {
 
 ```mysql
 -- mysqldump -u root -proot -t eshop2 >d.sql  -- -t只导出表中数据
+```
+
+mysql 8 jdbc连接字符又需要增加新的属性 serverTimezone
+
+```
+d1.url=jdbc:mysql://127.0.0.1:3306/eshop2?useSSL=false&serverTimezone=UTC 
 ```
 
 ***

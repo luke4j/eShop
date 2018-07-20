@@ -24,9 +24,10 @@ public interface ILoginAction {
     String gotoLogin = "去登录页面" ;
     String login = "用户登录" ;
     String getInfo = "获取登录信息" ;
-    String logout = "用户登出" ;
+    String logout = "主界面导航条->用户登出" ;
     String findCom = "查询所有公司，为登录页面公司下拉组件提供数据" ;
-    String editPassword = "登录界面修改个人密码" ;
+    String editPassword = "主界面导航条->修改密码" ;
+    String getUserInfo =  "主界面导航条->用户信息" ;
 
 
     /**
@@ -112,4 +113,11 @@ public interface ILoginAction {
     ActionResult editPassword_6(HttpServletRequest request, HttpServletResponse response,
                                 @ApiParam(value = editPassword, required = true)  @Valid
                                         VOLoginEditPassword vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+
+    @ApiOperation(value = getUserInfo)
+    @RequestMapping(path = "getUserInfo.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult getUserInfo_7(HttpServletRequest request, HttpServletResponse response,
+                                @ApiParam(value = getUserInfo, required = true)  @Valid
+                                VOEmpty vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 }

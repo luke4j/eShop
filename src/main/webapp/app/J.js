@@ -144,6 +144,7 @@ J.ajax = function(settings){
             J.alert("url is "+param.url+"\t"+XMLHttpRequest.status+":"+errorThrown) ;
         },
         success: function(res, status, xhr) {
+            console.dir(res) ;
             if(settings.isMsg){
                 J.alert(res.data) ;
             }

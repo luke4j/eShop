@@ -4,6 +4,7 @@ import com.luke.shop.eshop.login.dao.ILoginDao;
 import com.luke.shop.eshop.login.service.ILoginService;
 import com.luke.shop.eshop.login.vo.VOLogin;
 import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
+import com.luke.shop.eshop.login.vo.VOLoginUserInfo;
 import com.luke.shop.model.TU_Com;
 import com.luke.shop.model.TU_Message;
 import com.luke.shop.model.TU_Role;
@@ -13,6 +14,7 @@ import com.luke.shop.tool.LK;
 import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOIdName;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -53,7 +55,7 @@ public class LoginService implements ILoginService {
         Assertion.NotEmpty(tuken.getStoreId(),"用户没有分配站点，不能登录");
 
         TU_Com com = this.loginDao.get(TU_Com.class,tuken.getComId()) ;
-        Assertion.True(com.getJy(),"公司已被禁用");
+        Assertion.True(com.getIsJy(),"公司已被禁用");
 
         TU_User user = this.loginDao.get(TU_User.class,tuken.getId()) ;
         Assertion.True(user.getB_isDel(),"用户已被禁用");
@@ -68,11 +70,12 @@ public class LoginService implements ILoginService {
         resultMap.put("msgs", LK.ObjIsNullDo(listMessage,"")) ;
 
         if(LK.ObjIsNotNull(user.getRole())){
-            resultMap.put("role",user.getRole().getName()) ;
+            resultMap.put("role",LK.getModelId(user.getRole())) ;
         }
 
-        if(LK.ObjIsNotNull(user.getRole()))
-            resultMap.put("funs",LK.ObjIsNullDo(user.getRole().getListFun(),""));
+        if(LK.ObjIsNotNull(user.getRole())){
+            resultMap.put("funs",LK.getModelId(user.getRole().getListFun()));
+        }
         resultMap.put("sysTime",new Date().getTime()) ;
         return resultMap;
     }
@@ -80,5 +83,16 @@ public class LoginService implements ILoginService {
     @Override
     public void editPassword_6(LoginTuken sessionTuken, VOLoginEditPassword vo) throws Exception {
         this.loginDao.editPassword_6(vo,sessionTuken.getId()) ;
+    }
+
+    @Override
+    public VOLoginUserInfo getUserInfo_7(LoginTuken sessionTuken) throws Exception {
+        TU_User user =  this.loginDao.get(TU_User.class,sessionTuken.getId());
+        VOLoginUserInfo info = new VOLoginUserInfo() ;
+        BeanUtils.copyProperties(user,info);
+        info.setBrithday(LK.DateToStr_YMD(user.getBrithday()));
+        info.setStoreName(user.getStore().getName());
+
+        return info ;
     }
 }

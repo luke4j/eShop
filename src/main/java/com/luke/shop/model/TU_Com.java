@@ -20,16 +20,7 @@ public class TU_Com  extends Model{
         _end
     }
 
-//    @Id
-//    @TableGenerator(name = "tu_com_seq",       //sequence name
-//            initialValue=Static.initialValue,
-//            table = "seq_table",              //sequence table
-//            pkColumnName = "seq_name",        //在表中对对应的sequence name 列
-//            pkColumnValue = "tu_com_seq",      //在表中对对应的sequence name 值
-//            valueColumnName = "num",          //值
-//            allocationSize = Static.allocationSize)
-//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tu_com_seq")
-//    private Long id;
+
 
     @Column(length = 100,nullable = false,unique = true)
     private String name ;
@@ -120,12 +111,12 @@ public class TU_Com  extends Model{
         this.adminPassword = adminPassword;
     }
 
-    public Boolean getJy() {
+    public Boolean getIsJy() {
         return isJy;
     }
 
-    public void setJy(Boolean jy) {
-        isJy = jy;
+    public void setIsJy(Boolean isJy) {
+        this.isJy = isJy;
     }
 
     public Date getMaxUseDay() {
@@ -144,12 +135,12 @@ public class TU_Com  extends Model{
         this.yueJieRQ = yueJieRQ;
     }
 
-    public Boolean getYueJie() {
+    public Boolean getIsYueJie() {
         return isYueJie;
     }
 
-    public void setYueJie(Boolean yueJie) {
-        isYueJie = yueJie;
+    public void setIsYueJie(Boolean isYueJie) {
+        this.isYueJie = isYueJie;
     }
 
     public Integer getWebNum() {

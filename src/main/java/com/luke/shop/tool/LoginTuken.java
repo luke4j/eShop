@@ -51,9 +51,9 @@ public class LoginTuken {
         return (LoginTuken)request.getSession().getAttribute(Tuken);
     }
 
-
-
-
+    public static void removeTuken(HttpServletRequest request) {
+        request.getSession().removeAttribute(Tuken);
+    }
 
 
     public enum UserType {

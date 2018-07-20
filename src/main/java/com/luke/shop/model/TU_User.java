@@ -1,5 +1,6 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luke.shop.tool.LoginTuken;
 
 import javax.persistence.*;
@@ -55,86 +56,21 @@ public class TU_User extends Model{
 
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="roleId")
+    @JsonIgnore
     private TU_Role role ;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="comId")
+    @JsonIgnore
     private TU_Com com ;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="storeId")
+    @JsonIgnore
     private TU_Store store ;
 
-
-    public TU_Role getRole() {
-        return role;
-    }
-
-    public void setRole(TU_Role role) {
-        this.role = role;
-    }
-
-    public TU_Com getCom() {
-        return com;
-    }
-
-    public void setCom(TU_Com com) {
-        this.com = com;
-    }
-
-    public TU_Store getStore() {
-        return store;
-    }
-
-    public void setStore(TU_Store store) {
-        this.store = store;
-    }
-
-    public LoginTuken.UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(LoginTuken.UserType userType) {
-        this.userType = userType;
-    }
-
-
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddr() {
-        return addr;
-    }
-
-    public void setAddr(String addr) {
-        this.addr = addr;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    @Override
-    public Long getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id ;
-    }
 
     public String getName() {
         return name;
@@ -160,6 +96,14 @@ public class TU_User extends Model{
         this.password = password;
     }
 
+    public LoginTuken.UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(LoginTuken.UserType userType) {
+        this.userType = userType;
+    }
+
     public Date getBrithday() {
         return brithday;
     }
@@ -182,5 +126,53 @@ public class TU_User extends Model{
 
     public void setXue_li(String xue_li) {
         this.xue_li = xue_li;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public TU_Role getRole() {
+        return role;
+    }
+
+    public void setRole(TU_Role role) {
+        this.role = role;
+    }
+
+    public TU_Com getCom() {
+        return com;
+    }
+
+    public void setCom(TU_Com com) {
+        this.com = com;
+    }
+
+    public TU_Store getStore() {
+        return store;
+    }
+
+    public void setStore(TU_Store store) {
+        this.store = store;
     }
 }

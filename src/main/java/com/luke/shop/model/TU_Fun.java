@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class TU_Fun extends Model{
     private String studyPath ;
 
     @ManyToMany(mappedBy = "listFun")
+    @JsonIgnore
     List<TU_Role> listRole ;
 
     public String getViewPath() {

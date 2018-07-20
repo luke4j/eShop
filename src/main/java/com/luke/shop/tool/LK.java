@@ -1,5 +1,6 @@
 package com.luke.shop.tool;
 
+import com.luke.shop.model.Model;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -7,12 +8,14 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +24,42 @@ import java.util.regex.Pattern;
  * 工具类
  */
 public class LK {
+
+    /**
+     * hibernate 延时加载这个设置很烦人，所以才有这个方法 <br>
+     *     listT 为 null返回null
+     * @param listT
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> getModelId(List<T> listT){
+
+        if(listT==null)
+            return null ;
+        listT.forEach((T t)->{
+            if(t instanceof Model){
+                Model m = (Model)t ;
+                m.getId() ;
+            }
+        });
+        return listT ;
+    }
+
+    /**
+     *  hibernate 延时加载这个设置很烦人，所以才有这个方法<br>
+     * obj为null返回null
+     * @param obj
+     * @param <T>
+     * @return
+     */
+    public static <T> T getModelId(T obj){
+        if(obj==null) return null ;
+        if(obj instanceof Model){
+            Model m = (Model)obj ;
+            m.getId() ;
+        }
+        return obj ;
+    }
 
     public static String uuid(){
         String uuid = UUID.randomUUID().toString();

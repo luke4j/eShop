@@ -1,7 +1,7 @@
 package com.luke.shop.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,7 +11,8 @@ import java.util.Date;
  */
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @MappedSuperclass
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public abstract class Model  implements java.io.Serializable{
 
     @Id
@@ -21,8 +22,11 @@ public abstract class Model  implements java.io.Serializable{
 
 
     @Column(nullable = false,columnDefinition = "Boolean default false")
+    @JsonIgnore
     private Boolean b_isDel = false;
+
     @Column(nullable = false)
+    @JsonIgnore
     private Date b_wtime = new Date() ;
 
     public Long getId() {

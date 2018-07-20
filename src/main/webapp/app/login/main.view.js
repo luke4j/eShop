@@ -34,7 +34,7 @@ define(function(require, exports, module) {
             this.render_add_time() ;
             $("#nav_current_user_name").text("欢迎："+LukeApp.tuken.name) ;
             if(LukeApp.info.role)
-                $("#nav_current_user_role").text("角色："+LukeApp.info.role) ;
+                $("#nav_current_user_role").text("角色："+LukeApp.info.role.name) ;
             if(LukeApp.tuken.comName)
                 $("#nav_current_user_com").text("公司："+LukeApp.tuken.comName) ;
             if(LukeApp.tuken.storeName)
@@ -114,7 +114,7 @@ define(function(require, exports, module) {
                 msg:$(userinfo)
             }) ;
             J.ajax({
-                url:'login/findLoginUserInfo.act',
+                url:'login/getUserInfo.act',
                 success:function(d){
                     for(var n in d){
                         /**定义的页面元素名与返回数据后台类的属性名有规则对应关系*/
@@ -152,7 +152,7 @@ define(function(require, exports, module) {
                     if(isValid){
                         formData.password = J.md5(formData.password) ;
                         formData.password2 = J.md5(formData.password2) ;
-                        J.ajax({url:'login/updateUserPassword',isMsg:true,data:formData}) ;
+                        J.ajax({url:'login/editPassword',isMsg:true,data:formData}) ;
                     }
                 }
             }) ;

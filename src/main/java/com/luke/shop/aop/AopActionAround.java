@@ -26,7 +26,6 @@ import java.util.Date;
 @Aspect
 public class AopActionAround {
 
-
     private static Logger log = Logger.getLogger(AopActionAround.class);
     private static L l = L.getl(AopActionAround.class) ;
 

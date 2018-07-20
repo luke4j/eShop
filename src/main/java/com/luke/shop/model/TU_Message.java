@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -24,20 +26,13 @@ public class TU_Message extends Model{
     @Column(length = 12,nullable = false)
     private CType c_type = CType.GeRen ;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "readerId",nullable = false)
+    @JsonIgnore
     private TU_User reader ;
 
     private Boolean isRead = false ;
 
-
-    public Boolean getRead() {
-        return isRead;
-    }
-
-    public void setRead(Boolean read) {
-        isRead = read;
-    }
 
     public String getMsg() {
         return msg;
@@ -69,5 +64,13 @@ public class TU_Message extends Model{
 
     public void setReader(TU_User reader) {
         this.reader = reader;
+    }
+
+    public Boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 }

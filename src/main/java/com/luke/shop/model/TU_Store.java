@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -44,8 +46,9 @@ public class TU_Store extends Model{
     /**父级Id*/
     private Long fid = 0l ;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="comId")
+    @JsonIgnore
     private TU_Com com ;
 
 
@@ -97,28 +100,28 @@ public class TU_Store extends Model{
         this.phote = phote;
     }
 
-    public Boolean getCenter() {
+    public Boolean getIsCenter() {
         return isCenter;
     }
 
-    public void setCenter(Boolean center) {
-        isCenter = center;
+    public void setIsCenter(Boolean isCenter) {
+        this.isCenter = isCenter;
     }
 
-    public Boolean getZhiYing() {
+    public Boolean getIsZhiYing() {
         return isZhiYing;
     }
 
-    public void setZhiYing(Boolean zhiYing) {
-        isZhiYing = zhiYing;
+    public void setIsZhiYing(Boolean isZhiYing) {
+        this.isZhiYing = isZhiYing;
     }
 
-    public Boolean getZhanDianJia() {
+    public Boolean getIsZhanDianJia() {
         return isZhanDianJia;
     }
 
-    public void setZhanDianJia(Boolean zhanDianJia) {
-        isZhanDianJia = zhanDianJia;
+    public void setIsZhanDianJia(Boolean isZhanDianJia) {
+        this.isZhanDianJia = isZhanDianJia;
     }
 
     public Long getFid() {

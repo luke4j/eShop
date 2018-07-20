@@ -6,11 +6,9 @@ import com.luke.shop.eshop.login.action.ILoginAction;
 import com.luke.shop.eshop.login.service.ILoginService;
 import com.luke.shop.eshop.login.vo.VOLogin;
 import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
-import com.luke.shop.model.TU_Com;
-import com.luke.shop.model.TU_Store;
+import com.luke.shop.eshop.login.vo.VOLoginUserInfo;
 import com.luke.shop.model.TU_User;
 import com.luke.shop.tool.ActionResult;
-import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOEmpty;
 import com.luke.shop.tool.vo.VOIdName;
@@ -65,7 +63,9 @@ public class LoginAction extends BaseAction implements ILoginAction {
     public ActionResult logout_4(HttpServletRequest request, HttpServletResponse response,
                                  @ApiParam(value = logout, required = true) @RequestBody @Valid
                                  VOEmpty vo, BindingResult bindingResult, ActionResult actionResult) throws Exception {
-        return null;
+        actionResult.setDoing("退出登录");
+        LoginTuken.removeTuken(request) ;
+        return actionResult;
     }
 
     @Override
@@ -86,6 +86,16 @@ public class LoginAction extends BaseAction implements ILoginAction {
                                        BindingResult bindingResult, ActionResult actionResult) throws Exception {
         actionResult.setDoing(editPassword);
         this.loginService.editPassword_6(getSessionTuken(request),vo) ;
+    return actionResult;
+}
+
+    @Override
+    public ActionResult getUserInfo_7(HttpServletRequest request, HttpServletResponse response,
+                                      @ApiParam(value = getUserInfo, required = true) @Valid
+                                      VOEmpty vo, BindingResult bindingResult, ActionResult actionResult) throws Exception {
+        actionResult.setDoing(getUserInfo);
+        VOLoginUserInfo user = this.loginService.getUserInfo_7(getSessionTuken(request)) ;
+        actionResult.setData(user);
         return actionResult;
     }
 }
