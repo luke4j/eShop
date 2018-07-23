@@ -339,7 +339,7 @@ require([]，callback)以数组为参数的，还可使用回调函数来执行�
 
 
 
-用require(url)以url为参数，那么回一个backbone对象，这个对象加载完成后被加载文件中返回的backbone对象，这个对象只需要new一下，就可以执行，但是这个方法是异步的，也就是说你不能直接在require(url)的下一句就直接new ，因为这个时候还没有加载完
+用require(url)以url为参数，那么反回一个backbone对象，这个对象加载完成后被加载文件中返回的backbone对象，这个对象只需要new一下，就可以执行，但是这个方法是异步的，也就是说你不能直接在require(url)的下一句就直接new ，因为这个时候还没有加载完
 
 
 
