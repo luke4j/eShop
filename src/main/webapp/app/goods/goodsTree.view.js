@@ -8,25 +8,29 @@ define(function(require, exports, module) {
     var View = Backbone.View.extend({
         el: $("body"),
         events: {
-            /**保存信息*/
+            /**保存信息，与后台交互*/
             "click #btn_goodsTreeSubmit": "btn_goodsTreeSubmit_click_handler",
-            'change #c_group':'c_group_change_handler'
+            /**页面事件，不与后台交互*/
+            "click #btn_add_kind":"btn_add_kind_click_handler"
         },
         initialize: function () {
             this.render();
-            $("#c_group",$("#f_goodstree_add")).val("品类") ;
         },
         render: function () {
-            /**工作区添加一个tb_goodsTree的table元素*/
-            $("<table id='tb_goodsTree'>").appendTo($("#wm_workspace")) ;
-            this.treeTable() ;
-            this.addForm() ;
+            J.render(function(view,$div_Row){
+                /**工作区添加一个tb_goodsTree的table元素*/
+                $("<table id='tb_goodsTree'>").appendTo( $div_Row) ;
+                view.treeTable($div_Row) ;
+                view.addForm($div_Row) ;
+
+            },this) ;
         },
         /**添加保存功能组件 */
-        addForm:function(){
+        addForm:function( $div_Row){
             var $jForm = J.createForm("f_goodstree_add",'form-horizontal') ;
             $jForm.fieldset.append(J.formElement({id:'fid',name:'fid',text:'父结点id',type:'hidden'}))
                 .append(J.formElement({id:'c_group',name:'c_group',text:'分组',type:'select',options: J.SelectOptions('商品属性分组')}))
+                .append(J.formElement({id:'fname',name:'fname',text:'上级名称'}))
                 .append(J.formElement({id:'text',name:'text',text:'名称'}))
                 .append(J.formElement({id:'a1',name:'a1',text:'是否度数',type:'select',options: J.SelectOptions("是否")}))
                 .append(J.formElement({id:'a2',name:'a2',text:'是否实物',type:'select',options: J.SelectOptions("是否")}))
@@ -35,66 +39,115 @@ define(function(require, exports, module) {
                 .append(J.formElement({id:'a5',name:'a5',text:'级别',type:'hidden'}))
                 .append(J.formElement({id:'btn_goodsTreeSubmit',name:'btn_goodsTreeSubmit',text: S.btn_add,type:'btn'}))
             ;
-            $("#wm_workspace").append($("<div class='div_bian_kuang'>").append($jForm.form)) ;
+            $div_Row.append($("<div class='div_bian_kuang'>").append($jForm.form)) ;
             $("#c_group","#f_goodstree_add").attr('disabled',"disabled") ;
+            $("#fname","#f_goodstree_add").attr('disabled',"disabled") ;
+            var $f_goodstree_add = $("#f_goodstree_add") ;
+            $("#c_group",$f_goodstree_add).val("品类") ;
         },
         /**添加表格*/
-        treeTable:function(){
+        treeTable:function( $div_Row){
+            var me = this ;
             var bpts = {
                 url:'goodsTree/findNode.act',
                 height:$(window).height()-450 ,
-                //showSelectTitle:false,
-                idField: 'id',
-                treeShowField: 'text',
-                parentIdField: 'pid',
+                pagination:false,
+                showSelectTitle:true,
+                treeEnable:true,
+                idField: 'id',        //id不解释
+                treeShowField: 'text',//感觉没用的属性，但他妈的有用，不过写什么都行(限下面的列 field 值 )
+                parentIdField: 'fid', //数据中的父id
                 onLoadSuccess: function(data) {
-                    console.log('load');
                     $("#tb_goodsTree").treegrid({
                         treeColumn: 1,
                         onChange: function() {
                             $("#tb_goodsTree").bootstrapTable('resetWidth');
                         }
                     });
+                    $("#tb_goodsTree").treegrid('collapseAll') ;
                 },
-                columns: [
-                    {
-                        field: 'ck',
-                        checkbox: true
-                    },
-                    {
+                columns: [{
+                        field: 'c_group',
+                        title: '分组',
+                        width:'33%'
+                     },{
                         field: 'text',
-                        title: '名称'
+                        title: '名称',
+                        width:'33%'
                     },{
                         field: 'id',
                         title: '操作',
+                        width:'33%',
+                        events:{
+                            "click .btn_add":function(jqEvent,id,data,rowNum){
+                                me.btn_table_add_click_handler(jqEvent,id,data,rowNum) ;
+                            },
+                            "click .btn_edit":function(a,b,c,d){
+                                console.dir(a) ;
+                                console.dir(b) ;
+                                console.dir(c) ;
+                                console.dir(d) ;
+                            },
+                            "click .btn_del":function(arg){
+
+                            }
+                        },
                         formatter:function(){
-                            return ['修改','删除'].join('') ;
+                            return ['<button  class=" btn btn_add" name="btn_add">添加</button>','<button  class=" btn btn_edit" name="btn_edit">修改</button>','<button class=" btn btn_del" name="btn_del">删除</button>'].join('') ;
                         }
                     }
                 ]
             } ;
+            var $toolbar = $("<div id='treeToolbar'>") ;
+            $toolbar.append("<button class='btn' id='btn_add_kind'>添加品类</button>") ;
+            $toolbar.appendTo( $div_Row) ;
+            bpts.toolbar = $toolbar ;
             J.bpTable("tb_goodsTree",bpts) ;
         },
         // ------------------------------------事件代码区-----------------------------------------
-        c_group_change_handler:function(e){
-            var $selectGroup = $(e.currentTarget) ;
-            if($selectGroup.val()=='品类'){
-                $("#a1",$("#f_goodstree_add")).parent().parent().fadeIn("fast") ;
-                $("#a2",$("#f_goodstree_add")).parent().parent().fadeIn("fast") ;
-                $("#a3",$("#f_goodstree_add")).parent().parent().fadeIn("fast") ;
-            }else{
-                $("#a1",$("#f_goodstree_add")).parent().parent().fadeOut("fast") ;
-                $("#a1",$("#f_goodstree_add")).val('') ;
-                $("#a2",$("#f_goodstree_add")).parent().parent().fadeOut("fast") ;
-                $("#a2",$("#f_goodstree_add")).val('') ;
-                $("#a3",$("#f_goodstree_add")).parent().parent().fadeOut("fast") ;
-                $("#a3",$("#f_goodstree_add")).val('') ;
-            }
+        /**页面中添加品类按钮事件*/
+        btn_add_kind_click_handler:function(e){
+            var $f_goodstree_add = $("#f_goodstree_add") ;
+            $("#c_group",$f_goodstree_add).val("品类") ;
+            $("#a1",$f_goodstree_add).parent().parent().fadeIn("fast") ;
+            $("#a2",$f_goodstree_add).parent().parent().fadeIn("fast") ;
+            $("#a3",$f_goodstree_add).parent().parent().fadeIn("fast") ;
+            $("#fname",$f_goodstree_add).val('');
         },
+
+        /**
+         * 表格中添加事件
+         * @param jqEvent
+         * @param id
+         * @param data
+         * @param rowNum
+         */
+        btn_table_add_click_handler:function(jqEvent,id,data,rowNum){
+            var $f_goodstree_add = $("#f_goodstree_add") ;
+            $("#a1",$f_goodstree_add).parent().parent().fadeOut("fast") ;
+            $("#a2",$f_goodstree_add).parent().parent().fadeOut("fast") ;
+            $("#a3",$f_goodstree_add).parent().parent().fadeOut("fast") ;
+            $("#fid",$f_goodstree_add).val(data.id) ;
+            if(data.c_group=='品类'){
+                $("#c_group",$f_goodstree_add).val("品牌") ;
+                $("#fname",$f_goodstree_add).val("品类-"+data.text) ;
+            }else if(data.c_group=='品牌'){
+                $("#c_group",$f_goodstree_add).val("型号") ;
+                $("#fname",$f_goodstree_add).val("品牌-"+data.text) ;
+            }else if(data.c_group=='型号'){
+                $("#c_group",$f_goodstree_add).val("颜色") ;
+                $("#fname",$f_goodstree_add).val("型号-"+data.text) ;
+            }else{
+                throw new Error("goodsTree.view error 001") ;
+            }
+            $("#text",$f_goodstree_add).val('') ;
+        },
+        /**表单中提交新增*/
         btn_goodsTreeSubmit_click_handler:function(e){
             var param = J.formValues($("#f_goodstree_add")) ;
             if(param.c_group=='品类'){
                 param.c_level = 1 ;
+                param.fid = param.fid||0 ;
             }
             if(param.c_group=='品牌'){
                 param.c_level = 2 ;
@@ -105,8 +158,6 @@ define(function(require, exports, module) {
             if(param.c_group=='颜色'){
                 param.c_level =4 ;
             }
-
-            param.fid = param.fid||0 ;
             var valid = J.validate(param,{
                 c_group:{null_able:false,msg:'分组不能为空'},
                 text:{null_able:false,msg:'名称不能为空'}

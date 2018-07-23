@@ -18,7 +18,7 @@ define(function(require, exports, module) {
             /**返回主页*/
             "click #main_home_btn":'main_home_btn_handler',
             /**返回主页logo*/
-            "click #main_logo_btn":'main_logo_btn_handler',
+            //"click #main_logo_btn":'main_logo_btn_handler',
         },
         initialize: function () {
             J.getJBody().html("<div id='_main' class='container' style='height:100%;'></div>") ;

@@ -335,7 +335,95 @@ require([])     返回一个localRequire 对象，这个方法执行完成后，
 
 用require([])以数据为参数，那第参数内的 js 文件需要写一段加载完成执行的代码才会执行，不写只加载这个文件，不做任何事
 
+require([]，callback)以数组为参数的，还可使用回调函数来执行加载的js文件
+
+
+
 用require(url)以url为参数，那么回一个backbone对象，这个对象加载完成后被加载文件中返回的backbone对象，这个对象只需要new一下，就可以执行，但是这个方法是异步的，也就是说你不能直接在require(url)的下一句就直接new ，因为这个时候还没有加载完
+
+
+
+***
+
+#### bootstrapTable
+
+##### 自定义列表中的按钮
+
+1。添加formatter属性,这个是你要显示什么样的html代码，当然返回的是一个字符串
+
+例 
+
+```js
+formatter:function(){
+    return ['<button  class="a_btn" name="btn_edit">修改</button>','<button class="a_btn" name="btn_del">删除</button>'].join('') ;
+}
+```
+
+2。添加事件events属性这个是要执行什么事件代码
+
+例 
+
+```js
+events:{
+    "click [name=btn_edit]":function(a,b,c,d){
+        console.dir(a) ;
+        console.dir(b) ;
+        console.dir(c) ;
+        console.dir(d) ;
+    },
+    "click [name=btn_del]":function(arg){
+
+    }
+}
+```
+
+注册的这个事件是   事件名+jquery选择器来注册
+
+事件的传递的参数是 a jquery类型事件，b 数据id ，c 行数据 ，d 行数 从0行开始算的
+
+#### backbone
+
+##### 事件重复注册
+
+解决方法
+
+在render方法中调用J.render
+
+J.render定义
+
+```js
+/**
+ *
+ * @param functionRender  回调方法 传回view与一个统一的div元素容器
+ * @param view
+ * *.view.js 的render统一调用方法
+ */
+J.render = function(functionRender,view){
+    /**当前工作视图*/
+    J._CurrentWorkSpaceView = view ;
+    var $me =$("#wm_workspace") ;
+    var $div_Row = $("<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>");
+    view.$div_Row = $div_Row ;
+    $me.append(
+        $("<div>").addClass('container-fluid').append($div_Row)
+    ) ;
+    /**
+     * view  当前的功能视图
+     * $div_row  页面的内容显示div
+     * */
+    functionRender(view,$div_Row) ;
+} ;
+```
+
+这个方法主要是统一当前的视图是什么，当切换另一个视图时，这个视图中的事件需要清除
+
+
+
+```sequence
+title :页面切换
+main->menu:(任何页面进入菜单页面)J.chnageView(J._CurrentWorkSpaceView,"菜单.js")
+menu-->main:(菜单页面进入任何页面)
+```
 
 
 

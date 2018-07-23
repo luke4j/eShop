@@ -46,11 +46,18 @@
 .color_blue{
     color:#0000FF
 }
-.a_btn{
+.a_btn,.btn_add,.btn_edit,.btn_del,.btn_find{
     cursor:hand;
     cursor:pointer;
     margin-right:4px;
 }
+.btn_add{
+
+}
+.btn_edit{}
+.btn_del{}
+.btn_find{}
+
 .treeView_btn{
     float: right;
 }

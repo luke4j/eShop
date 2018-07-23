@@ -226,7 +226,7 @@ J.isNotNull = function(obj){
 } ;
 /**字符串不为空*/
 J.strIsNotEmpty = function(str){
-    return (str&&str!='')?true:false ;
+    return (str||str!='')?true:false ;
 } ;
 /**返回度数格式字符串*/
 J.toLensFormat = function(obj){
@@ -337,7 +337,6 @@ J.changeView = function(view,url){
         console.dir(e) ;
        J.alert("请检查文件："+url) ;
     }
-
 } ;
 /**
  *
@@ -365,6 +364,7 @@ J.bpTable = function(tableId,bootstrapTableSetup){
     var defaults = {
         showSelectTitle:true,       //show the title of column with 'radio' or 'singleSelect' 'checkbox' option.
             striped:true,               //设置为条文行
+            maintainSelected:true,      //保存当前页面页码
             search:true,                //显示页面查询
             searchOnEnterKey:true,      //回车执行查询
             showColumns:true,           //显示所有已加载的数据
@@ -775,7 +775,7 @@ J.filterRecord = function(record){
  * @param view
  * *.view.js 的render统一调用方法
  */
-J.render = function(render,view){
+J.render = function(functionRender,view){
     /**当前工作视图*/
     J._CurrentWorkSpaceView = view ;
     var $me =$("#wm_workspace") ;
@@ -788,7 +788,7 @@ J.render = function(render,view){
      * view  当前的功能视图
      * $div_row  页面的内容显示div
      * */
-    render(view,$div_Row) ;
+    functionRender(view,$div_Row) ;
 } ;
 
 J.studyView = function(fun){

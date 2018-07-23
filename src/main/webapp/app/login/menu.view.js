@@ -36,7 +36,6 @@ define(function(require, exports, module) {
                 /**为每一个菜单增加事件*/
                 item.on('click',function(e){
                     requirejs([$(e.currentTarget).attr('viewPath')],function(VClass){
-                        $me.undelegateEvents() ;
                         $("#main_menu").remove() ;
                         var viewPath = $(e.currentTarget).attr('viewPath') ;
                         J.changeView($me,viewPath) ;
