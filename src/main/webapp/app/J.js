@@ -676,11 +676,14 @@ J.setFormValue = function($Form,data){
             var $ele =  $("#"+i,$Form) ;
             if($ele.attr("eleType")=='time'){
                 $("#"+i,$Form).val(J.jsDateToStr(J.JavaTimeToJsTime(data[i]),"yyyy-MM-dd")) ;
-            }else if($ele.attr('eleType')=='select'){
-                $("option",$ele).attr("selected",false) ;
+            }else if($ele.is('select')){
+                //$("option",$ele).attr("selected",false) ;
+                $ele.val(data[i]) ;
                 $("option",$ele).each(function(n,element){
                     if($(element).val()==data[i]||$(element).val()==(data[i]+'')){
                         $(element).attr("selected",true) ;
+                    }else{
+                        $(element).attr("selected",false) ;
                     }
                 });
             }else {
@@ -811,6 +814,33 @@ J.showLens = function (v){
         lens = v.toFixed(2) ;
     }
     return lens+"" ;
+}
+
+/**
+ * 以数据中对象的 arr  属性为key ,对象为值 ，arr默认为id
+ * @param list
+ * @param arr
+ * @constructor
+ */
+J.ArrayToMap = function(list,arr){
+    var key = arr||'id' ;
+    var map = {} ;
+    for(var i in list){
+        map[list[i][key]]=list[i] ;
+    }
+    return map ;
+}
+
+/**
+ * 配合J.ArrayToMap使用，map的value集合数组
+ * @constructor
+ */
+J.MapToArray = function(map){
+    var list = [] ;
+    for(var i in map){
+        list.push(map[i]) ;
+    }
+    return list ;
 }
 
 

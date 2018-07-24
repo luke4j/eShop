@@ -16,3 +16,10 @@ S.btn_edit_tag_css = "glyphicon glyphicon-pencil" ;
 S.btn_del_tag_css = "glyphicon glyphicon-trash" ;
 S.btn_find_tag_css = "glyphicon glyphicon-zoom-in" ;
 S.btn_print_tag_css = "glyphicon glyphicon-print" ;
+
+S.btn_setup_tag_css = "glyphicon glyphicon-bookmark" ;
+S.btn_r1_tag_css = "glyphicon glyphicon-map-marker" ;
+S.btn_r2_tag_css = "glyphicon glyphicon-adjust" ;
+S.btn_r3_tag_css = "glyphicon glyphicon-tint" ;
+S.btn_r4_tag_css = "glyphicon glyphicon-share" ;
+S.btn_r5_tag_css = "glyphicon glyphicon-dashboard" ;

@@ -17,8 +17,8 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
     @Override
     public List<TG_GoodsTree> findNode_1(Long comId, VOIdEmpty vo) throws Exception {
         LKMap<String,Object> param = new LKMap<String,Object>().putEx("comId",comId).putEx("fid",vo.getId()) ;
-//        List<TG_GoodsTree> listGoodsTree = this.find("From TG_GoodsTree r where r.com.id=:comId and fid=:fid order by c_level ,id",param) ;
-        List<TG_GoodsTree> listGoodsTree = this.find("From TG_GoodsTree r where r.com.id=:comId  order by c_level ,id",param) ;
+        List<TG_GoodsTree> listGoodsTree = this.find("From TG_GoodsTree r where r.com.id=:comId and fid=:fid order by c_level ,id",param) ;
+//        List<TG_GoodsTree> listGoodsTree = this.find("From TG_GoodsTree r where r.com.id=:comId  order by c_level ,id",param) ;
         return listGoodsTree;
     }
 

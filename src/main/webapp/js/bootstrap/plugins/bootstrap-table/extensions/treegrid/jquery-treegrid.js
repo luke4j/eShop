@@ -90,14 +90,16 @@
             $this.on("collapse", function() {
                 var $this = $(this);
                 if (typeof($this.treegrid('getSetting', 'onCollapse')) === "function") {
-                    $this.treegrid('getSetting', 'onCollapse').apply($this);
+                    var nodeid =  $this.treegrid('getSetting', 'getNodeId').apply($this);
+                    $this.treegrid('getSetting', 'onCollapse').apply($this,[$this,nodeid]);
                 }
             });
             //Default behavior on expand
             $this.on("expand", function() {
                 var $this = $(this);
                 if (typeof($this.treegrid('getSetting', 'onExpand')) === "function") {
-                    $this.treegrid('getSetting', 'onExpand').apply($this);
+                   var nodeid =  $this.treegrid('getSetting', 'getNodeId').apply($this);
+                    $this.treegrid('getSetting', 'onExpand').apply($this,[$this,nodeid]);
                 }
 
             });

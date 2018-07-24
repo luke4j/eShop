@@ -168,6 +168,15 @@ ITestGoods.addGoods_1_1
 
 ***
 
+## 参考网络资源
+[bootstrap-table 中文言语主档](http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/)
+
+***
+
+
+
+
+
 ## 问题与解决
 
 ### java  
@@ -416,6 +425,81 @@ J.render = function(functionRender,view){
 ```
 
 这个方法主要是统一当前的视图是什么，当切换另一个视图时，这个视图中的事件需要清除
+
+
+
+#### bootstrap-table   
+
+##### treegrid 动态加载 
+
+官方给出的treegrid很傻，只是利用jquery的treegrid插件显示一个树列表，还是一次性加载的
+
+再一看treegrid插件，也是很简单。。。
+
+修改jquery-treegrid.js代码
+
+initSettingsEvents下面的打开事件（expand）折叠事件（collapse）中添加代码
+
+```js
+var nodeid =  $this.treegrid('getSetting', 'getNodeId').apply($this);
+```
+
+并在下面的代理调用方法中添加参数，例如打开方法，在点击打开的时候得知道你点是那个结点吧
+
+```js
+$this.treegrid('getSetting', 'onCollapse').apply($this,[$this,nodeid]);
+```
+
+在调用时与bootstrap-table中的treegrid例子一样使用，就是在加载完成事件中多加两个事件，一个是打开事件，一个是折叠事件,代码如下
+
+```javascript
+onLoadSuccess: function(data) {
+                    var optTreeGrid = {
+                        treeColumn: 1,
+                        onCollapse:function(e,nodeId){
+                            var data = $("#tb_goodsTree").bootstrapTable("getData") ;
+                            var tmp = [] ;
+                            for(var i in data){
+                                if(data[i].fid!=nodeId){
+                                    tmp.push(data[i])
+                                }
+                            }
+                            if(tmp.length==data.length) return false ;
+                            $("#tb_goodsTree").bootstrapTable('load', tmp)
+                            $("#tb_goodsTree").treegrid(optTreeGrid) ;
+                            return false ;
+                        },
+                        onExpand:function(e,nodeId){
+                            var isLoadGoodsTree = false ;
+                            var data = $("#tb_goodsTree").bootstrapTable("getData") ;
+                            var param = J.ArrayToMap(data);
+                            J.ajax({
+                                url:'goodsTree/findNode.act',
+                                async:false,
+                                data:{id:nodeId},
+                                success:function(res){
+                                    if(res.length!=0){
+                                        isLoadGoodsTree = true ;
+                                    }else{
+                                        return false ;
+                                    }
+                                    var tmp = J.ArrayToMap(res) ;
+                                    param = $.extend(param,tmp) ;
+                                    $("#tb_goodsTree").bootstrapTable('load',  J.MapToArray(param)) ;
+                                }
+                            }) ;
+                            if(isLoadGoodsTree){
+                                $("#tb_goodsTree").treegrid(optTreeGrid) ;
+                            }
+                            return false ;
+                        },
+                        onChange: function() {
+                            $("#tb_goodsTree").bootstrapTable('resetWidth');
+                        }
+                    };
+                    $("#tb_goodsTree").treegrid(optTreeGrid);
+                },
+```
 
 
 
