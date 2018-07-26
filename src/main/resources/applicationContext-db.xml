@@ -63,6 +63,9 @@
        </aop:config>
        <tx:advice id="txAdvice" transaction-manager="transactionManager">
               <tx:attributes>
+                     <tx:method name="create*" 	rollback-for="Throwable" read-only="false" />
+                     <tx:method name="affirm*" 	rollback-for="Throwable" read-only="false" />
+                     <tx:method name="execute*" 	rollback-for="Throwable" read-only="false" />
                      <tx:method name="save*" 	rollback-for="Throwable" read-only="false" />
                      <tx:method name="add*" 	rollback-for="Throwable" read-only="false" />
                      <tx:method name="delete*" 	rollback-for="Throwable" read-only="false" />

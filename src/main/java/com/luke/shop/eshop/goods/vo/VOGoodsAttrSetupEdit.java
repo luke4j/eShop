@@ -1,32 +1,22 @@
-package com.luke.shop.model;
-
-import javax.persistence.*;
+package com.luke.shop.eshop.goods.vo;
 
 /**
- * Created by luke on 2018/7/20.
- * 商品信息扩展信息配置
+ * Created by luke on 2018/7/26.
  */
-@Entity
-public class TG_GoodsAttrSetup extends Model {
+public class VOGoodsAttrSetupEdit {
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "kindId")
-    private TG_GoodsTree kind ;
-    @Column(length = 40,nullable = true)
+    private Long id ;
     private String columnName ;
-    @Column(length = 40,nullable = true)
     private String columnValue ;
-    @Column(length = 40,nullable = true)
-    private String c_type = "text";
-    @Column(length = 200,nullable = true)
-    private String defaults = "";
+    private String c_type ;
+    private String defaults ;
 
-    public TG_GoodsTree getKind() {
-        return kind;
+    public Long getId() {
+        return id;
     }
 
-    public void setKind(TG_GoodsTree kind) {
-        this.kind = kind;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getColumnName() {

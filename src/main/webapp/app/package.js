@@ -73,7 +73,8 @@ requirejs.config({
             exports:'bootstrap-table-editable'
         },
         "bootstrap-table-treegrid":{
-            deps:["bootstrap-table-editable",'jquery-treegrid','css!js/bootstrap/plugins/bootstrap-table/extensions/treegrid/jquery-treegrid'],
+            //"bootstrap-table-editable",
+            deps:['jquery','bootstrap','bootstrap-table','jquery-treegrid','css!js/bootstrap/plugins/bootstrap-table/extensions/treegrid/jquery-treegrid'],
             exports:'bootstrap-table-treegrid'
         },
         bootstrap:{

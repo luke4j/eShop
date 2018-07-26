@@ -1,15 +1,15 @@
-package com.luke.shop.tool.vo;
+package com.luke.shop.eshop.goods.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.NotNull;
-
+/**
+ * Created by luke on 2018/7/25.
+ */
 @ApiModel
-public class OVId implements VO{
+public class VOGoodsTreeEdit extends VOGoodsTreeAdd {
 
-    @ApiModelProperty(value = "id")
-    @NotNull(message = "id")
+    @ApiModelProperty(value = "ID")
     private Long Id ;
 
     public Long getId() {

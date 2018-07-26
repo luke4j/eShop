@@ -390,6 +390,20 @@ events:{
 
 事件的传递的参数是 a jquery类型事件，b 数据id ，c 行数据 ，d 行数 从0行开始算的
 
+##### 发现bug
+
+没有解决
+
+bug表现
+
+一个页面出现两个列表，第二个列表自定义列会出现事件不触发现象
+
+
+
+
+
+
+
 #### backbone
 
 ##### 事件重复注册
@@ -428,7 +442,7 @@ J.render = function(functionRender,view){
 
 
 
-#### bootstrap-table   
+#### bootstrap-table-greegrid   
 
 ##### treegrid 动态加载 
 
@@ -982,6 +996,15 @@ define(function(require, exports, module) {
 
 ###### addNode_2 添加节点
 
+添加的品类节点时需要自动添加一个空的品类属性数据 
+
+###### editNode_3编辑节点
+
+###### delNode_4修改节点
+
+###### edit_goods_attr_setup_5 配置商品属性
+
+###### addGoods_6 添加商品信息
 
 
 
@@ -991,6 +1014,19 @@ define(function(require, exports, module) {
 
 
 
+
+
+***
+
+业务 代码流程
+
+
+
+```sequence
+title:业务代码流程
+业务Action->业务Service:外部接口调用业务逻辑
+
+```
 
 
 

@@ -23,6 +23,15 @@ J.objIsNull = function(obj){
  *btns: 'Y' or 'YN'
  *okFunction:function(e,alert){}
  * }
+ *例：
+ * J.alert({
+                    title:'修改'+d.text+'品类',
+                    msg:$Element,
+                    btns:'YN',
+                    okFunction:function(e,alert){
+                       //code...
+                    }
+                }) ;
  * @param cfg
  */
 
@@ -321,18 +330,18 @@ J.getJBody = function(){
 } ;
 /**切换视图，解决事件多次注册问题*/
 J.changeView = function(view,url){
+    var args = arguments ;
     if(view){
         view.undelegateEvents() ;//处理事件重复加载问题
     }
     try{
-        var Class = requirejs(url);
-        $(function(){
-            if(Class)
-                new Class() ;
-            else{
-                J.alert("请检查文件："+url) ;
-            }
-        }) ;
+        requirejs([url],function(Class){
+            $("#wm_workspace").fadeOut("fast") ;
+            $("#wm_workspace").empty() ;
+            new Class(args) ;
+            $("#wm_workspace").fadeIn("fast") ;
+
+        });
     }catch(e){
         console.dir(e) ;
        J.alert("请检查文件："+url) ;
@@ -362,6 +371,10 @@ J.jForm = function(cfg){
  */
 J.bpTable = function(tableId,bootstrapTableSetup){
     var defaults = {
+        onLoadError:function(status, res){
+            if(status=='404')
+                J.alert("bootstrap-table 未找到请求地址->"+bootstrapTableSetup.url) ;
+        },
         showSelectTitle:true,       //show the title of column with 'radio' or 'singleSelect' 'checkbox' option.
             striped:true,               //设置为条文行
             maintainSelected:true,      //保存当前页面页码
@@ -379,7 +392,7 @@ J.bpTable = function(tableId,bootstrapTableSetup){
             method:'post',
             ajaxOptions:{
             contentType: 'application/json', //很重要
-                traditional: true
+            traditional: true
         },
         rowStyle:function(row, index){
             if(index%2==0){
@@ -541,9 +554,9 @@ J.formElement = function(ele){
     $formGroup.append($lable).append($divElement) ;
 
     if(!ele.type){
-        $divElement.append($("<input>").attr("id",ele.id).attr("name",ele.name).attr("placeholder",ele.text).addClass("form-control")) ;
+        $divElement.append($("<input>").attr("id",ele.id).attr("name",ele.name).addClass(S.keypress).attr('autocomplete','off').attr("placeholder",ele.text).addClass("form-control")) ;
     }else if(ele.type=='select'){
-        var $select  = $("<select>").addClass("form-control").attr('id',ele.id).attr("name",ele.name).attr("placeholder",ele.text).attr("eleType","select") ;
+        var $select  = $("<select>").addClass("form-control").attr('id',ele.id).attr("name",ele.name).attr("placeholder",ele.text).attr("eleType","select").addClass(S.keypress) ;
         if(ele.options){
             for(var i in ele.options){
                 var opt = $("<option>") ;
@@ -556,9 +569,9 @@ J.formElement = function(ele){
     }else if(ele.type=='btn'){
         $formGroup = $("<button >").addClass("btn btn-default").addClass(ele.cls).attr('id',ele.id).text(ele.text) ;
     }else if(ele.type=='hidden'){
-        $formGroup = $("<input type='hidden'>").attr("name",ele.name).attr("id",ele.id).attr("value",ele.value) ;
+        $formGroup = $("<input type='hidden'>").attr('autocomplete','off').attr("name",ele.name).attr("id",ele.id).attr("value",ele.value).addClass(S.keypress) ;
     }else if(ele.type=='time'){
-        var $element = $("<input>").addClass("form-control").attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr("eleType","time") ;
+        var $element = $("<input>").addClass("form-control").attr('autocomplete','off').attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr("eleType","time") ;
         $divElement.append($element) ;
         $element.datetimepicker({
             format:ele.format?ele.format: 'YYYY-MM-DD',//显示格式
@@ -566,7 +579,7 @@ J.formElement = function(ele){
     }else if(ele.type=='div'){
         return $formGroup ;
     }else{
-        var $element = $("<input>").addClass("form-control").attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr('type',ele.type) ;
+        var $element = $("<input>").addClass("form-control").attr('autocomplete','off').addClass(S.keypress).attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr('type',ele.type) ;
         $divElement.append($element) ;
     }
     $formGroup.addClass("margin-top_2") ;
@@ -782,6 +795,7 @@ J.render = function(functionRender,view){
     /**当前工作视图*/
     J._CurrentWorkSpaceView = view ;
     var $me =$("#wm_workspace") ;
+    $me.empty()
     var $div_Row = $("<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>");
     view.$div_Row = $div_Row ;
     $me.append(

@@ -11,6 +11,8 @@ S.btn_find = "查询" ;
 /**打印*/
 S.btn_print = "打印" ;
 
+S.keypress = "keypress" ;
+
 S.btn_add_tag_css = "glyphicon glyphicon-plus" ;
 S.btn_edit_tag_css = "glyphicon glyphicon-pencil" ;
 S.btn_del_tag_css = "glyphicon glyphicon-trash" ;
@@ -23,3 +25,4 @@ S.btn_r2_tag_css = "glyphicon glyphicon-adjust" ;
 S.btn_r3_tag_css = "glyphicon glyphicon-tint" ;
 S.btn_r4_tag_css = "glyphicon glyphicon-share" ;
 S.btn_r5_tag_css = "glyphicon glyphicon-dashboard" ;
+
