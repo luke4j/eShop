@@ -22,7 +22,7 @@ import javax.validation.Valid;
 /**
  * Created by luke on 2018/7/20.
  */
-@Api(value = "/goodsTree", description = "程序登录")
+@Api(value = "/goodsTree", description = "商品属性模块")
 @RequestMapping("goodsTree")
 public interface IGoodsTreeAction {
 
@@ -32,6 +32,7 @@ public interface IGoodsTreeAction {
     String delNode = "删除goodstree结点" ;
     String edit_goods_attr_setup = "编辑商品属性" ;
     String find_goods_attr_setup = "查询商品属性" ;
+    String find_goods_attr_setup_byColor = "以商品颜色Id查询所有商品属性" ;
 
 
     /**
@@ -127,7 +128,8 @@ public interface IGoodsTreeAction {
                                           BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
     /**
-     * 编辑商品属性
+     * 配置商品品类的商品属性时<br>
+     * 以商品品类Id查询商品扩展属性
      * @param request
      * @param response
      * @param vo
@@ -143,5 +145,23 @@ public interface IGoodsTreeAction {
                                           @ApiParam(value = find_goods_attr_setup, required = true)  @Valid @RequestBody
                                           VOId vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
+
+    /**
+     * 添加商品信息时，以颜色查询商品的所有扩展属性<br>
+     *     包括 品类，品牌，型号，颜色
+     * @param request
+     * @param response
+     * @param vo
+     * @param bindingResult
+     * @param actionResult
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = find_goods_attr_setup_byColor)
+    @RequestMapping(path = "find_goods_attr_setup_byColor.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult find_goods_attr_setup_byColor_7 (HttpServletRequest request, HttpServletResponse response,
+                                          @ApiParam(value = find_goods_attr_setup_byColor, required = true)  @Valid @RequestBody
+                                          VOId vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
 }

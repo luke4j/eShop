@@ -43,6 +43,9 @@ public class TG_Goods extends Model {
     private Integer kcjb = 0 ;
 
 
+
+
+
     public TG_GoodsTree getKind() {
         return kind;
     }

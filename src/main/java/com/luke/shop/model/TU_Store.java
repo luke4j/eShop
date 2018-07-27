@@ -11,17 +11,6 @@ import javax.persistence.*;
 @Entity
 public class TU_Store extends Model{
 
-//    @Id
-//    @TableGenerator(name = "tu_store_seq",       //sequence name
-//            initialValue=Static.initialValue,
-//            table = "seq_table",              //sequence table
-//            pkColumnName = "seq_name",        //在表中对对应的sequence name 列
-//            pkColumnValue = "tu_store_seq",      //在表中对对应的sequence name 值
-//            valueColumnName = "num",          //值
-//            allocationSize = Static.allocationSize)
-//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tu_store_seq")
-//    private Long id;
-
     @Column(length = 30,nullable = false)
     private String name ;
     @Column(length = 15,nullable = false)
@@ -45,12 +34,21 @@ public class TU_Store extends Model{
     private Boolean isZhanDianJia = false ;
     /**父级Id*/
     private Long fid = 0l ;
+    /**是否有库存*/
+    private Boolean isHasKc = true ;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="comId")
     @JsonIgnore
     private TU_Com com ;
 
+    public Boolean getIsHasKc() {
+        return isHasKc;
+    }
+
+    public void setIsHasKc(Boolean isHasKc) {
+        this.isHasKc = isHasKc;
+    }
 
     public String getName() {
         return name;

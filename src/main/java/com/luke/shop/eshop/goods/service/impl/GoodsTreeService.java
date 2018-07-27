@@ -73,4 +73,24 @@ public class GoodsTreeService implements IGoodsTreeService {
         List<TG_GoodsAttrSetup> listGoodsAttrSetup = this.goodsTreeDao.find_goods_attr_setup_6(vo) ;
         return listGoodsAttrSetup;
     }
+
+
+    @Override
+    public List<TG_GoodsAttrSetup> find_goods_attr_setup_byColor_7(LoginTuken sessionTuken, VOId vo) throws Exception {
+        LKMap<String,Object> extMap = this.find_goods_attr_setup_byColor_7_goodsTreeParent(vo) ;
+        TG_GoodsTree kindNode = (TG_GoodsTree)extMap.get("kind") ;
+        VOId id = new VOId() ;
+        id.setId(kindNode.getId());
+        return  this.find_goods_attr_setup_6(sessionTuken,id) ;
+    }
+
+    @Override
+    public LKMap<String, Object> find_goods_attr_setup_byColor_7_goodsTreeParent(VOId vo) throws Exception {
+        TG_GoodsTree colorNode = this.goodsTreeDao.get(TG_GoodsTree.class,vo.getId()) ;
+        TG_GoodsTree versionNode = this.goodsTreeDao.get(TG_GoodsTree.class,colorNode.getFid()) ;
+        TG_GoodsTree brandNode = this.goodsTreeDao.get(TG_GoodsTree.class,versionNode.getFid()) ;
+        TG_GoodsTree kindNode = this.goodsTreeDao.get(TG_GoodsTree.class,brandNode.getFid()) ;
+        LKMap<String, Object> ext = new LKMap<String,Object>().putEx("kind",kindNode).putEx("brand",brandNode).putEx("version",versionNode).putEx("color", colorNode) ;
+        return ext;
+    }
 }

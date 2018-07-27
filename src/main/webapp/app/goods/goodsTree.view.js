@@ -66,7 +66,10 @@ define(function(require, exports, module) {
                 $("#c_group",$f_goodstree).val("颜色") ;
                 $("#fname",$f_goodstree).val("品类-"+data._parent._parent.text+"   品牌-"+data._parent.text+"   型号-"+data.text) ;
             }else if(data.c_group=='颜色'){
-                J.alert("goods")
+                require(['app/goods/goods.help'],function(){
+                    goods_help.alert_fm_addGoods(data) ;
+                }) ;
+
             }else {
                 throw new Error("goodsTree.view error 001") ;
             }
@@ -160,6 +163,7 @@ define(function(require, exports, module) {
             var view = this ;
             J.changeView(view,'app/goods/goodsAttrSetup.view',data,'app/goods/goodsTree.view') ;
         },
+        //------------------------------------------------------------------------------------------------------------
         /**表单中提交新增*/
         btn_goodsTreeSubmit_click_handler:function(e){
             var me = this ;

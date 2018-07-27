@@ -9,6 +9,7 @@ import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
 import com.luke.shop.model.TG_GoodsAttrSetup;
 import com.luke.shop.model.TG_GoodsTree;
 import com.luke.shop.tool.ActionResult;
+import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.vo.VOId;
 import com.luke.shop.tool.vo.VOIdEmpty;
 import io.swagger.annotations.ApiParam;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by luke on 2018/7/20.
@@ -93,6 +95,18 @@ public class GoodsTreeAction extends BaseAction implements IGoodsTreeAction {
         actionResult.setDoing(find_goods_attr_setup);
         List<TG_GoodsAttrSetup> listGoodsAttrSetup =  this.goodsTreeService.find_goods_attr_setup_6(getSessionTuken(request), vo) ;
         actionResult.setData(listGoodsAttrSetup);
+        return actionResult;
+    }
+
+    @Override
+    public ActionResult find_goods_attr_setup_byColor_7(HttpServletRequest request, HttpServletResponse response,
+                                                        @ApiParam(value = find_goods_attr_setup_byColor, required = true) @Valid @RequestBody VOId vo,
+                                                        BindingResult bindingResult, ActionResult actionResult) throws Exception {
+        actionResult.setDoing(find_goods_attr_setup_byColor);
+        List<TG_GoodsAttrSetup> listGoodsAttrSetup =  this.goodsTreeService.find_goods_attr_setup_byColor_7(getSessionTuken(request), vo) ;
+        LKMap<String,Object> ext = this.goodsTreeService.find_goods_attr_setup_byColor_7_goodsTreeParent(vo) ;
+        actionResult.setData(listGoodsAttrSetup);
+        actionResult.setExt(ext);
         return actionResult;
     }
 }
