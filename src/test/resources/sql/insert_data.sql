@@ -88,3 +88,8 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-07-18 14:59:44
+
+
+
+insert tsys_setup (id,b_isDel,b_wtime,name,note,val)values(1,false,now(),'添加商品时是否添加价格','添加商品时是否添加价格',true) ;
+insert tsys_setupcom (id,b_isDel,b_wtime,name,note,val,comId)values(1,false,now(),'添加商品时是否添加价格','添加商品时是否添加价格',true,1) ;
