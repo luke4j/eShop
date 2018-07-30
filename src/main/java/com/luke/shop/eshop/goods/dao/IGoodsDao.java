@@ -16,5 +16,5 @@ public interface IGoodsDao extends IBaseDao {
      * @param goods
      * @throws Exception
      */
-    void addGoods_1_add_kc(LoginTuken sessionTuken, TG_Goods goods)throws  Exception;
+    void addGoods_1_notLens_kc(LoginTuken sessionTuken, TG_Goods goods)throws  Exception;
 }

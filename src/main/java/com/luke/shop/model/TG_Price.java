@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -35,6 +37,7 @@ public class TG_Price extends Model {
 
     @ManyToOne
     @JoinColumn(name = "comId",foreignKey =@ForeignKey(name="fk_price_com") )
+    @JsonIgnore
     private TU_Com com ;
 
 

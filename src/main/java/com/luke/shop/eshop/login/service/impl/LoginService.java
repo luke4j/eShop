@@ -5,15 +5,13 @@ import com.luke.shop.eshop.login.service.ILoginService;
 import com.luke.shop.eshop.login.vo.VOLogin;
 import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
 import com.luke.shop.eshop.login.vo.VOLoginUserInfo;
-import com.luke.shop.model.TU_Com;
-import com.luke.shop.model.TU_Message;
-import com.luke.shop.model.TU_Role;
-import com.luke.shop.model.TU_User;
+import com.luke.shop.model.*;
 import com.luke.shop.tool.Assertion;
 import com.luke.shop.tool.LK;
 import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOIdName;
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,8 @@ import java.util.*;
 
 @Service
 public class LoginService implements ILoginService {
+
+    private static final Logger log = Logger.getLogger(LoginService.class) ;
 
     @Resource
     private ILoginDao loginDao ;
@@ -67,8 +67,10 @@ public class LoginService implements ILoginService {
         Map<String,Object> resultMap = new HashMap<>(10) ;
         TU_User user = this.loginDao.get(TU_User.class,sessionTuken.getId()) ;
         List<TU_Message> listMessage = this.loginDao.getInfo_3_message(user) ;
-        resultMap.put("msgs", LK.ListObjToListMap(listMessage,new LKMap<String,String>().putEx("reader","reader").putEx("b_isDel","b_isDel").putEx("isRead","isRead"))) ;
+        log.info("load msg");
+        resultMap.put("msgs", LK.ListObjToListMap(listMessage, new LKMap<String, String>().putEx("reader", "reader").putEx("b_isDel", "b_isDel").putEx("isRead", "isRead"))) ;
 
+        log.info("load role");
         if(LK.ObjIsNotNull(user.getRole())){
             resultMap.put("role",LK.getModelId(user.getRole())) ;
         }
@@ -76,7 +78,15 @@ public class LoginService implements ILoginService {
         if(LK.ObjIsNotNull(user.getRole())){
             resultMap.put("funs",LK.getModelId(user.getRole().getListFun()));
         }
-        resultMap.put("sysTime",new Date().getTime()) ;
+
+
+        log.info(("load system setup"));
+        List<TSYS_SetupCom> listSetupCom = this.loginDao.getInfo_3_system_setup(sessionTuken.getComId()) ;
+        resultMap.put("listSetupCom", listSetupCom) ;
+
+        log.info("load time");
+        resultMap.put("sysTime", new Date().getTime()) ;
+
         return resultMap;
     }
 

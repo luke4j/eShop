@@ -4,11 +4,9 @@ import com.luke.shop.eshop.base.BaseDao;
 import com.luke.shop.eshop.login.dao.ILoginDao;
 import com.luke.shop.eshop.login.vo.VOLogin;
 import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
-import com.luke.shop.model.TU_Com;
-import com.luke.shop.model.TU_Message;
-import com.luke.shop.model.TU_Store;
-import com.luke.shop.model.TU_User;
+import com.luke.shop.model.*;
 import com.luke.shop.tool.Assertion;
+import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
@@ -40,6 +38,10 @@ public class LoginDao extends BaseDao implements ILoginDao {
         return listMessage;
     }
 
+    @Override
+    public List<TSYS_SetupCom> getInfo_3_system_setup(Long comId) throws Exception {
+        return  this.find("From TSYS_SetupCom sys where sys.com.id=:comId",new LKMap<String,Object>().putEx("comId",comId)) ;
+    }
 
     @Override
     public void editPassword_6(VOLoginEditPassword vo,Long userId) throws Exception {

@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -19,6 +21,7 @@ public class TSYS_SetupCom extends Model{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comId",foreignKey = @ForeignKey(name = "fk_setupCom_com"))
+    @JsonIgnore
     private TU_Com com  ;
 
     public String getName() {

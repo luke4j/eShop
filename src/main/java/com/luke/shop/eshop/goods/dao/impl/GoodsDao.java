@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 public class GoodsDao extends BaseDao implements IGoodsDao {
     @Override
-    public void addGoods_1_add_kc(LoginTuken sessionTuken, TG_Goods goods) throws Exception {
+    public void addGoods_1_notLens_kc(LoginTuken sessionTuken, TG_Goods goods) throws Exception {
         TU_Com com = this.get(TU_Com.class,sessionTuken.getComId()) ;
         /**没有被删除，有库存的站点*/
         List<TU_Store> listStore = this.find("From TU_Store s where s.com.id=:comId and s.isHasKc=true and s.b_isDel=false", new LKMap<String,Object>().putEx("comId",sessionTuken.getComId())) ;

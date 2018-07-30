@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -25,6 +27,7 @@ public class TK_KC extends Model {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comId",foreignKey = @ForeignKey(name = "fk_kc_com"))
+    @JsonIgnore
     private TU_Com com ;
 
     /**

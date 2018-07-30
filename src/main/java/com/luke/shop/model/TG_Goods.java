@@ -1,5 +1,7 @@
 package com.luke.shop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -25,6 +27,10 @@ public class TG_Goods extends Model {
     @JoinColumn(name = "colorId",foreignKey = @ForeignKey(name = "fk_goods_color"))
     private TG_GoodsTree color ;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comId",foreignKey = @ForeignKey(name = "fk_goods_com"))
+    @JsonIgnore
+    private TU_Com com ;
 
 
     /**商品编码*/
@@ -41,8 +47,13 @@ public class TG_Goods extends Model {
     private Integer kcjb = 0 ;
 
 
+    public TU_Com getCom() {
+        return com;
+    }
 
-
+    public void setCom(TU_Com com) {
+        this.com = com;
+    }
 
     public TG_GoodsTree getKind() {
         return kind;

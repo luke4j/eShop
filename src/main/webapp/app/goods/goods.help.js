@@ -1,12 +1,29 @@
 var goods_help = {
     alert_fm_addGoods:function(colorId){
         var $fm_goods = this.fm_goodsInfo(colorId.id) ;
-        J.alert({
+        var alt = J.alert({
             title:'添加商品',
             msg:$fm_goods.form,
             btns:'YN',
             okFunction:function(e,alert){
-                //code...
+                var valForm = J.formValues($("#fm_goodsInf")) ;
+                var validate = J.validate(valForm,{
+                    name:{null_able:false,msg:'商品名不能为空'},
+                    kcjb:{null_able:false,msg:'库存级别不能为空'}
+                }) ;
+                if(validate){
+                    J.ajax({
+                        url:'goods/addGoods',
+                        data:valForm,
+                        success:function(data,res){
+                            if(res.success){
+                                J.alert("保存成功") ;
+                                alt.modal('hidden') ;
+                            }
+
+                        }
+                    });
+                }
             }
         }) ;
     },
@@ -60,6 +77,7 @@ var goods_help = {
         }
         /**是否度数*/
         if(ext.kind.a1=='true'){
+            /**度数商品显示度数配置*/
             var btnSetLens = J.formElement({id:'btn_set_lens',name:'btn_set_lens',text:'配置度数',type:'btn'}) ;
             /**显示配置度数弹出窗*/
             btnSetLens.on('click',
@@ -88,8 +106,20 @@ var goods_help = {
                 }
             ) ;
             jFrom.fieldset.append(btnSetLens) ;
+        }else{
+            /**是否添加价格*/
+            if(LukeApp.info!=null&&LukeApp.info.listSetupCom!=null){
+                /**是否配置了在录入时录入价格*/
+                var setups = LukeApp.info.listSetupCom ;
+                for(var i in setups){
+                    if(setups[i].name="添加商品时是否添加价格"&&setups[i].val=="true"){
+                        jFrom.fieldset.append(J.formElement({id:'pin',name:'pin',text:"进货价"})) ;
+                        jFrom.fieldset.append(J.formElement({id:'pout',name:'pout',text:"销售价"})) ;
+                        break ;
+                    }
+                }
+            }
         }
         return jFrom ;
-
     }
 }
