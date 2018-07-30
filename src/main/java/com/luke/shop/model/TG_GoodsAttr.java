@@ -1,7 +1,6 @@
 package com.luke.shop.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 /**
  * Created by luke on 2018/7/20.
@@ -9,6 +8,10 @@ import javax.persistence.Entity;
  */
 @Entity
 public class TG_GoodsAttr extends Model {
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "goodsId",foreignKey = @ForeignKey(name = "fk_goodsAttr_goods") ,nullable = false)
+    private TG_Goods goods ;
 
     @Column(length = 25)
     private String a1 ;
@@ -159,5 +162,13 @@ public class TG_GoodsAttr extends Model {
 
     public void setA15(String a15) {
         this.a15 = a15;
+    }
+
+    public TG_Goods getGoods() {
+        return goods;
+    }
+
+    public void setGoods(TG_Goods goods) {
+        this.goods = goods;
     }
 }

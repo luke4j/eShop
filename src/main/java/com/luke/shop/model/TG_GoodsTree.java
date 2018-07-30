@@ -24,7 +24,7 @@ public class TG_GoodsTree extends Model{
     private String py ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comId")
+    @JoinColumn(name = "comId",foreignKey = @ForeignKey(name = "fk_goodsTree_com"))
     @JsonIgnore
     private TU_Com com ;
 

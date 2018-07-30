@@ -27,7 +27,7 @@ public class TU_Message extends Model{
     private CType c_type = CType.GeRen ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "readerId",nullable = false)
+    @JoinColumn(name = "readerId",nullable = false,foreignKey = @ForeignKey(name = "fk_msg_user"))
     @JsonIgnore
     private TU_User reader ;
 

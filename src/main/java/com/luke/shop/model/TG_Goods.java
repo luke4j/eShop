@@ -10,24 +10,22 @@ import javax.persistence.*;
 public class TG_Goods extends Model {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kindId")
+    @JoinColumn(name = "kindId",foreignKey = @ForeignKey(name = "fk_goods_kind"))
     private TG_GoodsTree kind ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brandId")
+    @JoinColumn(name = "brandId",foreignKey = @ForeignKey(name = "fk_goods_brand"))
     private TG_GoodsTree brand ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "versionId")
+    @JoinColumn(name = "versionId",foreignKey = @ForeignKey(name = "fk_goods_version"))
     private TG_GoodsTree version ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "colorId")
+    @JoinColumn(name = "colorId",foreignKey = @ForeignKey(name = "fk_goods_color"))
     private TG_GoodsTree color ;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "attrId")
-    private TG_GoodsAttr attr ;
+
 
     /**商品编码*/
     @Column(length = 40,nullable = false)
@@ -78,13 +76,7 @@ public class TG_Goods extends Model {
         this.color = color;
     }
 
-    public TG_GoodsAttr getAttr() {
-        return attr;
-    }
 
-    public void setAttr(TG_GoodsAttr attr) {
-        this.attr = attr;
-    }
 
     public String getC_code() {
         return c_code;

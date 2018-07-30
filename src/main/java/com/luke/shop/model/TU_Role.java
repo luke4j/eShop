@@ -17,13 +17,13 @@ public class TU_Role extends Model {
 
     @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinTable(name="TU_Role_Fun",
-            joinColumns = {@JoinColumn(name="roleId")},
-            inverseJoinColumns = {@JoinColumn(name="funId")})
+            joinColumns = {@JoinColumn(name="roleId",foreignKey = @ForeignKey(name = "fk_role_fun"))},
+            inverseJoinColumns = {@JoinColumn(name="funId",foreignKey = @ForeignKey(name = "fk_fun_fole"))})
     @JsonIgnore
     private List<TU_Fun> listFun ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comId")
+    @JoinColumn(name = "comId",foreignKey = @ForeignKey(name = "fk_role_com"))
     @JsonIgnore
     private TU_Com com ;
 

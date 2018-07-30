@@ -22,7 +22,7 @@ public class TU_Com  extends Model{
 
 
 
-    @Column(length = 100,nullable = false,unique = true)
+    @Column(length = 100,nullable = false,unique = true,name = "idxu_com_name")
     private String name ;
 
     @Column(length = 200,nullable = false)

@@ -18,7 +18,7 @@ public class TSYS_SetupCom extends Model{
     private String  note  ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comId")
+    @JoinColumn(name = "comId",foreignKey = @ForeignKey(name = "fk_setupCom_com"))
     private TU_Com com  ;
 
     public String getName() {

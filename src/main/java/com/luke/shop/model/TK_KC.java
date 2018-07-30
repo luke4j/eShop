@@ -7,21 +7,24 @@ import java.util.Date;
  * Created by luke on 2018/7/27.
  */
 @Entity
+@Table(indexes = {
+        @Index(name="idx_kc_store_goods_sph_cyl",columnList = "storeId,goodsId,sph,cyl",unique = true)
+})
 public class TK_KC extends Model {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "goodsId")
+    @JoinColumn(name = "goodsId",foreignKey = @ForeignKey(name = "fk_kc_goods"))
     private TG_Goods goods ;
     private Float sph ;
     private Float cyl ;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "storeId")
+    @JoinColumn(name = "storeId",foreignKey = @ForeignKey(name = "fk_kc_store"))
     private TU_Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comId")
+    @JoinColumn(name = "comId",foreignKey = @ForeignKey(name = "fk_kc_com"))
     private TU_Com com ;
 
     /**

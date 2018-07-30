@@ -28,17 +28,13 @@ public class GoodsService extends BaseService implements IGoodsService {
 
     @Override
     public TG_Goods addGoods_1(LoginTuken sessionTuken, VOGoods vo) throws Exception {
-        /**保存扩展属性*/
-        TG_GoodsAttr attr = new TG_GoodsAttr() ;
-        BeanUtils.copyProperties(vo,attr);
-        this.goodsDao.save(attr) ;
+
 
         /**保存商品信息*/
         TG_Goods goods = new TG_Goods() ;
         BeanUtils.copyProperties(vo, goods);
         goods.setPinYin(LK.NameToPingYinLong(goods.getName()));
         goods.setPy(LK.NameToPingYinShort(goods.getName()));
-        goods.setAttr(attr);
 
         TG_GoodsTree color = this.goodsDao.get(TG_GoodsTree.class,vo.getColorId()) ;
         TG_GoodsTree version = this.goodsDao.get(TG_GoodsTree.class,color.getFid()) ;
@@ -51,6 +47,13 @@ public class GoodsService extends BaseService implements IGoodsService {
         goods.setColor(color);
 
         goods = this.goodsDao.save(goods);
+
+                /**保存扩展属性*/
+        TG_GoodsAttr attr = new TG_GoodsAttr() ;
+        BeanUtils.copyProperties(vo,attr);
+        attr.setGoods(goods);
+        this.goodsDao.save(attr) ;
+
 
         /**添加非度数商品库存现库级别商品写入库存0*/
         if(goods.getKcjb().intValue()==0&&"false".equals(kind.getA1())){

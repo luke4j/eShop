@@ -38,7 +38,7 @@ public class TU_Store extends Model{
     private Boolean isHasKc = true ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="comId")
+    @JoinColumn(name="comId",foreignKey = @ForeignKey(name = "fk_store_com"))
     @JsonIgnore
     private TU_Com com ;
 

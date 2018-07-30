@@ -57,17 +57,17 @@ public class TU_User extends Model{
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="roleId")
+    @JoinColumn(name="roleId",foreignKey =@ForeignKey(name = "fk_user_role") )
     @JsonIgnore
     private TU_Role role ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="comId")
+    @JoinColumn(name="comId",foreignKey =@ForeignKey(name = "fk_user_com") )
     @JsonIgnore
     private TU_Com com ;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="storeId")
+    @JoinColumn(name="storeId",foreignKey =@ForeignKey(name = "fk_user_store") )
     @JsonIgnore
     private TU_Store store ;
 

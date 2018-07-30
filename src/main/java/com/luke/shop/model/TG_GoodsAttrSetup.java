@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class TG_GoodsAttrSetup extends Model {
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "kindId")
+    @JoinColumn(name = "kindId",foreignKey = @ForeignKey(name = "fk_goodsAttrSetup_goodsTree"))
     private TG_GoodsTree kind ;
     @Column(length = 40,nullable = true)
     private String columnName ;
