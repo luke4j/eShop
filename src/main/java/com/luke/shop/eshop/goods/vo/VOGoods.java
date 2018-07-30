@@ -26,6 +26,9 @@ public class VOGoods implements VO {
     @ApiModelProperty(value = "商品名")
     String name;
 
+    private Double pin = 0.0;
+    private Double pout  = 0.0 ;
+
     private String a1;
     private String a2;
     private String a3;
@@ -41,6 +44,22 @@ public class VOGoods implements VO {
     private String a13;
     private String a14;
     private String a15;
+
+    public Double getPin() {
+        return pin;
+    }
+
+    public void setPin(Double pin) {
+        this.pin = pin;
+    }
+
+    public Double getPout() {
+        return pout;
+    }
+
+    public void setPout(Double pout) {
+        this.pout = pout;
+    }
 
     public String getA1() {
         return a1;
