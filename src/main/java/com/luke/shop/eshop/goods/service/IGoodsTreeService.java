@@ -1,6 +1,7 @@
 package com.luke.shop.eshop.goods.service;
 
 import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
+import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeAdd;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
 import com.luke.shop.model.TG_GoodsAttrSetup;
@@ -17,7 +18,7 @@ import java.util.Map;
  * Created by luke on 2018/7/20.
  */
 public interface IGoodsTreeService {
-    List<TG_GoodsTree> findNode_1(LoginTuken sessionTuken, VOIdEmpty vo) throws  Exception;
+    List<VOGoodsNode> findNode_1(LoginTuken sessionTuken, VOIdEmpty vo) throws  Exception;
 
     TG_GoodsTree addNode_2(LoginTuken sessionTuken, VOGoodsTreeAdd vo) throws  Exception;
 

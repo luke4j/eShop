@@ -1,4 +1,6 @@
 var goodsTree_view_help = {
+
+
     /**添加保存功能组件 */
     addForm:function( view,$div_Row){
         var $jForm = J.createForm("f_goodstree",'form-horizontal') ;
@@ -20,107 +22,44 @@ var goodsTree_view_help = {
         $("#fname","#f_goodstree").attr('disabled',"disabled") ;
         var $f_goodstree = $("#f_goodstree") ;
         $("#c_group",$f_goodstree).val("品类") ;
-    },/**添加表格*/
-    tbl_goodsTree:function(view, $div_Row){
-        var me = view ;
-        var bpts = {
-            url:'goodsTree/findNode.act',
-            height:$(window).height()-450 ,
-            pagination:false,
-            showSelectTitle:true,
-            treeEnable:true,
-            idField: 'id',        //id不解释
-            treeShowField: 'text',//感觉没用的属性，但他妈的有用，不过写什么都行(限下面的列 field 值 )
-            parentIdField: 'fid', //数据中的父id
-            onLoadSuccess: function(data) {
-                var optTreeGrid = {
-                    treeColumn: 1,
-                    onCollapse:function(e,nodeId){
-                        var data = $("#tb_goodsTree").bootstrapTable("getData") ;
-                        var tmp = [] ;
-                        for(var i in data){
-                            if(data[i].fid!=nodeId){
-                                tmp.push(data[i])
-                            }
-                        }
-                        if(tmp.length==data.length) return false ;
-                        $("#tb_goodsTree").bootstrapTable('load', tmp)
-                        $("#tb_goodsTree").treegrid(optTreeGrid) ;
-                        return false ;
-                    },
-                    onExpand:function(e,nodeId){
-                        var isLoadGoodsTree = false ;
-                        var data = $("#tb_goodsTree").bootstrapTable("getData") ;
-                        var param = J.ArrayToMap(data);
-                        J.ajax({
-                            url:'goodsTree/findNode.act',
-                            async:false,
-                            data:{id:nodeId},
-                            success:function(res){
-                                if(res.length!=0){
-                                    isLoadGoodsTree = true ;
-                                }else{
-                                    return false ;
-                                }
-                                var tmp = J.ArrayToMap(res) ;
-                                param = $.extend(param,tmp) ;
-                                $("#tb_goodsTree").bootstrapTable('load',  J.MapToArray(param)) ;
-                            }
-                        }) ;
-                        if(isLoadGoodsTree){
-                            $("#tb_goodsTree").treegrid(optTreeGrid) ;
-                        }
-                        return false ;
-                    },
-                    onChange: function() {
-                        $("#tb_goodsTree").bootstrapTable('resetWidth');
-                    }
-                };
-                $("#tb_goodsTree").treegrid(optTreeGrid);
-            },
-            columns: [
-                {
-                    field: 'c_group',
-                    title: '分组',
-                    width:'33%'
-                },{
-                    field: 'text',
-                    title: '名称',
-                    width:'33%'
-                },{
-                    field: 'id',
-                    title: '操作',
-                    width:'33%',
-                    events:{
-                        "click .btn_add":function(jqEvent,id,data,rowNum){
-                            me.btn_table_add_click_handler(jqEvent,id,data,rowNum) ;
-                        },
-                        "click .btn_edit":function(jqEvent,id,data,rowNum){
-                            me.btn_table_edit_click_handler(jqEvent,id,data,rowNum) ;
-                        },
-                        "click .btn_del":function(jqEvent,id,data,rowNum){
-                            me.btn_table_del_click_handler(jqEvent,id,data,rowNum) ;
-                        },
-                        "click .btn_kindSetup":function(jqEvent,id,data,rowNum){
-                            me.btn_kindSetup_click_handler(jqEvent,id,data,rowNum) ;
-                        }
-                    },
-                    formatter:function(id,data){
-                        var btns = ['<button  class=" btn btn_add '+ S.btn_add_tag_css+' " name="btn_add">添加</button>',
-                            '<button  class=" btn btn_edit '+ S.btn_edit_tag_css+'" name="btn_edit">修改</button>',
-                            '<button class=" btn btn_del '+ S.btn_del_tag_css+'" name="btn_del">删除</button>'] ;
-                        if(data.c_group=='品类')
-                            btns.push('<button class=" btn a_btn btn_kindSetup" name="btn_kindSetup">配置属性</button>') ;
-                        return btns.join("") ;
-                    }
-                }
-            ]
-        } ;
-        var $toolbar = $("<div id='treeToolbar'>") ;
-        $toolbar.append("<button class='btn "+S.btn_add_tag_css+"' id='btn_add_kind'  >添加品类</button>") ;
-        $toolbar.appendTo( $div_Row) ;
-        bpts.toolbar = $toolbar ;
-        J.bpTable("tb_goodsTree",bpts) ;
     },
+    tbl_goodsTree:function(view, $div_Row){
+        var me = this ;
+        $div_Row.append("<div style='max-height: 300px;height: 300px;' id='div_goodsTree'>") ;
+        var treeNodes  ;
+        J.ajax({
+            url:'goodsTree/findNode.act',
+            async:false,
+            success:function(data,res){
+                treeNodes = data ;
+                console.dir(arguments) ;
+            }
+        }) ;
+
+        $("#div_goodsTree").treeview({
+            expandIcon: "glyphicon glyphicon-stop",
+            collapseIcon: "glyphicon glyphicon-unchecked",
+            showTags: true,
+            highlightSelected: true,
+            //data: treeNodes
+            data:me.testData()
+        }) ;
+    },
+    testData:function(){
+        return [
+            {
+                text: "Node 1",
+                icon: "glyphicon glyphicon-stop",
+                selectedIcon: "glyphicon glyphicon-stop",
+                color: "#000000",
+                backColor: "#FFFFFF",
+                href: "#node-1",
+                selectable: true,
+                tags: ['available'],
+            }
+        ]
+    }
+
+
 
 } ;

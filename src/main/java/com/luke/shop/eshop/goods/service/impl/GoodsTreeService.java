@@ -3,6 +3,7 @@ package com.luke.shop.eshop.goods.service.impl;
 import com.luke.shop.eshop.goods.dao.IGoodsTreeDao;
 import com.luke.shop.eshop.goods.service.IGoodsTreeService;
 import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
+import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeAdd;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
 import com.luke.shop.model.TG_GoodsAttrSetup;
@@ -31,9 +32,9 @@ public class GoodsTreeService implements IGoodsTreeService {
     IGoodsTreeDao goodsTreeDao ;
 
     @Override
-    public List<TG_GoodsTree> findNode_1(LoginTuken sessionTuken, VOIdEmpty vo) throws Exception {
+    public List<VOGoodsNode> findNode_1(LoginTuken sessionTuken, VOIdEmpty vo) throws Exception {
         vo.setId(vo.getId()==null?0l:vo.getId());
-        List<TG_GoodsTree> listGoodsTree = this.goodsTreeDao.findNode_1(sessionTuken.getComId(),vo) ;
+        List<VOGoodsNode> listGoodsTree = this.goodsTreeDao.findNode_1(sessionTuken.getComId(),vo) ;
         return listGoodsTree;
     }
 

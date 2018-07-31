@@ -2,6 +2,7 @@ package com.luke.shop.eshop.goods.dao;
 
 import com.luke.shop.eshop.base.IBaseDao;
 import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
+import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
 import com.luke.shop.model.TG_GoodsAttrSetup;
 import com.luke.shop.model.TG_GoodsTree;
@@ -15,7 +16,7 @@ import java.util.List;
  * Created by luke on 2018/7/20.
  */
 public interface IGoodsTreeDao extends IBaseDao {
-    List<TG_GoodsTree> findNode_1(Long comId, VOIdEmpty vo)throws  Exception ;
+    List<VOGoodsNode> findNode_1(Long comId, VOIdEmpty vo)throws  Exception ;
 
     TG_GoodsTree addNode_2(TG_GoodsTree node)throws  Exception ;
 

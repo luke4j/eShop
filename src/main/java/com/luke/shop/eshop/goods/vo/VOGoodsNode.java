@@ -39,6 +39,13 @@ public class VOGoodsNode implements VO {
     private String a4 ;
     private String a5 ;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getFid() {
         return fid;

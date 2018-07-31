@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     require("J");
     require("backbone");
     require("bootstrap");
-    require("bootstrap-table-treegrid") ;
+    require("treeview") ;
     var View = Backbone.View.extend({
         el: $("body"),
         events: {

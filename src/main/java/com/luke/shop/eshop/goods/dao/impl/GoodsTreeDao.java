@@ -3,7 +3,9 @@ package com.luke.shop.eshop.goods.dao.impl;
 import com.luke.shop.eshop.base.BaseDao;
 import com.luke.shop.eshop.goods.dao.IGoodsTreeDao;
 import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
+import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
+import com.luke.shop.model.TG_Goods;
 import com.luke.shop.model.TG_GoodsAttrSetup;
 import com.luke.shop.model.TG_GoodsTree;
 import com.luke.shop.tool.LKMap;
@@ -22,11 +24,26 @@ import java.util.List;
 @Component
 public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
     @Override
-    public List<TG_GoodsTree> findNode_1(Long comId, VOIdEmpty vo) throws Exception {
-        LKMap<String,Object> param = new LKMap<String,Object>().putEx("comId",comId).putEx("fid",vo.getId()) ;
-        List<TG_GoodsTree> listGoodsTree = this.find("From TG_GoodsTree r where r.b_isDel = false and  r.com.id=:comId and fid=:fid order by c_level ,id",param) ;
-//        List<TG_GoodsTree> listGoodsTree = this.find("From TG_GoodsTree r where r.com.id=:comId  order by c_level ,id",param) ;
-        return listGoodsTree;
+    public List<VOGoodsNode> findNode_1(Long comId, VOIdEmpty vo) throws Exception {
+        List<VOGoodsNode> listVoGoodsNodes = new ArrayList<>() ;
+
+        if(vo.getId()!=null&&vo.getId().intValue()!=0){
+            TG_GoodsTree treeNode = this.get(TG_GoodsTree.class, vo.getId()) ;
+            if(treeNode!=null&&treeNode.getC_level().intValue()==4){
+                List<TG_Goods> listGoods = this.find("From TG_Goods g where g.color.id=:id",vo) ;
+                for(TG_Goods goods :listGoods){
+                    VOGoodsNode node = new VOGoodsNode() ;
+                    node.setText(goods.getName());
+                    node.setFid(vo.getId());
+                    node.setId(goods.getId());
+                    node.setC_group("商品");
+                    node.setC_level(5);
+                    listVoGoodsNodes.add(node) ;
+                }
+                return listVoGoodsNodes ;
+            }
+        }
+        return listVoGoodsNodes;
     }
 
     @Override

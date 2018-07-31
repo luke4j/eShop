@@ -4,6 +4,7 @@ import com.luke.shop.eshop.base.BaseAction;
 import com.luke.shop.eshop.goods.action.IGoodsTreeAction;
 import com.luke.shop.eshop.goods.service.IGoodsTreeService;
 import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
+import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeAdd;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
 import com.luke.shop.model.TG_GoodsAttrSetup;
@@ -40,7 +41,7 @@ public class GoodsTreeAction extends BaseAction implements IGoodsTreeAction {
                                    VOIdEmpty vo,
                                    BindingResult bindingResult, ActionResult actionResult) throws Exception {
         actionResult.setDoing(findNode);
-        List<TG_GoodsTree> listGoodsTree = this.goodsTreeService.findNode_1(getSessionTuken(request),vo) ;
+        List<VOGoodsNode> listGoodsTree = this.goodsTreeService.findNode_1(getSessionTuken(request),vo) ;
         actionResult.setData(listGoodsTree);
         return actionResult;
     }
