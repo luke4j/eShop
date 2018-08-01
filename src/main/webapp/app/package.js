@@ -32,7 +32,8 @@ requirejs.config({
         "picker":"js/bootstrap/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min",
         "picker-zh":"js/bootstrap/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN",
         "moment":"js/bootstrap/plugins/bootstrap-datetimepicker/moment.min",
-        "print":"plugin/print/LodopFuncs"
+        "print":"plugin/print/LodopFuncs",
+        "ztree":"js/jquery/plugins/ztree/jquery.ztree.all"
     },
 
     /**
@@ -40,6 +41,10 @@ requirejs.config({
      * */
     shim:{
 
+        ztree:{
+            deps:['jquery','css!js/jquery/plugins/ztree/metroStyle/metroStyle.css'],
+            exports:'ztree'
+        },
         treeview:{
             deps:['jquery','css!js/bootstrap/plugins/treeview/bootstrap-treeview.min.css'],
             exports:'treeview'

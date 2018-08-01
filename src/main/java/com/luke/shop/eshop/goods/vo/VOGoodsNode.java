@@ -4,12 +4,19 @@ import com.luke.shop.tool.vo.VO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by luke on 2018/7/30.
  */
 @ApiModel
 public class VOGoodsNode implements VO {
 
+
+    private Boolean isParent = true;
+
+    private Long count ;
 
     private Long id ;
 
@@ -22,7 +29,16 @@ public class VOGoodsNode implements VO {
     @ApiModelProperty(value = "级别")
     private Integer c_level = 0 ;
 
+    private List<VOGoodsNode> children = new ArrayList<VOGoodsNode>(100) ;
 
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
 
     /**
      * {kind:'是否度数'}
@@ -38,6 +54,23 @@ public class VOGoodsNode implements VO {
     private String a3 ;
     private String a4 ;
     private String a5 ;
+
+
+    public Boolean getIsParent() {
+        return isParent;
+    }
+
+    public void setIsParent(Boolean isParent) {
+        this.isParent = isParent;
+    }
+
+    public List<VOGoodsNode> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<VOGoodsNode> children) {
+        this.children = children;
+    }
 
     public Long getId() {
         return id;
@@ -61,6 +94,14 @@ public class VOGoodsNode implements VO {
 
     public void setC_group(String c_group) {
         this.c_group = c_group;
+    }
+
+    public String getName() {
+        return text;
+    }
+
+    public void setName(String text) {
+        this.text = text;
     }
 
     public String getText() {

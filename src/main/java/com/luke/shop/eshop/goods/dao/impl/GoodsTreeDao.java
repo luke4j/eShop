@@ -26,21 +26,48 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
     @Override
     public List<VOGoodsNode> findNode_1(Long comId, VOIdEmpty vo) throws Exception {
         List<VOGoodsNode> listVoGoodsNodes = new ArrayList<>() ;
-
-        if(vo.getId()!=null&&vo.getId().intValue()!=0){
+        VOGoodsNode node = null ;
+        if(vo.getId().intValue()!=0){
             TG_GoodsTree treeNode = this.get(TG_GoodsTree.class, vo.getId()) ;
-            if(treeNode!=null&&treeNode.getC_level().intValue()==4){
+            /**树展开颜色*/
+            if("颜色".equals(treeNode.getC_group())){
                 List<TG_Goods> listGoods = this.find("From TG_Goods g where g.color.id=:id",vo) ;
                 for(TG_Goods goods :listGoods){
-                    VOGoodsNode node = new VOGoodsNode() ;
+                    node = new VOGoodsNode() ;
                     node.setText(goods.getName());
                     node.setFid(vo.getId());
                     node.setId(goods.getId());
                     node.setC_group("商品");
                     node.setC_level(5);
+                    node.setIsParent(false);
                     listVoGoodsNodes.add(node) ;
                 }
-                return listVoGoodsNodes ;
+            }else{
+                /**树展开品类，品牌，型号*/
+                List<TG_GoodsTree> listGoodsNode = this.find("From TG_GoodsTree t where t.fid=:id",vo) ;
+                for(TG_GoodsTree tmp :listGoodsNode){
+                    node = new VOGoodsNode();
+                    BeanUtils.copyProperties(tmp, node);
+                    if("颜色".equals(tmp.getC_group())){
+                        Long count = this.getUnique("select count(g.id) From TG_Goods g where g.color.id=:id", tmp) ;
+                        node.setCount(count);
+                    }else{
+                        Long count = this.getUnique("select count(t.id) From TG_GoodsTree t where t.fid=:id", tmp) ;
+                        node.setCount(count);
+                    }
+
+                    listVoGoodsNodes.add(node) ;
+                }
+            }
+        }else{
+            /**初始化树的时候没有参数，默认为0，查询所有品类*/
+            List<TG_GoodsTree> listGoodsNode = this.find("From TG_GoodsTree t where t.c_group='品类'") ;
+            for(TG_GoodsTree tmp :listGoodsNode){
+                node = new VOGoodsNode() ;
+                BeanUtils.copyProperties(tmp, node);
+                Long count = this.getUnique("select count(t.id) From TG_GoodsTree t where t.fid=:id", tmp) ;
+                node.setCount(count);
+                listVoGoodsNodes.add(node) ;
             }
         }
         return listVoGoodsNodes;

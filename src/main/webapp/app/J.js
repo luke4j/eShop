@@ -7,6 +7,8 @@ J._CurrentWorkSpaceView = null ;
 J.$WorkSpace = function(){
     return $("#wm_workspace") ;
 } ;
+
+J.emptyFun = function(){console.dir(arguments)} ;
 /**
  * 统一的提示{
  *msg:'提示内容',title:'提示标题',btns:'显示按钮Y/YN（默认只有Y）',closeFunction:'关闭弹出窗后执行方法（可选）',okFunction:'确定按钮执行方法（可选）'

@@ -86,3 +86,27 @@
     padding: 10px;
     margin: 5px;
 }
+
+.treeNode_10{
+    width:10% ;
+}
+.treeNode_20{
+    width:20% ;
+}
+.treeNode_30{
+    width:30% ;
+}
+.treeNode_40{
+    width:40% ;
+}
+.treeNode_50{
+    width:50% ;
+}
+
+.float_left{
+    float:left !important;
+}
+.float_right{
+    float:right !important;
+}
+

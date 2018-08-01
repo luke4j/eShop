@@ -4,14 +4,15 @@ define(function(require, exports, module) {
     require("J");
     require("backbone");
     require("bootstrap");
-    require("treeview") ;
+    require("ztree") ;
     var View = Backbone.View.extend({
         el: $("body"),
         events: {
             /**保存信息，与后台交互*/
             "click #btn_goodsTreeSubmit": "btn_goodsTreeSubmit_click_handler",
             /**页面事件，不与后台交互*/
-            "click #btn_add_kind":"btn_add_kind_click_handler"
+            "click #btn_add_kind":"btn_add_kind_click_handler",
+            //"click .ztree_btn_del":function(){console.dir(arguments) ;}
         },
         initialize: function () {
             this.render();
@@ -19,16 +20,16 @@ define(function(require, exports, module) {
         render: function () {
             J.render(function(view,$div_Row){
                 /**工作区添加一个tb_goodsTree的table元素*/
-                $("<table id='tb_goodsTree'>").appendTo( $div_Row) ;
                 require(['app/goods/goodsTree.view.help'],function(){
                     goodsTree_view_help.tbl_goodsTree(view,$div_Row) ;
-                    goodsTree_view_help.addForm(view,$div_Row) ;
+                    goodsTree_view_help.fm_goodsInfo(view,$div_Row) ;
                 }) ;
             },this) ;
         },
         // ------------------------------------事件代码区-----------------------------------------
         /**页面中添加品类按钮事件*/
         btn_add_kind_click_handler:function(e){
+            alert(1) ;
             var $f_goodstree = $("#f_goodstree") ;
             $f_goodstree[0].reset() ;
             $("#ajaxdo",$f_goodstree).val("add") ;
@@ -125,6 +126,10 @@ define(function(require, exports, module) {
          * @param data
          * @param rowNum
          */
+        ztree_btn_del_click_handler:function(jqEvent,treeId,treeNode){
+            this.btn_table_del_click_handler(jqEvent,treeNode.id,treeNode) ;
+            return false ;
+        },
         btn_table_del_click_handler:function(jqEvent,id,data,rowNum){
             var $f_goodstree = $("#f_goodstree") ;
             $f_goodstree[0].reset() ;
@@ -151,6 +156,7 @@ define(function(require, exports, module) {
             }
             J.setFormValue($f_goodstree,data) ;
             $("#btn_goodsTreeSubmit",$f_goodstree).text(S.btn_del) ;
+            return false ;
         },
         /**
          *表格中配置属性事件
@@ -159,6 +165,9 @@ define(function(require, exports, module) {
          * @param data
          * @param rowNum
          */
+        ztree_btn_setup_click_handler:function(jqEvent,id,data){
+            this.btn_kindSetup_click_handler(jqEvent,data.id,data) ;
+        },
         btn_kindSetup_click_handler:function(jqEvent,id,data,rowNum){
             var view = this ;
             J.changeView(view,'app/goods/goodsAttrSetup.view',data,'app/goods/goodsTree.view') ;
