@@ -40,6 +40,8 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
                     node.setC_group("商品");
                     node.setC_level(5);
                     node.setIsParent(false);
+                    node.setKcjb(goods.getKcjb());
+                    node.setC_code(goods.getC_code());
                     listVoGoodsNodes.add(node) ;
                 }
             }else{

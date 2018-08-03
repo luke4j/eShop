@@ -1,8 +1,27 @@
 var goods_help = {
-    alert_fm_addGoods:function(colorId){
-        var $fm_goods = this.fm_goodsInfo(colorId.id) ;
+    ajax_getGoodsByColor:function(colorId){
+        var goodsExtAttr  ;
+        var ext
+        J.ajax({
+            url:'goodsTree/find_goods_attr_setup_byColor.act',
+            data:{id:colorId},
+            async:false,
+            success:function(data,res){
+                ext =  res.ext ;
+                for(var i in data){
+                    if(data[i].columnValue){
+                        goodsExtAttr.push(data[i]) ;
+                    }
+                }
+            }
+        }) ;
+        return  {goodsExtAttr:goodsExtAttr,ext:ext} ;
+    },
+    alert_fm_addGoods:function(color){
+        var param = this.ajax_getGoodsByColor(color.id) ;
+        var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
         var alt = J.alert({
-            title:'添加商品',
+            title:'添加商品信息',
             msg:$fm_goods.form,
             btns:'YN',
             okFunction:function(e,alert){
@@ -20,35 +39,50 @@ var goods_help = {
                                 J.alert("保存成功") ;
                                 alt.modal('hidden') ;
                             }
-
                         }
                     });
                 }
             }
         }) ;
     },
-    /**
-     * 表单显示商品详细信息
-     * 返回$form
-     * @returns {{form, fieldset}|{form: (*|jQuery), fieldset: (*|jQuery|HTMLElement)}}
-     */
-    fm_goodsInfo:function(colorId){
-
-        var goodsExtAttr = [] ;//商品扩展属性
-        var ext ;               //商品属性对象 品类，品牌，型号，颜色
-        J.ajax({
-            url:'goodsTree/find_goods_attr_setup_byColor.act',
-            data:{id:colorId},
-            async:false,
-            success:function(data,res){
-                ext =  res.ext ;
-                for(var i in data){
-                    if(data[i].columnValue){
-                        goodsExtAttr.push(data[i]) ;
-                    }
+    /**修改商品信息*/
+    alert_fm_editGoods:function(goods){
+        var param = this.ajax_getGoodsByColor(goods.getParentNode().id) ;
+        var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
+        var alt = J.alert({
+            title:'修改商品信息',
+            msg:$fm_goods.form,
+            btns:'YN',
+            okFunction:function(e,alert){
+                var valForm = J.formValues($("#fm_goodsInf")) ;
+                var validate = J.validate(valForm,{
+                    name:{null_able:false,msg:'商品名不能为空'},
+                    kcjb:{null_able:false,msg:'库存级别不能为空'}
+                }) ;
+                if(validate){
+                    J.ajax({
+                        url:'goods/addGoods',
+                        data:valForm,
+                        success:function(data,res){
+                            if(res.success){
+                                J.alert("保存成功") ;
+                                alt.modal('hidden') ;
+                            }
+                        }
+                    });
                 }
             }
         }) ;
+        J.setFormValue($("#fm_goodsInf"),goods) ;
+    },
+    /**
+     * 表单显示商品详细信息
+     * @param goodsExtAttr  商品扩展属性
+     * @param ext  商品属性对象 品类，品牌，型号，颜色
+     * @returns {{form, fieldset}|{form: (*|jQuery), fieldset: (*|jQuery|HTMLElement)}}
+     */
+    fm_goodsInfo:function(goodsExtAttr,ext){
+
         var jFrom = J.createForm('fm_goodsInf') ;
         /**基本属性*/
         jFrom.fieldset

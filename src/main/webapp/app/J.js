@@ -338,10 +338,10 @@ J.changeView = function(view,url){
     }
     try{
         requirejs([url],function(Class){
-            $("#wm_workspace").fadeOut("fast") ;
+            //$("#wm_workspace").fadeOut("fast") ;
             $("#wm_workspace").empty() ;
             new Class(args) ;
-            $("#wm_workspace").fadeIn("fast") ;
+            //$("#wm_workspace").fadeIn("fast") ;
 
         });
     }catch(e){

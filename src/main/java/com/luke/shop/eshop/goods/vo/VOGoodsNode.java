@@ -26,11 +26,52 @@ public class VOGoodsNode implements VO {
     private String c_group ;
     @ApiModelProperty(value = "文字")
     private String text ;
-    @ApiModelProperty(value = "级别")
+    @ApiModelProperty(value = "节点级别")
     private Integer c_level = 0 ;
+
+    /**0 库存，1 零订 2车房*/
+    private Integer kcjb = 0 ;
+
+    /**商品级别*/
+    private String c_code ;
+
+    private Double pin = 0.0;
+    private Double pout  = 0.0 ;
 
     private List<VOGoodsNode> children = new ArrayList<VOGoodsNode>(100) ;
 
+
+    public Double getPin() {
+        return pin;
+    }
+
+    public void setPin(Double pin) {
+        this.pin = pin;
+    }
+
+    public Double getPout() {
+        return pout;
+    }
+
+    public void setPout(Double pout) {
+        this.pout = pout;
+    }
+
+    public Integer getKcjb() {
+        return kcjb;
+    }
+
+    public void setKcjb(Integer kcjb) {
+        this.kcjb = kcjb;
+    }
+
+    public String getC_code() {
+        return c_code;
+    }
+
+    public void setC_code(String c_code) {
+        this.c_code = c_code;
+    }
 
     public Long getCount() {
         return count;

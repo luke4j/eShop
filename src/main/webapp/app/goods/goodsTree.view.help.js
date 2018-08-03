@@ -35,7 +35,6 @@ var goodsTree_view_help = {
         }else{
             return false ;
         }
-
     },
     tbl_goodsTree:function(view, $div_Row) {
         var me = this;
@@ -88,26 +87,29 @@ var goodsTree_view_help = {
 
                     var $btn_del = $("<a>").addClass(" ztree_btn_del btn float_right a_btn").addClass(S.btn_add_tag_css).text("删除") ;
                     aObj.append($btn_del) ;
-                    $btn_del.on("click",function(e){view.ztree_btn_del_click_handler(e,treeId,treeNode) ;})
+                    $btn_del.on("click",function(e){view.ztree_btn_del_click_handler(e,treeNode.id,treeNode) ;})
 
-                    aObj.append("<a class='float_right a_btn'>删除</a>") ;
-                    aObj.append("<a class='float_right a_btn'>修改</a>") ;
+
+                    var $btn_edit = $("<a class='float_right a_btn'>修改</a>") ;
+                    aObj.append($btn_edit) ;
+                    $btn_edit.on("click",function(e){view.ztree_btn_edit_click_handler(e,treeNode.id,treeNode)})
+
                     if(treeNode.c_group!='商品'){
                         var $btn_add = $("<a class='float_right a_btn'>添加</a>") ;
                         aObj.append($btn_add) ;
-                        $btn_add.on('click',function(){}) ;
+                        $btn_add.on('click',function(e){view.ztree_btn_add_click_handler(e,treeNode.id,treeNode)}) ;
                     }
 
                     if(treeNode.c_group=='品类'){
                         var $btn_setup= $("<a class='float_right a_btn'>配置属性</a>") ;
                         aObj.append($btn_setup) ;
-                        $btn_setup.on('click',function(e){view.ztree_btn_setup_click_handler(e,treeId,treeNode) ;}) ;
+                        $btn_setup.on('click',function(e){view.ztree_btn_setup_click_handler(e,treeNode.id,treeNode) ;}) ;
                     }
                 }
             },
             callback: {
-                beforeExpand: me.ztreeBeforeExpand,
-                //onAsyncSuccess: me.onAsyncSuccess,
+                beforeExpand: me.ztreeBeforeExpand
+                //onAsyncSuccess: me.ztreeAsyncSuccess,
                 //onAsyncError: onAsyncError
             }
         };
