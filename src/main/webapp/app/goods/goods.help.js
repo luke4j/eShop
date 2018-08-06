@@ -1,9 +1,27 @@
 var goods_help = {
     ajax_getGoodsByColor:function(colorId){
-        var goodsExtAttr  ;
+        var goodsExtAttr = []  ;
         var ext
         J.ajax({
             url:'goodsTree/find_goods_attr_setup_byColor.act',
+            data:{id:colorId},
+            async:false,
+            success:function(data,res){
+                ext =  res.ext ;
+                for(var i in data){
+                    if(data[i].columnValue){
+                        goodsExtAttr.push(data[i]) ;
+                    }
+                }
+            }
+        }) ;
+        return  {goodsExtAttr:goodsExtAttr,ext:ext} ;
+    },
+    ajax_getGoodsById:function(colorId){
+        var goodsExtAttr = []  ;
+        var ext
+        J.ajax({
+            url:'goodsTree/find_goods_attrsByGoodsId.act',
             data:{id:colorId},
             async:false,
             success:function(data,res){
@@ -47,7 +65,7 @@ var goods_help = {
     },
     /**修改商品信息*/
     alert_fm_editGoods:function(goods){
-        var param = this.ajax_getGoodsByColor(goods.getParentNode().id) ;
+        var param = this.ajax_getGoodsById(goods.id) ;
         var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
         var alt = J.alert({
             title:'修改商品信息',
@@ -61,11 +79,11 @@ var goods_help = {
                 }) ;
                 if(validate){
                     J.ajax({
-                        url:'goods/addGoods',
+                        url:'goods/editGoods',
                         data:valForm,
                         success:function(data,res){
                             if(res.success){
-                                J.alert("保存成功") ;
+                                J.alert("修改成功") ;
                                 alt.modal('hidden') ;
                             }
                         }
@@ -74,6 +92,7 @@ var goods_help = {
             }
         }) ;
         J.setFormValue($("#fm_goodsInf"),goods) ;
+        J.setFormValue($("#fm_goodsInf"),param.ext.attrs) ;
     },
     /**
      * 表单显示商品详细信息

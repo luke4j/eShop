@@ -5,10 +5,14 @@ import com.luke.shop.eshop.goods.action.IGoodsAction;
 import com.luke.shop.eshop.goods.service.IGoodsService;
 import com.luke.shop.eshop.goods.vo.VOGoods;
 import com.luke.shop.eshop.goods.vo.VOGoodsEdit;
+import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.model.TG_Goods;
+import com.luke.shop.model.TG_Lens;
 import com.luke.shop.tool.ActionResult;
+import com.luke.shop.tool.Assertion;
 import com.luke.shop.tool.vo.VOId;
 import io.swagger.annotations.ApiParam;
+import net.sf.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,5 +60,23 @@ public class GoodsAction extends BaseAction implements IGoodsAction {
                                     @ApiParam(value = findGoods, required = true) @Valid @RequestBody VOGoods vo,
                                     BindingResult bindingResult, ActionResult actionResult) throws Exception {
         return null;
+    }
+
+    @Override
+    public ActionResult getGoodsLens_5(HttpServletRequest request, HttpServletResponse response,
+                                     @ApiParam(value = getGoodsLens, required = true) @Valid @RequestBody VOId vo,
+                                     BindingResult bindingResult, ActionResult actionResult) throws Exception {
+        actionResult.setDoing(getGoodsLens);
+        this.goodsService.getGoodsLens_5(actionResult,vo) ;
+        return actionResult;
+    }
+
+    @Override
+    public ActionResult saveLens_6(HttpServletRequest request, HttpServletResponse response,
+                                   @ApiParam(value = saveLens, required = true) @Valid @RequestBody VOLens vo,
+                                   BindingResult bindingResult, ActionResult actionResult) throws Exception {
+        actionResult.setData(saveLens);
+        this.goodsService.saveLens_6(getSessionTuken(request),actionResult,vo) ;
+        return actionResult;
     }
 }

@@ -4,6 +4,8 @@ import com.luke.shop.eshop.base.IBaseDao;
 import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
 import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
+import com.luke.shop.model.TG_Goods;
+import com.luke.shop.model.TG_GoodsAttr;
 import com.luke.shop.model.TG_GoodsAttrSetup;
 import com.luke.shop.model.TG_GoodsTree;
 import com.luke.shop.tool.LoginTuken;
@@ -42,4 +44,6 @@ public interface IGoodsTreeDao extends IBaseDao {
      * @throws Exception
      */
     List<TG_GoodsAttrSetup> find_goods_attr_setup_6(VOId vo) throws  Exception ;
+
+    TG_GoodsAttr find_goods_attrsByGoodsId_8_attrs(TG_Goods goods)throws  Exception ;
 }

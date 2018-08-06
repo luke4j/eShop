@@ -6,9 +6,8 @@ import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
 import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeAdd;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
-import com.luke.shop.model.TG_GoodsAttrSetup;
-import com.luke.shop.model.TG_GoodsTree;
-import com.luke.shop.model.TU_Com;
+import com.luke.shop.model.*;
+import com.luke.shop.tool.ActionResult;
 import com.luke.shop.tool.LK;
 import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
@@ -80,9 +79,9 @@ public class GoodsTreeService implements IGoodsTreeService {
     public List<TG_GoodsAttrSetup> find_goods_attr_setup_byColor_7(LoginTuken sessionTuken, VOId vo) throws Exception {
         LKMap<String,Object> extMap = this.find_goods_attr_setup_byColor_7_goodsTreeParent(vo) ;
         TG_GoodsTree kindNode = (TG_GoodsTree)extMap.get("kind") ;
-        VOId id = new VOId() ;
-        id.setId(kindNode.getId());
-        return  this.find_goods_attr_setup_6(sessionTuken,id) ;
+        VOId voKindId = new VOId() ;
+        voKindId.setId(kindNode.getId());
+        return  this.find_goods_attr_setup_6(sessionTuken,voKindId) ;
     }
 
     @Override
@@ -93,5 +92,26 @@ public class GoodsTreeService implements IGoodsTreeService {
         TG_GoodsTree kindNode = this.goodsTreeDao.get(TG_GoodsTree.class,brandNode.getFid()) ;
         LKMap<String, Object> ext = new LKMap<String,Object>().putEx("kind",kindNode).putEx("brand",brandNode).putEx("version",versionNode).putEx("color", colorNode) ;
         return ext;
+    }
+
+    @Override
+    public void find_goods_attrsByGoodsId_8(VOId vo, ActionResult actionResult) throws Exception {
+        /**商品基本信息*/
+        TG_Goods goods = this.goodsTreeDao.get(TG_Goods.class, vo.getId()) ;
+        VOId voColorId = new VOId() ;
+        voColorId.setId(goods.getColor().getId());
+        LKMap<String, Object> ext = this.find_goods_attr_setup_byColor_7_goodsTreeParent(voColorId) ;
+        /**商品扩展信息*/
+        TG_GoodsAttr attrs = this.goodsTreeDao.find_goods_attrsByGoodsId_8_attrs(goods) ;
+        ext.put("attrs",attrs) ;
+        actionResult.setExt(ext);
+
+        /**商品扩展信息配置*/
+        VOId voKindId = new VOId() ;
+        TG_GoodsTree goodsNode = (TG_GoodsTree)ext.get("kind") ;
+        voKindId.setId(goodsNode.getId());
+        List<TG_GoodsAttrSetup> listGoodsAttr = this.find_goods_attr_setup_6(null,voKindId) ;
+
+        actionResult.setData(listGoodsAttr);
     }
 }

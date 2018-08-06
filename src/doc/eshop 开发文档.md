@@ -992,27 +992,112 @@ define(function(require, exports, module) {
 
 ##### IGoodsTreeAction
 
-###### findNode_1 查询节点
+###### findNode_1
 
-###### addNode_2 添加节点
+查询goodstree结点
 
-添加的品类节点时需要自动添加一个空的品类属性数据 
+###### addNode_2
 
-###### editNode_3编辑节点
+添加goodstree结点
 
-###### delNode_4修改节点
+###### editNode_3
 
-###### edit_goods_attr_setup_5 配置商品属性
+修改goodstree结点
 
-###### addGoods_6 添加商品信息
+###### delNode_4
+
+修改goodstree结点
+
+###### edit_goods_attr_setup_5
+
+编辑商品属性
+
+###### find_goods_attr_setup_6
+
+配置商品品类的商品属性时 以商品品类Id查询商品扩展属性
+
+###### find_goods_attr_setup_byColor_7
+
+添加商品信息时，以颜色查询商品的所有扩展属性 包括 品类，品牌，型号，颜色
+
+##### IGoodsAction
+
+###### addGoods_1
+
+商品属性-添加商品信息
+
+###### editGoods_2
+
+修改商品信息
+
+###### delGoods_3
+
+删除商品信息
+
+###### findGoods_4
+
+查询商品信息
+
+###### getGoodsLens_5
+
+以商品ID查询度数配置与所有度数
+
+###### saveLens_6
+
+删除已保存的度数，度数配置，库 存，价格信息，保存度数与度数配置信息
 
 
 
+```
+名词：
+商品基本属性：品类，品牌，型号，颜色，是否度数，是否实物，是否效期
+商品扩展属性：自定义的属性，任意属性
+```
 
 
 
+```sequence
+title:商品信息功能
+note left of goodsTree.view:商品信息功能入口
+goodsTree.view->goodsTree.view.help: 函数tbl_goodsTree()显示商品树{id:tb_goodsTree}
+goodsTree.view.help->IGoodsTreeAction:ajax(goodsTree/findNode.act)查询结点，只相询一级
+IGoodsTreeAction-->goodsTree.view.help:返回数据结果
+goodsTree.view->goodsTree.view.help: 函数fm_goodsInfo() 显示商品基本属性表单{id:f_goodstree}
+goodsTree.view.help->goodsTree.view:按钮{id:btn_goodsTreeSubmit}保存，修改，删除提交数据
 
 
+goodsTree.view->goodsTree.view:按钮{id:btn_add_kind}btn_add_kind_click_handler 初始化f_goodstree表单，并把信息显示在表单{id:f_goodstree}中
+goodsTree.view.help->goodsTree.view:按钮{class:ztree_btn_del}ztree_btn_del_click_handler删除树中结点，并把信息显示在表单{id:f_goodstree}中
+goodsTree.view.help->goodsTree.view:按钮{class:ztree_btn_edit}ztree_btn_edit_click_handler修改树中结点，并把信息显示在表单{id:f_goodstree}中
+goodsTree.view.help->goodsTree.view:按钮{class:ztree_btn_add}ztree_btn_add_click_handler添加树中结点（添加是添加下一级），并把信息显示在表单{id:f_goodstree}中
+goodsTree.view.help->goodsTree.view:按钮{class:ztree_btn_setup}ztree_btn_setup_click_handler配置品类的商品属性
+goodsTree.view->IGoodsTreeAction:点击树的不同按钮时，为表单{id:f_goodstree}.ajaxdo付上不同的值使用用btn_goodsTreeSubmit_click_handler函数提交后台
+
+
+
+```
+
+```sequence
+title:商品品类扩展属性配置
+goodsTree.view->goodsAttrSetup.view:backbone initialize 切换页面，显示商品扩展属性
+goodsAttrSetup.view->IGoodsTreeAction:bootstraptable ajax(find_goods_attr_setup.act,{kindId:kindId})
+IGoodsTreeAction-->goodsAttrSetup.view:返回扩展属性数据，以bootstrapTable显示
+goodsAttrSetup.view->goodsAttrSetup.view:bootstrapTable修改事件ajax(goodsTree/edit_goods_attr_setup.act)编辑商品属性
+```
+
+```sequence
+title:商品信息添加
+goodsTree.view->goods.help:使用函数alert_fm_addGoods(颜色结点信息)弹出商品信息录入窗
+goods.help->IGoodsTreeAction:ajax_getGoodsByColor(colorId)查询商品的基本信息
+IGoodsTreeAction-->goods.help:返回商品的基本信息
+goods.help->goods.help:fm_goodsInfo填充表单信息
+goods.help->goods.help:LukeApp.info.listSetupCom.name=添加商品时是否添加价格,是否显示价格
+goods.help->goods.help:如果品类是度数，显示 按钮{id:btn_set_lens}
+goods.help->lens.help:按钮{id:btn_set_lens}显示度数配置弹出窗(showLensWindow)，在显示之前需要保存商品信息，以得到商品id
+lens.help->lens.help:_tbar()组织工具栏的jquery对象，J.alert显示弹出窗，添加弹出窗页面元素事件
+lens.help->lens.help:ajax(goods/getGoodsLens)查询度数配置与度数，如果有会初始化所有元素
+goods.help->IGoodsAction:ajax (goods/saveLens)保存信息(以商品信息删除库存，价格，度数配置，度数，再重新保存)
+```
 
 
 

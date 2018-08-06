@@ -17,7 +17,7 @@ var goodsTree_view_help = {
             .append(J.formElement({id:'a5',name:'a5',text:'级别',type:'hidden'}))
             .append(J.formElement({id:'btn_goodsTreeSubmit',name:'btn_goodsTreeSubmit',text: S.btn_add,type:'btn',cls: S.btn_r5_tag_css}))
         ;
-        $div_Row.append($("<div class='div_bian_kuang'>").append($jForm.form)) ;
+        $div_Row.append($("<div class='div_bian_kuang'>").append($jForm.form)) ;//添加个边框
         $("#c_group","#f_goodstree").attr('disabled',"disabled") ;
         $("#fname","#f_goodstree").attr('disabled',"disabled") ;
         var $f_goodstree = $("#f_goodstree") ;
@@ -90,18 +90,18 @@ var goodsTree_view_help = {
                     $btn_del.on("click",function(e){view.ztree_btn_del_click_handler(e,treeNode.id,treeNode) ;})
 
 
-                    var $btn_edit = $("<a class='float_right a_btn'>修改</a>") ;
+                    var $btn_edit = $("<a>").addClass('ztree_btn_edit btn float_right a_btn').text("修改") ;
                     aObj.append($btn_edit) ;
                     $btn_edit.on("click",function(e){view.ztree_btn_edit_click_handler(e,treeNode.id,treeNode)})
 
                     if(treeNode.c_group!='商品'){
-                        var $btn_add = $("<a class='float_right a_btn'>添加</a>") ;
+                        var $btn_add = $("<a>").addClass("ztree_btn_add btn float_right a_btn").text("新增") ;
                         aObj.append($btn_add) ;
                         $btn_add.on('click',function(e){view.ztree_btn_add_click_handler(e,treeNode.id,treeNode)}) ;
                     }
 
                     if(treeNode.c_group=='品类'){
-                        var $btn_setup= $("<a class='float_right a_btn'>配置属性</a>") ;
+                        var $btn_setup= $("<a>").addClass("ztree_btn_setup btn float_right a_btn").text("配置属性") ;
                         aObj.append($btn_setup) ;
                         $btn_setup.on('click',function(e){view.ztree_btn_setup_click_handler(e,treeNode.id,treeNode) ;}) ;
                     }

@@ -110,4 +110,13 @@ public class GoodsTreeAction extends BaseAction implements IGoodsTreeAction {
         actionResult.setExt(ext);
         return actionResult;
     }
+
+    @Override
+    public ActionResult find_goods_attrsByGoodsId_8(HttpServletRequest request, HttpServletResponse response,
+                                                          @ApiParam(value = find_goods_attrsByGoodsId, required = true) @Valid @RequestBody VOId vo,
+                                                          BindingResult bindingResult, ActionResult actionResult) throws Exception {
+        actionResult.setDoing(find_goods_attrsByGoodsId);
+        this.goodsTreeService.find_goods_attrsByGoodsId_8(vo, actionResult) ;
+        return actionResult;
+    }
 }

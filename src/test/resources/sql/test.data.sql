@@ -46,12 +46,15 @@ UNLOCK TABLES;
 
 
 LOCK TABLES tsys_setup WRITE;
-INSERT INTO tsys_setup VALUES (1,0,'2018-07-27 11:53:32.000000','添加商品时是否添加价格','添加商品时是否添加价格','1');
+INSERT INTO tsys_setup  (id,b_isDel,b_wtime,name,note,val) VALUES (1,0,'2018-07-27 11:53:32.000000','添加商品时是否添加价格','添加商品时是否添加价格','1');
+insert into tsys_setup  (id,b_isDel,b_wtime,name,note,val) values (2,0,now(),'添加商品时初始化库存','添加商品时初始化库存','1') ;
 UNLOCK TABLES;
 
 
 LOCK TABLES tsys_setupcom WRITE;
-INSERT INTO tsys_setupcom VALUES (1,0,'2018-07-27 11:54:51.000000','添加商品时是否添加价格','添加商品时是否添加价格','1',1);
+INSERT INTO tsys_setupcom (id,b_isDel,b_wtime,name,note,val,comid) VALUES (1,0,'2018-07-27 11:54:51.000000','添加商品时是否添加价格','添加商品时是否添加价格','1',1);
+insert into tsys_setupcom (id,b_isDel,b_wtime,name,note,val,comid)values(2,false,now(),'添加商品时初始化库存','添加商品时初始化库存','true',1) ;
+insert into tsys_setupcom (id,b_isDel,b_wtime,name,note,val,comid)values(3,false,now(),'添加商品时初始化价格','添加商品时初始化价格','true',1) ;
 UNLOCK TABLES;
 
 

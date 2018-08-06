@@ -6,6 +6,7 @@ import com.luke.shop.eshop.goods.vo.VOGoodsAttrSetupEdit;
 import com.luke.shop.eshop.goods.vo.VOGoodsNode;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
 import com.luke.shop.model.TG_Goods;
+import com.luke.shop.model.TG_GoodsAttr;
 import com.luke.shop.model.TG_GoodsAttrSetup;
 import com.luke.shop.model.TG_GoodsTree;
 import com.luke.shop.tool.LKMap;
@@ -115,5 +116,10 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
     @Override
     public List<TG_GoodsAttrSetup> find_goods_attr_setup_6(VOId vo) throws Exception {
         return this.find("From TG_GoodsAttrSetup t where t.kind.id=:id",vo) ;
+    }
+
+    @Override
+    public TG_GoodsAttr find_goods_attrsByGoodsId_8_attrs(TG_Goods goods) throws Exception {
+        return this.getUnique("From TG_GoodsAttr ga where ga.goods.id=:id",goods) ;
     }
 }

@@ -358,7 +358,7 @@ var lens_help = {
 
         var param = $.extend({},values,{lens:JSON.stringify(arrayLens)})
         J.ajax({
-            url:'goods/save_goods_lens',
+            url:'goods/saveLens',
             data:param,
             timeout:150000,
             success:function(d){
@@ -500,7 +500,7 @@ var lens_help = {
 
             var setupValue = {} ;
             J.ajax({
-                url:'goods/get_goods_lens',
+                url:'goods/getGoodsLens',
                 async:false,
                 data:{id:goodsId},
                 success:function(d){
@@ -521,6 +521,7 @@ var lens_help = {
             }
         }) ;
     },
+    /**选中的td标为红色*/
     _lensGoodsSelect:function(goodslens){
         $.each(goodslens,function(i,d){
             $("td[sph='"+ J.showLens(d.sph)+"'][cyl='"+ J.showLens(d.cyl)+"']").addClass("td_red").attr('lensId', d.id) ;

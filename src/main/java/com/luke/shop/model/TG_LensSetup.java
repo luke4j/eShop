@@ -8,12 +8,18 @@ import javax.persistence.*;
 @Entity
 public class TG_LensSetup extends Model {
 
+    @Column(nullable = false)
     private Float sphMin ;
+    @Column(nullable = false)
     private Float sphMax ;
+    @Column(nullable = false)
     private Float sphPool ;
 
-    private Float cylhMin ;
+    @Column(nullable = false)
+    private Float cylMin ;
+    @Column(nullable = false)
     private Float cylMax ;
+    @Column(nullable = false)
     private Float cylPool ;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -45,12 +51,12 @@ public class TG_LensSetup extends Model {
         this.sphPool = sphPool;
     }
 
-    public Float getCylhMin() {
-        return cylhMin;
+    public Float getCylMin() {
+        return cylMin;
     }
 
-    public void setCylhMin(Float cylhMin) {
-        this.cylhMin = cylhMin;
+    public void setCylMin(Float cylMin) {
+        this.cylMin = cylMin;
     }
 
     public Float getCylMax() {

@@ -33,6 +33,7 @@ public interface IGoodsTreeAction {
     String edit_goods_attr_setup = "编辑商品属性" ;
     String find_goods_attr_setup = "查询商品属性" ;
     String find_goods_attr_setup_byColor = "以商品颜色Id查询所有商品属性" ;
+    String find_goods_attrsByGoodsId = "以商品Id查询商品基本属性，扩展属性，扩展属性配置" ;
 
 
     /**
@@ -163,5 +164,23 @@ public interface IGoodsTreeAction {
     ActionResult find_goods_attr_setup_byColor_7 (HttpServletRequest request, HttpServletResponse response,
                                           @ApiParam(value = find_goods_attr_setup_byColor, required = true)  @Valid @RequestBody
                                           VOId vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+
+
+    /**
+     * 以商品id查询 商品基本信息，扩展信息与扩展信息配置
+     * @param request
+     * @param response
+     * @param vo
+     * @param bindingResult
+     * @param actionResult
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = find_goods_attrsByGoodsId)
+    @RequestMapping(path = "find_goods_attrsByGoodsId.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult find_goods_attrsByGoodsId_8 (HttpServletRequest request, HttpServletResponse response,
+                                                  @ApiParam(value = find_goods_attrsByGoodsId, required = true)  @Valid @RequestBody
+                                                  VOId vo, BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
 }

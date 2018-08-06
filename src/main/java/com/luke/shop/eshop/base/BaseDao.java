@@ -16,6 +16,7 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,11 @@ public class BaseDao {
      */
     public <T> T save(T obj) throws Exception{
         if(obj==null) Assertion.Error("保存对象为空");
+        if(obj instanceof Model){
+            Model m = (Model)obj ;
+            m.setB_isDel(false);
+            m.setB_wtime(new Date());
+        }
         this.getSession().save(obj) ;
         return obj ;
     }
@@ -141,9 +147,15 @@ public class BaseDao {
      * @throws Exception
      */
     public <T> List<T> saveAll(List<T> list) throws Exception{
+        Date now = new Date() ;
         for(int i = 0 ;i<list.size();i++){
             if(i!=0&&i%20==0){
                 this.getSession().flush();
+            }
+            if(list.get(i) instanceof Model){
+                Model m = (Model)list.get(i) ;
+                m.setB_wtime(now);
+                m.setB_isDel(false);
             }
             this.save(list.get(i)) ;
         }

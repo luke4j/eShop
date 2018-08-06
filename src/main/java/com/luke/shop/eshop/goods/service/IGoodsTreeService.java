@@ -6,6 +6,7 @@ import com.luke.shop.eshop.goods.vo.VOGoodsTreeAdd;
 import com.luke.shop.eshop.goods.vo.VOGoodsTreeEdit;
 import com.luke.shop.model.TG_GoodsAttrSetup;
 import com.luke.shop.model.TG_GoodsTree;
+import com.luke.shop.tool.ActionResult;
 import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOId;
@@ -63,4 +64,6 @@ public interface IGoodsTreeService {
      * @throws Exception
      */
     LKMap<String,Object> find_goods_attr_setup_byColor_7_goodsTreeParent(VOId vo)throws  Exception;
+
+    void find_goods_attrsByGoodsId_8(VOId vo, ActionResult actionResult)throws  Exception;
 }
