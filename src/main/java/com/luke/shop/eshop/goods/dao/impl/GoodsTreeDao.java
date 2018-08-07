@@ -9,7 +9,6 @@ import com.luke.shop.model.TG_Goods;
 import com.luke.shop.model.TG_GoodsAttr;
 import com.luke.shop.model.TG_GoodsAttrSetup;
 import com.luke.shop.model.TG_GoodsTree;
-import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOId;
 import com.luke.shop.tool.vo.VOIdEmpty;
@@ -41,7 +40,7 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
                     node.setC_group("商品");
                     node.setC_level(5);
                     node.setIsParent(false);
-                    node.setKcjb(goods.getKcjb());
+                    node.setKcjb(goods.getKcjb().ordinal());
                     node.setC_code(goods.getC_code());
                     listVoGoodsNodes.add(node) ;
                 }

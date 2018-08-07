@@ -1,6 +1,8 @@
 package com.luke.shop.eshop.goods.service.impl;
 
 import com.luke.shop.eshop.base.BaseService;
+import com.luke.shop.eshop.base.service.IBusiness;
+import com.luke.shop.eshop.base.service.impl.BusinessProxy;
 import com.luke.shop.eshop.goods.dao.IGoodsDao;
 import com.luke.shop.eshop.goods.service.IGoodsService;
 import com.luke.shop.eshop.goods.vo.VOGoods;
@@ -16,18 +18,124 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by luke on 2018/7/27.
  */
 @Service
-public class GoodsService extends BaseService implements IGoodsService {
+public class GoodsService extends BaseService implements IGoodsService,IBusiness {
 
     private static final Logger log = Logger.getLogger(GoodsService.class) ;
 
     @Resource
     IGoodsDao goodsDao ;
+    @Resource
+    BusinessProxy proxy  ;
+
+    @Override
+    public <T, V> T createBill(V bill,TU_User zdUser,String tag) throws Exception {
+        return null;
+    }
+
+    @Override
+    public <T> T affirmBill(T bill,TU_User qrUser ,String tag) throws Exception {
+        /**初始化库存单据确认*/
+        if("LensInit".equals(tag)){
+            TK_Init init = (TK_Init)bill ;
+            init.setY_qr_user(qrUser);
+            init.setQrTime(new Date());
+            init.setY_bill_state(_YW.BillState.qr);
+            return (T)this.goodsDao.update_GoodsDao(init) ;
+        }else if("NotLensInit".equals(tag)){
+            TK_Init init = (TK_Init)bill ;
+            init.setY_qr_user(qrUser);
+            init.setQrTime(new Date());
+            init.setY_bill_state(_YW.BillState.qr);
+            return (T)this.goodsDao.update_GoodsDao(init) ;
+        }else{
+            Assertion.Error("GoodsService.affirmBill param [tag] is not handler");
+        }
+        return null ;
+    }
+
+    @Override
+    public <T> T executeBill(T bill,TU_User zxUser,String tag) throws Exception {
+        if("LensInit".equals(tag)){
+            TK_Init init = (TK_Init)bill ;
+            List<TK_KC> listKc = new ArrayList<>(init.getDjmx().size()) ;
+            TK_KC kc = null ;TG_Goods goods = null;
+            /**每一条初始化单据的明细都有一个库存记录*/
+            for(_YWList ywlist :init.getDjmx()){
+                TK_InitList initList = (TK_InitList)ywlist ;
+                if(goods==null) goods = initList.getL_goods() ;
+                kc = new TK_KC() ;
+                kc.setGoods(goods);
+                kc.setCyl(initList.getCyl());
+                kc.setSph(initList.getSph());
+                kc.setCom(init.getY_com());
+                kc.setStore(init.getY_store());
+                listKc.add(kc) ;
+            }
+            this.goodsDao.saveAll_GoodsDao(listKc) ;
+
+            /**设置单据状态与执行操作人*/
+            init.setY_zx_user(zxUser);
+            init.setZxTime(new Date());
+            init.setY_bill_state(_YW.BillState.qr);
+            this.goodsDao.update_GoodsDao(init) ;
+
+            /**更新初始化单据中的库存数据 */
+            for(_YWList ywlist:init.getDjmx()){
+                TK_InitList iniList = (TK_InitList )ywlist ;
+                iniList.setDj(init);
+               for(int i = 0 ;i<listKc.size() ;i++){
+                   if(listKc.get(i).getGoods().getId().longValue()==iniList.getL_goods().getId().longValue()
+                           &&listKc.get(i).getSph().floatValue()==iniList.getSph().floatValue()
+                           &&listKc.get(i).getCyl().floatValue()==iniList.getCyl().floatValue()
+                           &&listKc.get(i).getStore().getId().longValue()==init.getY_store().getId().longValue()){
+                       iniList.setL_kc(listKc.get(i));
+                       break ;
+                   }
+               }
+            }
+            return (T)init ;
+        }else if("NotLensInit".equals(tag)){
+            TK_Init init = (TK_Init)bill ;
+            List<TK_KC> listKc = new ArrayList<>(init.getDjmx().size()) ;
+            TK_KC kc = null ;TG_Goods goods = null;
+            /**每一条初始化单据的明细都有一个库存记录，非度数商品添加一次，就只有一个明细*/
+            for(_YWList ywlist :init.getDjmx()){
+                TK_InitList initList = (TK_InitList)ywlist ;
+                if(goods==null) goods = initList.getL_goods() ;
+                kc = new TK_KC() ;
+                kc.setGoods(goods);
+                kc.setCyl(initList.getCyl());
+                kc.setSph(initList.getSph());
+                kc.setCom(init.getY_com());
+                kc.setStore(init.getY_store());
+                listKc.add(kc) ;
+            }
+            this.goodsDao.saveAll_GoodsDao(listKc) ;
+
+            /**设置单据状态与执行操作人*/
+            init.setY_zx_user(zxUser);
+            init.setZxTime(new Date());
+            init.setY_bill_state(_YW.BillState.zx);
+            this.goodsDao.update_GoodsDao(init) ;
+
+            /**更新初始化单据中的库存数据 */
+            init.getDjmx().get(0).setL_kc(listKc.get(0));
+            this.goodsDao.update_GoodsDao(init.getDjmx().get(0)) ;
+            return (T)init ;
+        }else{
+            Assertion.Error("GoodsService.executeBill param [tag] is not handler");
+        }
+        return null ;
+    }
+
+
 
     @Override
     public TG_Goods addGoods_1(LoginTuken sessionTuken, VOGoods vo) throws Exception {
@@ -60,13 +168,13 @@ public class GoodsService extends BaseService implements IGoodsService {
         this.goodsDao.save(attr) ;
 
         //向下的逻辑需要分两种情况处理，度数商品，和非度数商品，
-        this.goodsDao.addGoods_1_kc(goods,vo) ;
-        this.goodsDao.addGoods_1_price(goods,vo) ;
-
-
+        this.addGoods_1_init_bill(goods, sessionTuken) ;
+        this.goodsDao.addGoods_1_price(goods, vo) ;
 
         return goods ;
     }
+
+
 
     @Override
     public void getGoodsLens_5(ActionResult actionResult, VOId vo) throws Exception {
@@ -79,7 +187,7 @@ public class GoodsService extends BaseService implements IGoodsService {
             BeanUtils.copyProperties(lens,goodsLensFindResult);
             goodsLens.add(goodsLensFindResult) ;
         }
-        actionResult.setData(new LKMap<String,Object>().putEx("goodsLensSetup",goodsLensSetup).putEx("goodsLens",goodsLens));
+        actionResult.setData(new LKMap<String, Object>().putEx("goodsLensSetup", goodsLensSetup).putEx("goodsLens", goodsLens));
     }
 
 
@@ -99,9 +207,10 @@ public class GoodsService extends BaseService implements IGoodsService {
         BeanUtils.copyProperties(vo, lensSetup);
         lensSetup.setGoods(goods);
         this.goodsDao.save(lensSetup) ;
-
+        /**保存所有度数*/
         List<TG_Lens> listLens = this.goodsDao.saveLens_6_allLens(lensSetup, goods, arrayGoodsLens) ;
 
+        /**处理返回值 */
         VOLensFindResult goodsLensFindResult = null ;
         List<VOLensFindResult> goodsLens = new ArrayList<>(listLens.size()) ;
         for(TG_Lens lens :listLens){
@@ -110,13 +219,83 @@ public class GoodsService extends BaseService implements IGoodsService {
             goodsLens.add(goodsLensFindResult) ;
         }
         actionResult.setData(new LKMap<String, Object>().putEx("goodsLensSetup", lensSetup).putEx("goodsLens", goodsLens));
-        /**添加默认库存 0 */
-        if(goods.getKcjb().intValue()==0){
-            this.goodsDao.saveLens_6_kc(goods) ;
-        }
+
+        /**添加默认入库单，确认入库单，入默认库存0 */
+        this.saveLens_6_init_lens_bill(goods, listLens, sessionTuken) ;
+        /**添加默认价格*/
         this.goodsDao.saveLens_6_price(goods) ;
 
-
         actionResult.setZytz("修改度数配置会重置价格与库存，请重新盘点库存与设置价格");
+    }
+
+    /**
+     * 默认非度数库存处理
+     * @param goods
+     * @param sessionTuken
+     */
+    private void addGoods_1_init_bill(TG_Goods goods, LoginTuken sessionTuken) throws Exception {
+        TG_GoodsTree kindNode = goods.getKind() ;
+        if(TG_Goods.KcJb.xk.ordinal()==goods.getKcjb().ordinal()&&!Boolean.valueOf(kindNode.getA1())){
+            TK_YW yw = this.goodsDao.getUnique("From TK_YW yw where yw.bm=:bm", LKMap.create().putEx("bm", "0")) ;
+            TU_Com com = this.goodsDao.get(TU_Com.class, sessionTuken.getComId()) ;
+            TU_User user = this.goodsDao.get(TU_User.class, sessionTuken.getId()) ;
+            List<TU_Store> listStore = this.goodsDao.find("From TU_Store s where s.com.id=:id  and s.isHasKc=true ", com) ;
+            TK_Init init = null ;List<_YWList> initLists = null ; TK_InitList initList = null ;
+            for(TU_Store store :listStore){
+                init = new TK_Init(goods.getCom(),yw,store,user) ;
+
+                initLists = new ArrayList<>() ;
+                initList = new TK_InitList() ;
+                initList.setL_goods(goods);
+                initList.setL_num(0l);
+                initLists.add(initList) ;
+
+                init.setDjmx(initLists);
+                init.setY_zd_user(user);
+//                this.goodsDao.saveAll_GoodsDao(init.getDjmx()) ;
+                this.goodsDao.save(init) ;
+
+                proxy.getInstance(this).createBill(init, user, "NotLensInit") ;
+                proxy.getInstance(this).affirmBill(init,user, "NotLensInit") ;
+                proxy.getInstance(this).executeBill(init,user, "NotLensInit") ;
+            }
+        }
+    }
+    /**
+     * 默认度数库存处理
+     * @param goods
+     * @param listLens
+     * @param sessionTuken
+     */
+    private void saveLens_6_init_lens_bill(TG_Goods goods, List<TG_Lens> listLens, LoginTuken sessionTuken) throws Exception{
+        if(TG_Goods.KcJb.xk.ordinal()==goods.getKcjb().ordinal()){
+            TK_YW yw = this.goodsDao.getUnique("From TK_YW yw where yw.bm=:bm", LKMap.create().putEx("bm", "0")) ;
+            TU_Com com = this.goodsDao.get(TU_Com.class, sessionTuken.getComId()) ;
+            TU_User user = this.goodsDao.get(TU_User.class, sessionTuken.getId()) ;
+            List<TU_Store> listStore = this.goodsDao.find("From TU_Store s where s.com.id=:id and s.isCenter=true and s.isHasKc=true ", com) ;
+            TK_Init init = null ;List<_YWList> initLists = null ; TK_InitList initList = null ;
+            for(TU_Store store :listStore){
+                init = new TK_Init(goods.getCom(),yw,store,user) ;
+                initLists = new ArrayList<>(listLens.size()) ;
+                for(TG_Lens lens :listLens){
+                    initList = new TK_InitList() ;
+                    initList.setL_goods(goods);
+                    initList.setL_num(0l);
+                    initList.setSph(lens.getSph());
+                    initList.setCyl(lens.getCyl());
+                    initList.setDj(init);
+                    initLists.add(initList) ;
+                }
+                init.setDjmx(initLists);
+                init.setY_zd_user(user);
+                this.goodsDao.save(init) ;
+                this.goodsDao.saveAll_GoodsDao(init.getDjmx()) ;
+
+                proxy.getInstance(this).createBill(init,user,"LensInit") ;
+                proxy.getInstance(this).affirmBill(init,user, "LensInit") ;
+                proxy.getInstance(this).executeBill(init,user, "LensInit") ;
+            }
+
+        }
     }
 }

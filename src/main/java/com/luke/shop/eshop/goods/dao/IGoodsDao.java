@@ -4,7 +4,6 @@ import com.luke.shop.eshop.base.IBaseDao;
 import com.luke.shop.eshop.goods.vo.VOGoods;
 import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.model.*;
-import com.luke.shop.tool.LoginTuken;
 import com.luke.shop.tool.vo.VOId;
 
 import java.util.List;
@@ -14,13 +13,7 @@ import java.util.List;
  */
 public interface IGoodsDao extends IBaseDao {
 
-    /**
-     * 添加商品时添加默认库存
-     * @param goods
-     * @return
-     * @throws Exception
-     */
-    void addGoods_1_kc(TG_Goods goods, VOGoods vo)throws  Exception;
+
 
     /**
      * 添加商品时，添加默认价格
@@ -56,10 +49,15 @@ public interface IGoodsDao extends IBaseDao {
      */
     void saveLens_6_delete(VOLens vo)throws  Exception;
 
-    /**是加工中心并且有库存的站点添加默认库存*/
-    void saveLens_6_kc(TG_Goods goods)throws  Exception;
+
 
     void saveLens_6_price(TG_Goods goods)throws  Exception;
 
 
+
+
+    List saveAll_GoodsDao(List listKc)throws  Exception;
+
+
+    <T> T update_GoodsDao(T  t)throws  Exception;
 }

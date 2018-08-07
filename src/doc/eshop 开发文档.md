@@ -214,7 +214,7 @@ class A{
     // 在TU_User表中生成一个roleId列
 ```
 
-#### @OneToMany
+#### @ManyToMany
 
 ```java
 class TU_Role
@@ -240,6 +240,10 @@ class TU_Role
   获取order（一或多）对象里也同时也重新获取最新的items（多）的对象，对应EntityManager的refresh(object)，调用JPA规范中的refresh()时，适用于Hibernate的flush()方法
 - **CascadeType.ALL** 
   包含所有持久化方法
+
+####  @OneToMany
+
+只做些标记时，默认会多出一个关系表，一般需要与 @JoinColumn(name = "initId") 一起使用，
 
 
 

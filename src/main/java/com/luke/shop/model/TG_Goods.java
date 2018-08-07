@@ -11,6 +11,10 @@ import javax.persistence.*;
 @Entity
 public class TG_Goods extends Model {
 
+    public enum KcJb{
+        xk,ld,cf
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindId",foreignKey = @ForeignKey(name = "fk_goods_kind"))
     private TG_GoodsTree kind ;
@@ -43,8 +47,10 @@ public class TG_Goods extends Model {
     @Column(length = 180,nullable = false)
     private String pinYin ;
 
-    /**0 库存，1 零订 2车房*/
-    private Integer kcjb = 0 ;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private KcJb kcjb = KcJb.xk ;
 
 
     public TU_Com getCom() {
@@ -121,11 +127,11 @@ public class TG_Goods extends Model {
         this.pinYin = pinYin;
     }
 
-    public Integer getKcjb() {
+    public KcJb getKcjb() {
         return kcjb;
     }
 
-    public void setKcjb(Integer kcjb) {
+    public void setKcjb(KcJb kcjb) {
         this.kcjb = kcjb;
     }
 }

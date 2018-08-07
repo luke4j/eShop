@@ -4,11 +4,12 @@ import com.luke.shop.eshop.base.BaseDao;
 import com.luke.shop.eshop.login.dao.ILoginDao;
 import com.luke.shop.eshop.login.vo.VOLogin;
 import com.luke.shop.eshop.login.vo.VOLoginEditPassword;
-import com.luke.shop.model.*;
-import com.luke.shop.tool.Assertion;
+import com.luke.shop.model.TSYS_SetupCom;
+import com.luke.shop.model.TU_Com;
+import com.luke.shop.model.TU_Message;
+import com.luke.shop.model.TU_User;
 import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.LoginTuken;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

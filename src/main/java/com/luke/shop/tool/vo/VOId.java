@@ -8,15 +8,20 @@ import javax.validation.constraints.NotNull;
 @ApiModel
 public class VOId implements VO{
 
+    public VOId(){}
+    public VOId(Long id ){
+        this.id = id ;
+    }
+
     @ApiModelProperty(value = "id")
     @NotNull(message = "id")
-    private Long Id ;
+    private Long id ;
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 }

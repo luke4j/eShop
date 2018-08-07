@@ -13,7 +13,7 @@ import java.util.Date;
 @MappedSuperclass
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public abstract class Model  implements java.io.Serializable{
+public class Model  implements java.io.Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
