@@ -16,6 +16,18 @@ public class TSYS_SetupCom extends Model{
     @Column(length = 100,nullable = false)
     private String val ;
 
+    @Column(length = 100)
+    private String ext1 ;
+
+    @Column(length = 100)
+    private String ext2 ;
+    @Column(length = 100)
+    private String ext3 ;
+    @Column(length = 100)
+    private String ext4 ;
+    @Column(length = 100)
+    private String ext5 ;
+
     @Column(length = 200,nullable = false)
     private String  note  ;
 
@@ -54,5 +66,45 @@ public class TSYS_SetupCom extends Model{
 
     public void setCom(TU_Com com) {
         this.com = com;
+    }
+
+    public String getExt1() {
+        return ext1;
+    }
+
+    public void setExt1(String ext1) {
+        this.ext1 = ext1;
+    }
+
+    public String getExt2() {
+        return ext2;
+    }
+
+    public void setExt2(String ext2) {
+        this.ext2 = ext2;
+    }
+
+    public String getExt3() {
+        return ext3;
+    }
+
+    public void setExt3(String ext3) {
+        this.ext3 = ext3;
+    }
+
+    public String getExt4() {
+        return ext4;
+    }
+
+    public void setExt4(String ext4) {
+        this.ext4 = ext4;
+    }
+
+    public String getExt5() {
+        return ext5;
+    }
+
+    public void setExt5(String ext5) {
+        this.ext5 = ext5;
     }
 }

@@ -31,6 +31,7 @@ public interface IGoodsAction {
     public final String findGoods = "查询商品信息" ;
     public final String getGoodsLens = "查询度数商品度数配置信息" ;
     public final String saveLens = "保存度数与配置" ;
+    public final String saveLensDefVal = "保存商品度数默认库存" ;
 
 
     /**
@@ -144,5 +145,14 @@ public interface IGoodsAction {
                                 @ApiParam(value = saveLens, required = true)  @Valid @RequestBody
                                 VOLens vo,
                                 BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+
+
+    @ApiOperation(value = saveLensDefVal)
+    @RequestMapping(path = "saveLensDefVal.act",method= RequestMethod.POST)
+    @ResponseBody
+    ActionResult saveLensDefVal_7(HttpServletRequest request, HttpServletResponse response,
+                            @ApiParam(value = saveLensDefVal, required = true)  @Valid @RequestBody
+                            VOId vo,
+                            BindingResult bindingResult, ActionResult actionResult)throws Exception ;
 
 }

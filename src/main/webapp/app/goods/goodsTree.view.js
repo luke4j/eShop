@@ -259,7 +259,9 @@ define(function(require, exports, module) {
                     url:'goodsTree/editNode',
                     data:param,
                     success:function(res,all){
-                        $("#tb_goodsTree").bootstrapTable('refresh') ;
+                        var zTree = $.fn.zTree.getZTreeObj("tb_goodsTree");
+                        var node = zTree.getNodeByParam("id",param.fid) ;
+                        zTree.expandNode(node,true,false,false,true) ;
                         $("#text",$("#f_goodstree")).val('') ;
                     }
                 });

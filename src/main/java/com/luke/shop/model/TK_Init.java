@@ -20,7 +20,7 @@ public class TK_Init extends _YW {
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "djId",foreignKey = @ForeignKey(name = "fk_yw_djId"))
     private List<TK_InitList> djmx ;
 

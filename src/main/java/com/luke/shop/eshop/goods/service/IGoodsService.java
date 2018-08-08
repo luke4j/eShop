@@ -29,4 +29,6 @@ public interface IGoodsService {
     void getGoodsLens_5(ActionResult actionResult, VOId vo) throws Exception;
 
     void saveLens_6(LoginTuken sessionTuken, ActionResult actionResult, VOLens vo)throws Exception;
+
+    void saveLensDefVal_7(LoginTuken sessionTuken, ActionResult actionResult, VOId vo)throws Exception;
 }

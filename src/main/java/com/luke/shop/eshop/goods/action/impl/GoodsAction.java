@@ -76,4 +76,13 @@ public class GoodsAction extends BaseAction implements IGoodsAction {
         this.goodsService.saveLens_6(getSessionTuken(request),actionResult,vo) ;
         return actionResult;
     }
+
+    @Override
+    public ActionResult saveLensDefVal_7(HttpServletRequest request, HttpServletResponse response,
+                                         @ApiParam(value = saveLensDefVal, required = true) @Valid @RequestBody VOId vo,
+                                         BindingResult bindingResult, ActionResult actionResult) throws Exception {
+        actionResult.setData(saveLens);
+        this.goodsService.saveLensDefVal_7(getSessionTuken(request),actionResult,vo) ;
+        return actionResult;
+    }
 }

@@ -11,11 +11,6 @@ import java.util.Date;
  *
  */
 @Entity
-@Table(
-        indexes = {
-                @Index(name = "idx_user_loginName" ,unique = true,columnList = "loginname")
-        }
-)
 public class TU_User extends Model{
 
 

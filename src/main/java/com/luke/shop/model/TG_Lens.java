@@ -6,9 +6,6 @@ import javax.persistence.*;
  * Created by luke on 2018/7/30.
  */
 @Entity
-@Table(indexes = {
-        @Index(name="idx_lens_goods_sph_cyl",columnList = "goodsId,sph,cyl",unique = true)
-})
 public class TG_Lens extends Model {
     @JoinColumn(nullable = false)
     private Float sph ;

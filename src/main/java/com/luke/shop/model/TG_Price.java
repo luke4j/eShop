@@ -8,9 +8,6 @@ import javax.persistence.*;
  * Created by luke on 2018/7/30.
  */
 @Entity
-@Table(indexes = {
-        @Index(name="idx_price_goods_store_sph_cyl",columnList = "goodsId,storeId,sph,cyl",unique = true)
-})
 public class TG_Price extends Model {
 
     public enum PriceType {

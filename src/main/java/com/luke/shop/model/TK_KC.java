@@ -9,9 +9,6 @@ import java.util.Date;
  * Created by luke on 2018/7/27.
  */
 @Entity
-@Table(indexes = {
-        @Index(name="idx_kc_store_goods_sph_cyl",columnList = "storeId,goodsId,sph,cyl",unique = true)
-})
 public class TK_KC extends Model {
 
     @ManyToOne(fetch = FetchType.EAGER)

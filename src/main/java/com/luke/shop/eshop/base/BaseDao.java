@@ -64,13 +64,14 @@ public class BaseDao {
     }
 
     /**
-     * hibernate ql　删除
+     * hibernate ql　删除<br>
+     * this.delete_ql("delete from TG_Price p where p.goods.id=:goodsId", vo) ; vo中要有goodsId属性并且有值
      * @param ql
      * @param param
      * @return
      * @throws Exception
      */
-    public boolean delete_ql(String ql,Object param) throws Exception{
+    public boolean delete_hql(String ql,Object param) throws Exception{
         if(LK.StrIsEmpty(ql) ) Assertion.Error("delete_ql语句为空");
         if(param instanceof Map){
             Map<String,Object> p = (Map<String,Object>) param ;
@@ -78,7 +79,19 @@ public class BaseDao {
         }else{
             this.getSession().createQuery(ql).setProperties(param).executeUpdate() ;
         }
+        return true ;
+    }
 
+    /**
+     * this.delete_jdbc("delete from tg_price where goodsId=?",vo.getGoodsId()) ;
+     * @param sql
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public boolean delete_jdbc(String sql,Object... params) throws Exception{
+        if(LK.StrIsEmpty(sql) ) Assertion.Error("delete_sql语句为空");
+        this.jdbcTemplate.update(sql,params) ;
         return true ;
     }
 
@@ -309,5 +322,7 @@ public class BaseDao {
         return obj ;
     }
 
-
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
 }

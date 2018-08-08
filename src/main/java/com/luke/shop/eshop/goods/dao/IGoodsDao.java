@@ -60,4 +60,6 @@ public interface IGoodsDao extends IBaseDao {
 
 
     <T> T update_GoodsDao(T  t)throws  Exception;
+
+    List<TK_InitList> saveLensDefVal_7_dbCopy_dj(Long goodsId, Long num, Long djId)throws  Exception;
 }

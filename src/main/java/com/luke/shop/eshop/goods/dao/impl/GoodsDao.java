@@ -6,6 +6,8 @@ import com.luke.shop.eshop.goods.dao.IGoodsDao;
 import com.luke.shop.eshop.goods.vo.VOGoods;
 import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.model.*;
+import com.luke.shop.tool.Assertion;
+import com.luke.shop.tool.LK;
 import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.vo.VOId;
 import org.springframework.beans.BeanUtils;
@@ -21,35 +23,20 @@ import java.util.List;
 public class GoodsDao extends BaseDao implements IGoodsDao {
 
 
-    private void addGoods_1_kc_notLens_kc(TU_Com com, TG_Goods goods) throws Exception {
-        TSYS_SetupCom sc = this.getUnique("From TSYS_SetupCom sc where sc.name='添加商品时是否添加价格' and sc.com.id=:id ", com) ;
-        if(Boolean.valueOf(sc.getVal())){
-            List<TU_Store> listStore = this.find("From TU_Store s where s.com.id=:comId and s.isHasKc=true and s.b_isDel=false", new LKMap<String,Object>().putEx("comId",com.getId())) ;
-            List<TK_KC> listKc = new ArrayList<TK_KC>(listStore.size()) ;
-            TK_KC kc = null ;
-            for(TU_Store store :listStore){
-                kc = new TK_KC() ;
-                kc.setStore(store);
-                kc.setCom(com);
-                kc.setGoods(goods);
-                listKc.add(kc) ;
-            }
-            this.saveAll(listKc) ;
-        }
-    }
-
     @Override
     public TG_Price addGoods_1_price(TG_Goods goods, VOGoods vo) throws Exception {
         TG_GoodsTree kindNode = goods.getKind() ;
         if(!Boolean.valueOf(kindNode.getA1())){
             TU_Com com = goods.getCom() ;
-            TSYS_SetupCom sc = this.getUnique("From TSYS_SetupCom sc where sc.name='添加商品时是否添加价格' and sc.com.id=:id ",com) ;
+            TSYS_SetupCom sc = this.getUnique("From TSYS_SetupCom sc where sc.name='save_not_lens_add_price' and sc.com.id=:id ",com) ;
             if(Boolean.valueOf(sc.getVal())){
                 TG_Price price = new TG_Price() ;
                 BeanUtils.copyProperties(vo, price);
                 price.setCom(com);
                 price.setGoods(goods);
                 price.setPriceType(TG_Price.PriceType.normal);
+                if(LK.StrIsNotEmpty(sc.getExt1())) price.setPin(Double.parseDouble(sc.getExt1()));
+                if(LK.StrIsNotEmpty(sc.getExt2())) price.setPout(Double.parseDouble(sc.getExt2()));
                 this.save(price) ;
                 return price ;
             }
@@ -83,28 +70,29 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
 
     @Override
     public void saveLens_6_delete(VOLens vo) throws Exception {
-        this.delete_ql("delete from TG_Price p where p.goods.id=:goodsId", vo) ;
-        this.delete_ql("delete from TG_Lens l where l.goods.id=:goodsId",vo) ;
-        this.delete_ql("delete from TG_LensSetup s where s.goods.id=:goodsId",vo) ;
+        Assertion.NotEmpty(vo.getGoodsId(), "商品ID为空，不能保存度数");
+        this.delete_jdbc("delete from tg_price where goodsId=?", vo.getGoodsId()) ;
+        this.delete_jdbc("delete from tg_lens where goodsId=?",vo.getGoodsId()) ;
+        this.delete_jdbc("delete from tg_lenssetup where goodsId=?",vo.getGoodsId()) ;
+        this.delete_jdbc("delete from tg_goodsattr where goodsId=?", vo.getGoodsId()) ;
 
-        List<TK_Init> list = this.find("select i from TK_Init i left join TK_InitList il on i.id = il.dj.id where il.l_goods.id=:goodsId ",vo) ;
-        this.delete_ql("delete from TK_InitList il where il.l_goods.id=:goodsId",vo) ;
-        Long tk_initId = null ;
-        if(list!=null&&list.size()>=0){
-            tk_initId = list.get(0).getId() ;
+        List<TK_InitList> listInitLists = this.find("From TK_InitList il where il.l_goods.id=:goodsId", vo) ;
+        if(listInitLists.size()>0){
+            TK_InitList initList = listInitLists.get(0) ;
+            this.delete_jdbc("delete from tk_initlist where l_goodsId=?", vo.getGoodsId());
+            this.delete_jdbc("delete from tk_init where id=?", initList.getDj().getId());
         }
-        this.delete_ql("delete from TK_Init i where i.id=:id",new VOId(tk_initId)) ;
-        this.delete_ql("delete from TK_YWLS ls where ls.goods.id=:goodsId",vo) ;
-        this.delete_ql("delete from TK_KC k where k.goods.id=:goodsId",vo) ;
-
+        this.delete_jdbc("delete from tk_ywls where goodsId=?", vo.getGoodsId());
+        this.delete_jdbc("delete from tk_kc where goodsId=?", vo.getGoodsId());
     }
 
 
 
     @Override
     public void saveLens_6_price(TG_Goods goods) throws Exception {
+        /**添加度数商品时添加添加默认价格0*/
         TU_Com com = goods.getCom() ;
-        TSYS_SetupCom sc = this.getUnique("From TSYS_SetupCom sc where sc.name='添加商品时初始化价格' and sc.com.id=:id ", com) ;
+        TSYS_SetupCom sc = this.getUnique("From TSYS_SetupCom sc where sc.name='save_lens_add_price' and sc.com.id=:id ", com) ;
         if(Boolean.valueOf(sc.getVal())){
             List<TG_Lens> listLens = this.find("From TG_Lens l where l.goods.id=:id",goods) ;
             TG_Price price = null ;
@@ -118,6 +106,8 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
                 price.setSph(lens.getSph());
                 price.setCyl(lens.getCyl());
                 price.setPriceType(TG_Price.PriceType.normal);
+                if(LK.StrIsNotEmpty(sc.getExt1())) price.setPin(Double.parseDouble(sc.getExt1()));
+                if(LK.StrIsNotEmpty(sc.getExt2())) price.setPout(Double.parseDouble(sc.getExt2()));
                 listPrice.add(price) ;
             }
             this.saveAll(listPrice) ;
@@ -134,5 +124,12 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
         return super.saveAll(listKc);
     }
 
+    @Override
+    public List<TK_InitList> saveLensDefVal_7_dbCopy_dj(Long goodsId, Long num, Long djId) throws Exception {
+        String mysqlJdbcInsertIntoSql = "insert into tk_initlist (b_isDel,b_wtime,l_goodsId,sph,cyl,l_num,djid)" +
+                "select false,now(),l.goodsId,l.sph,l.cyl,"+num+","+djId+" from  tg_lens l where l.goodsid=?" ;
 
+        this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql, new Object[]{goodsId}) ;
+        return this.find("From TK_InitList il where il.dj.id=:id",new VOId(djId)) ;
+    }
 }

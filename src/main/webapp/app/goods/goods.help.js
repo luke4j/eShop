@@ -55,7 +55,7 @@ var goods_help = {
                         success:function(data,res){
                             if(res.success){
                                 J.alert("保存成功") ;
-                                alt.modal('hidden') ;
+                                alt.modal('hide') ;
                             }
                         }
                     });
@@ -84,7 +84,7 @@ var goods_help = {
                         success:function(data,res){
                             if(res.success){
                                 J.alert("修改成功") ;
-                                alt.modal('hidden') ;
+                                alt.modal('hide') ;
                             }
                         }
                     });
@@ -129,7 +129,7 @@ var goods_help = {
             }
         }
         /**是否度数*/
-        if(ext.kind.a1=='true'){
+        if(ext.kind.a1==='true'){
             /**度数商品显示度数配置*/
             var btnSetLens = J.formElement({id:'btn_set_lens',name:'btn_set_lens',text:'配置度数',type:'btn'}) ;
             /**显示配置度数弹出窗*/
@@ -148,9 +148,24 @@ var goods_help = {
                                 J.ajax({
                                     url:'goods/addGoods',
                                     data:valForm,
-                                    success:function(d){
+                                    success:function(d,res){
                                         lens_help.showLensWindow(d.id) ;
                                         $('#id',$("#fm_goodsInf")).val(d.id) ;
+
+                                        /**是否添加价格*/
+                                        if(LukeApp.info&&LukeApp.info.listSetupCom){
+                                            /**是否配置了在录入时录入价格*/
+                                            var setups = LukeApp.info.listSetupCom ;
+                                            for(var i in setups){
+                                                if(setups[i].name==="save_lens_add_kc"&&setups[i].val==="true"){
+                                                    console.dir(arguments) ;
+                                                    //J.ajax({
+                                                    //
+                                                    //}) ;
+                                                }
+                                            }
+                                        }
+
                                     }
                                 });
                             }
@@ -165,7 +180,7 @@ var goods_help = {
                 /**是否配置了在录入时录入价格*/
                 var setups = LukeApp.info.listSetupCom ;
                 for(var i in setups){
-                    if(setups[i].name="添加商品时是否添加价格"&&setups[i].val=="true"){
+                    if(setups[i].name==="save_not_lens_add_price"&&setups[i].val==="true"){
                         jFrom.fieldset.append(J.formElement({id:'pin',name:'pin',text:"进货价"})) ;
                         jFrom.fieldset.append(J.formElement({id:'pout',name:'pout',text:"销售价"})) ;
                         break ;
