@@ -34,97 +34,13 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
     @Resource
     BusinessProxy proxy  ;
 
-    @Override
-    public <T, V> T createBill(V bill,TU_User zdUser,String tag) throws Exception {
-        return null;
-    }
-
-    @Override
-    public <T> T affirmBill(T bill,TU_User qrUser ,String tag) throws Exception {
-        /**初始化库存单据确认*/
-        if("LensInit".equals(tag)){
-            TK_Init init = (TK_Init)bill ;
-            init.setY_qr_user(qrUser);
-            init.setQrTime(new Date());
-            init.setY_bill_state(_YW.BillState.qr);
-            return (T)this.goodsDao.update_GoodsDao(init) ;
-        }else if("NotLensInit".equals(tag)){
-            TK_Init init = (TK_Init)bill ;
-            init.setY_qr_user(qrUser);
-            init.setQrTime(new Date());
-            init.setY_bill_state(_YW.BillState.qr);
-            return (T)this.goodsDao.update_GoodsDao(init) ;
-        }else{
-            Assertion.Error("GoodsService.affirmBill param [tag] is not handler");
-        }
-        return null ;
-    }
 
     @Override
     public <T> T executeBill(T bill,TU_User zxUser,String tag) throws Exception {
-        if("LensInit".equals(tag)){
-            TK_Init init = (TK_Init)bill ;
-            /**设置单据状态与执行操作人*/
-            init.setY_zx_user(zxUser);
-            init.setZxTime(new Date());
-            init.setY_bill_state(_YW.BillState.qr);
-            this.goodsDao.update_GoodsDao(init) ;
-
-            List<TK_KC> listKc = new ArrayList<>(init.getDjmx().size()) ;
-            TK_KC kc = null ;TG_Goods goods = null;
-            /**每一条初始化单据的明细都有一个库存记录*/
-
-            this.goodsDao.saveAll_GoodsDao(listKc) ;
-
-
-
-            /**更新初始化单据中的库存数据 */
-            for(_YWList ywlist:init.getDjmx()){
-                TK_InitList iniList = (TK_InitList )ywlist ;
-                iniList.setDj(init);
-               for(int i = 0 ;i<listKc.size() ;i++){
-                   if(listKc.get(i).getGoods().getId().longValue()==iniList.getL_goods().getId().longValue()
-                           &&listKc.get(i).getSph().floatValue()==iniList.getSph().floatValue()
-                           &&listKc.get(i).getCyl().floatValue()==iniList.getCyl().floatValue()
-                           &&listKc.get(i).getStore().getId().longValue()==init.getY_store().getId().longValue()){
-                       iniList.setL_kc(listKc.get(i));
-                       break ;
-                   }
-               }
-            }
-            return (T)init ;
-        }else if("NotLensInit".equals(tag)){
-            TK_Init init = (TK_Init)bill ;
-            List<TK_KC> listKc = new ArrayList<>(init.getDjmx().size()) ;
-            TK_KC kc = null ;TG_Goods goods = null;
-            /**每一条初始化单据的明细都有一个库存记录，非度数商品添加一次，就只有一个明细*/
-            for(_YWList ywlist :init.getDjmx()){
-                TK_InitList initList = (TK_InitList)ywlist ;
-                if(goods==null) goods = initList.getL_goods() ;
-                kc = new TK_KC() ;
-                kc.setGoods(goods);
-                kc.setCyl(initList.getCyl());
-                kc.setSph(initList.getSph());
-                kc.setCom(init.getY_com());
-                kc.setStore(init.getY_store());
-                listKc.add(kc) ;
-            }
-            this.goodsDao.saveAll_GoodsDao(listKc) ;
-
-            /**设置单据状态与执行操作人*/
-            init.setY_zx_user(zxUser);
-            init.setZxTime(new Date());
-            init.setY_bill_state(_YW.BillState.zx);
-            this.goodsDao.update_GoodsDao(init) ;
-
-            /**更新初始化单据中的库存数据 */
-            init.getDjmx().get(0).setL_kc(listKc.get(0));
-            this.goodsDao.update_GoodsDao(init.getDjmx().get(0)) ;
-            return (T)init ;
-        }else{
-            Assertion.Error("GoodsService.executeBill param [tag] is not handler");
-        }
-        return null ;
+        TK_InitBill initBill = (TK_InitBill)bill ;
+        if(LK.ObjIsNull(initBill))Assertion.Error("GoodsService.executeBill 单据为空");
+        this.goodsDao.saveDefVal_dbCopy_kc_ls(initBill, tag) ;
+        return (T)initBill ;
     }
 
 
@@ -153,20 +69,57 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
 
         goods = this.goodsDao.save(goods);
 
-                /**保存扩展属性*/
+        /**保存扩展属性*/
         TG_GoodsAttr attr = new TG_GoodsAttr() ;
         BeanUtils.copyProperties(vo, attr);
         attr.setGoods(goods);
         this.goodsDao.save(attr) ;
 
-        //向下的逻辑需要分两种情况处理，度数商品，和非度数商品，
-        this.addGoods_1_init_bill(goods, sessionTuken) ;
+        /**按系统配置保存价格*/
         this.goodsDao.addGoods_1_price(goods, vo) ;
 
         return goods ;
     }
 
+    @Override
+    public void addGoods_1_def_kc(LoginTuken sessionTuken, TG_Goods goods) throws Exception {
+        /**添加商品时初始化库存*/
+        TU_Com com = goods.getCom() ;
+        TSYS_SetupCom sc = this.goodsDao.getUnique("From TSYS_SetupCom sc where sc.name='save_not_lens_add_kc' and sc.com.id=:id ", com) ;
+        /**系统配置了添加商品时初始化库存才执行*/
+        if(Boolean.parseBoolean(sc.getVal())){
+            Long num = 0l ;
+            if(LK.StrIsNotEmpty(sc.getExt1())){
+                num = Long.parseLong(sc.getExt1()) ;
+            }
 
+            TG_GoodsTree kindNode = goods.getKind() ;
+            /**只对现库级别并且非度数商品有效*/
+            if(TG_Goods.KcJb.xk.ordinal()==goods.getKcjb().ordinal()&&!Boolean.valueOf(kindNode.getA1())){
+                TK_YW yw = this.goodsDao.getUnique("From TK_YW yw where yw.bm=:bm", LKMap.create().putEx("bm", "0")) ;
+                TU_User user = this.goodsDao.get(TU_User.class, sessionTuken.getId()) ;
+                List<TU_Store> listStore = this.goodsDao.find("From TU_Store s where s.com.id=:id  and s.isHasKc=true ", com) ;
+                TK_InitBill initBill = null ;List<_YWMX> listInitBillMX = null ; TK_InitBillMX initBillMX = null ;
+                /**每个需要有库存的站点执行*/
+                for(TU_Store store :listStore){
+                    initBill = new TK_InitBill(goods.getCom(),yw,store,user) ;
+                    proxy.getInstance(this).createBill(initBill, user, "NotLensInit");
+                    /**保存单据明细*/
+                    initBillMX = new TK_InitBillMX() ;
+                    initBillMX.setDj(initBill);
+                    initBillMX.setL_goods(goods);
+                    initBillMX.setL_num(num);
+                    this.goodsDao.save(initBillMX) ;
+
+                    listInitBillMX = this.goodsDao.find("From TK_InitBillMX mx where mx.dj.id=:id", initBill) ;
+                    initBill.setDjmx(listInitBillMX);
+
+                    proxy.getInstance(this).affirmBill(initBill,user, "NotLensInit") ;
+                    proxy.getInstance(this).executeBill(initBill, user, "NotLensInit") ;
+                }
+            }
+        }
+    }
 
     @Override
     public void getGoodsLens_5(ActionResult actionResult, VOId vo) throws Exception {
@@ -214,134 +167,43 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
 
         /**添加默认入库单，确认入库单，入默认库存0 */
         //TODO 添加完成之后再做处理 用数据库批量处理
-//        this.saveLens_6_init_lens_bill(goods, listLens, sessionTuken) ;
         /**添加默认价格*/
         this.goodsDao.saveLens_6_price(goods) ;
 
         actionResult.setZytz("修改度数配置会重置价格与库存，请重新盘点库存与设置价格");
     }
 
-    /**
-     * 默认非度数库存处理
-     * @param goods
-     * @param sessionTuken
-     */
-    private void addGoods_1_init_bill(TG_Goods goods, LoginTuken sessionTuken) throws Exception {
-        /**添加商品时初始化库存*/
-        TU_Com com = goods.getCom() ;
-        TSYS_SetupCom sc = this.goodsDao.getUnique("From TSYS_SetupCom sc where sc.name='save_not_lens_add_kc' and sc.com.id=:id ", com) ;
-        Long num = 0l ;
-        if(LK.StrIsNotEmpty(sc.getExt1())){
-            num = Long.parseLong(sc.getExt1()) ;
-        }
-        /**系统配置了添加商品时初始化库存才执行*/
-        if(Boolean.parseBoolean(sc.getVal())){
-            TG_GoodsTree kindNode = goods.getKind() ;
-            /**只对现库级别并且非度数商品有效*/
-            if(TG_Goods.KcJb.xk.ordinal()==goods.getKcjb().ordinal()&&!Boolean.valueOf(kindNode.getA1())){
-                TK_YW yw = this.goodsDao.getUnique("From TK_YW yw where yw.bm=:bm", LKMap.create().putEx("bm", "0")) ;
-                TU_User user = this.goodsDao.get(TU_User.class, sessionTuken.getId()) ;
-                List<TU_Store> listStore = this.goodsDao.find("From TU_Store s where s.com.id=:id  and s.isHasKc=true ", com) ;
-                TK_Init init = null ;List<_YWList> initLists = null ; TK_InitList initList = null ;
-                /**每个需要有库存的站点执行*/
-                for(TU_Store store :listStore){
-                    init = new TK_Init(goods.getCom(),yw,store,user) ;
-                    init.setY_zd_user(user);
-                    this.goodsDao.save(init) ;
 
-                    initLists = new ArrayList<>() ;
-                    initList = new TK_InitList() ;
-                    initList.setL_goods(goods);
-                    initList.setL_num(num);
-                    initLists.add(initList) ;
-                    this.goodsDao.saveAll_GoodsDao(initLists) ;
-
-                    init.setDjmx(initLists);
-
-                    proxy.getInstance(this).createBill(init, user, "NotLensInit") ;
-                    proxy.getInstance(this).affirmBill(init,user, "NotLensInit") ;
-                    proxy.getInstance(this).executeBill(init,user, "NotLensInit") ;
-                }
-            }
-        }
-    }
-    /**
-     * 默认度数库存处理
-     * @param goods
-     * @param listLens
-     * @param sessionTuken
-     */
-    private void saveLens_6_init_lens_bill(TG_Goods goods, List<TG_Lens> listLens, LoginTuken sessionTuken) throws Exception{
-        /**添加度数商品时添加默认库存0*/
-        TU_Com com = goods.getCom() ;
-        TSYS_SetupCom sc = this.goodsDao.getUnique("From TSYS_SetupCom sc where sc.name='save_lens_add_kc' and sc.com.id=:id ", com) ;
-        Long num = 0l ;
-        if(LK.StrIsNotEmpty(sc.getExt1()))
-            num = Long.parseLong(sc.getExt1()) ;
-
-        if(Boolean.parseBoolean(sc.getVal())){
-            /**只处理现库级别*/
-            if(TG_Goods.KcJb.xk.ordinal()==goods.getKcjb().ordinal()){
-                TK_YW yw = this.goodsDao.getUnique("From TK_YW yw where yw.bm=:bm", LKMap.create().putEx("bm", "0")) ;
-                TU_User user = this.goodsDao.get(TU_User.class, sessionTuken.getId()) ;
-                List<TU_Store> listStore = this.goodsDao.find("From TU_Store s where s.com.id=:id and s.isCenter=true and s.isHasKc=true ", com) ;
-                TK_Init init = null ;List<_YWList> initLists = null ; TK_InitList initList = null ;
-                /**是加工中心并且有库存的站点*/
-                for(TU_Store store :listStore){
-                    init = new TK_Init(goods.getCom(),yw,store,user) ;
-                    init.setY_zd_user(user);
-                    this.goodsDao.save(init) ;
-                    initLists = new ArrayList<>(listLens.size()) ;
-                    /**每一个度数都是一个库存记录*/
-                    for(TG_Lens lens :listLens){
-                        initList = new TK_InitList() ;
-                        initList.setL_goods(goods);
-                        initList.setL_num(num);
-                        initList.setSph(lens.getSph());
-                        initList.setCyl(lens.getCyl());
-                        initList.setDj(init);
-                        initLists.add(initList) ;
-                    }
-                    this.goodsDao.saveAll_GoodsDao(initLists) ;
-                    init.setDjmx(initLists);
-
-                    proxy.getInstance(this).createBill(init,user,"LensInit") ;
-                    proxy.getInstance(this).affirmBill(init,user, "LensInit") ;
-                    proxy.getInstance(this).executeBill(init,user, "LensInit") ;
-                }
-            }
-        }
-    }
 
     @Override
-    public void saveLensDefVal_7(LoginTuken sessionTuken, ActionResult actionResult, VOId vo) throws Exception {
-        TG_Goods goods = this.goodsDao.get(TG_Goods.class,vo.getId()) ;
-        /**添加度数商品时添加默认库存0*/
+    public void saveLens_6_def_kc(LoginTuken sessionTuken, ActionResult actionResult, VOLens vo) throws Exception {
+        TG_Goods goods = this.goodsDao.get(TG_Goods.class,vo.getGoodsId()) ;
         TU_Com com = goods.getCom() ;
         TSYS_SetupCom sc = this.goodsDao.getUnique("From TSYS_SetupCom sc where sc.name='save_lens_add_kc' and sc.com.id=:id ", com) ;
         Long num = 0l ;
         if(LK.StrIsNotEmpty(sc.getExt1()))
             num = Long.parseLong(sc.getExt1()) ;
-
         if(Boolean.parseBoolean(sc.getVal())){
             /**只处理现库级别*/
             if(TG_Goods.KcJb.xk.ordinal()==goods.getKcjb().ordinal()){
+                /**业务编码0为初始化库存*/
                 TK_YW yw = this.goodsDao.getUnique("From TK_YW yw where yw.bm=:bm", LKMap.create().putEx("bm", "0")) ;
                 TU_User user = this.goodsDao.get(TU_User.class, sessionTuken.getId()) ;
                 List<TU_Store> listStore = this.goodsDao.find("From TU_Store s where s.com.id=:id and s.isCenter=true and s.isHasKc=true ", com) ;
-                TK_Init init = null ;List<_YWList> initLists = null ; TK_InitList initList = null ;
+                TK_InitBill initBill = null ;List<_YWMX> listInitBillMX = null ; TK_InitBillMX initList = null ;
                 /**是加工中心并且有库存的站点*/
                 for(TU_Store store :listStore){
-                    init = new TK_Init(goods.getCom(),yw,store,user) ;
-                    init.setY_zd_user(user);
-                    this.goodsDao.save(init) ;
-                    List<TK_InitList> listInitLists = this.goodsDao.saveLensDefVal_7_dbCopy_dj(goods.getId(), num, init.getId()) ;
-                    init.setDjmx(listInitLists);
-                    proxy.getInstance(this).createBill(init,user,"LensInit") ;
-                    proxy.getInstance(this).affirmBill(init,user, "LensInit") ;
-                    proxy.getInstance(this).executeBill(init,user, "LensInit") ;
+                    initBill = new TK_InitBill(goods.getCom(),yw,store,user) ;
+                    proxy.getInstance(this).createBill(initBill,user,"LensInit") ;
+                    /**以商品id，商品对应的度数数据,系统配置的初始化库存数据，批量生成单据明细信息*/
+                    this.goodsDao.saveLensDefVal_7_dbCopy_dj(goods.getId(), num,initBill.getId()) ;
+                    listInitBillMX = this.goodsDao.find("From TK_InitBillMX mx where mx.dj.id=:id", initBill) ;
+                    initBill.setDjmx(listInitBillMX);
+                    proxy.getInstance(this).affirmBill(initBill,user, "LensInit") ;
+                    proxy.getInstance(this).executeBill(initBill,user, "LensInit") ;
                 }
             }
         }
+
     }
 }

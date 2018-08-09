@@ -7,17 +7,17 @@ import javax.persistence.*;
  * 库存初始化单据明细
  */
 @Entity
-public class TK_InitList extends _YWList {
+public class TK_InitBillMX extends _YWMX {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "djId",foreignKey = @ForeignKey(name = "fk_yw_djId"))
-    TK_Init dj  ;
+    @JoinColumn(name = "djId",nullable = false,foreignKey = @ForeignKey(name = "fk_yw_djId"))
+    TK_InitBill dj  ;
 
-    public TK_Init getDj() {
+    public TK_InitBill getDj() {
         return dj;
     }
 
-    public void setDj(TK_Init dj) {
+    public void setDj(TK_InitBill dj) {
         this.dj = dj;
     }
 }

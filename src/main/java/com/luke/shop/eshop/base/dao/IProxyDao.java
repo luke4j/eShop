@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface IProxyDao extends IBaseDao{
     void saveAll_proxyDao(List<TK_YWLS> listLs) throws Exception;
+    void update_proxyDao(Object obj)throws Exception;
 }

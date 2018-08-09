@@ -34,6 +34,7 @@ public class GoodsAction extends BaseAction implements IGoodsAction {
                                    BindingResult bindingResult, ActionResult actionResult) throws Exception {
         actionResult.setDoing(addGoods);
         TG_Goods node = this.goodsService.addGoods_1(getSessionTuken(request), vo) ;
+        this.goodsService.addGoods_1_def_kc(getSessionTuken(request),node) ;
         actionResult.setData(node);
         return actionResult;
     }
@@ -73,16 +74,10 @@ public class GoodsAction extends BaseAction implements IGoodsAction {
                                    @ApiParam(value = saveLens, required = true) @Valid @RequestBody VOLens vo,
                                    BindingResult bindingResult, ActionResult actionResult) throws Exception {
         actionResult.setData(saveLens);
-        this.goodsService.saveLens_6(getSessionTuken(request),actionResult,vo) ;
+        this.goodsService.saveLens_6(getSessionTuken(request), actionResult,vo) ;
+        this.goodsService.saveLens_6_def_kc(getSessionTuken(request), actionResult,vo) ;
         return actionResult;
     }
 
-    @Override
-    public ActionResult saveLensDefVal_7(HttpServletRequest request, HttpServletResponse response,
-                                         @ApiParam(value = saveLensDefVal, required = true) @Valid @RequestBody VOId vo,
-                                         BindingResult bindingResult, ActionResult actionResult) throws Exception {
-        actionResult.setData(saveLens);
-        this.goodsService.saveLensDefVal_7(getSessionTuken(request),actionResult,vo) ;
-        return actionResult;
-    }
+
 }

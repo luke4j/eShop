@@ -10,15 +10,16 @@ import java.util.List;
 public interface IBusiness {
 
     /**
-     * 制单
+     * 制单 ，代理会保存单据，但并不保存单据明细
      * @param bill
      * @param <T>
      * @param <V>
      * @return
      * @throws Exception
      */
-    <T ,V> T createBill(V bill,TU_User zdUser,String tag) throws Exception;
-
+    default <T, V> T createBill(V bill, TU_User zdUser, String tag) throws Exception {
+        return (T)bill;
+    }
     /**
      * 确认单据
      * @param bill
@@ -26,7 +27,9 @@ public interface IBusiness {
      * @return
      * @throws Exception
      */
-    <T> T  affirmBill(T bill,TU_User qrUser,String tag) throws Exception;
+    default <T> T affirmBill(T bill,TU_User qrUser ,String tag) throws Exception {
+        return (T)bill ;
+    }
 
     /**
      * 执行单据

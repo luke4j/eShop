@@ -2,6 +2,18 @@
 
 # eshop 开发文档
 
+## 名词解释
+
+名词：
+
+### 商品基本属性：
+
+品类，品牌，型号，颜色，是否度数，是否实物，是否效期
+
+### 商品扩展属性：
+
+自定义的属性，任意属性
+
 ## 约定
 
 ### 日志
@@ -700,7 +712,103 @@ isRead boolean -- 是否已读
 
 
 
+### TSYS_SetupCom //公司配置信息
 
+```sql
+name varchar(30)//配置名，英文
+note varchar(200) //中文说明
+val varchar(100) //这个配置的值，任意字符串，比如：'true','false'
+comId bigint // 这个配置属于哪个公司
+ext1 varchar(100) //扩展配置，
+ext2 varchar(100)
+ext3 varchar(100)
+ext4 varchar(100)
+ext5 varchar(100)
+```
+
+```
+例：
+
+name:save_not_lens_add_price 
+
+note:添加成品商品时添加价格 
+
+val:'true'
+
+ext1:10
+
+ext2:20
+
+这一条数据的配置是说在添加 品商品时会添加价格，这个价格会在页面显示输入框，后台也会再做判断是否添加，如果页面没有填写数据，会按照配置的ext1为进货价，ext2为销售价来初始化价格数据
+
+```
+
+
+
+```
+公司配置一些软件使用时的参数
+
+save_not_lens_add_price {ext1:默认进货价,ext2:默认销售价}
+
+save_not_lens_add_kc{ext1:默认入库正品数量}
+
+save_lens_add_price{ext1:默认进货价,ext2:默认销售价}
+
+```
+
+
+
+### TG_GoodsTree //商品基本属性
+
+```sql
+fid bigint //父结点ID
+c_group varchar //组（品类，品牌，型号，颜色 四个组）
+text varchar    //节点名
+c_level int 	//节点级别 1 为品类，2 为品牌 ，3 为型号，4 为颜色
+comId bigint //公司信息
+a1 varchar  //扩展1
+a2 varchar //扩展2
+a3 varchar //扩展 3
+```
+
+```
+扩展说明：
+c_group为品类时，a1代表  是否度数 ；a2代表 是否实物 ；a3代表 是否效期
+```
+
+
+
+### TG_GoodsAttr //商品扩展属性
+
+```sql
+goodsId bigInt //商品ID
+a1 varchar //扩展1
+a2 varchar //扩展2
+a3 varchar //扩展3
+...
+a15 varchar //扩展15
+```
+
+### TG_GoodsAttrSetup //商品扩展属性配置说明
+
+```sql
+kindId bigint //tg_goodsTree.c_group==品类的ID
+columnName varchar    //取值为TG_goodsAttr 的a1-a15
+columnValue varchar   //对应代表的意义，比如columnName:a1;columnValue:单位
+c_type varchar //页面显示此列的元素，
+defaults varchar //页面显示的默认值 
+```
+
+
+
+### TG_Goods //商品信息
+
+```sql
+kindId bigInt //品类ID
+brandId bigint //品牌ID
+versionId bigInt //型号ID
+colorId bigint //颜色ID
+```
 
 
 
@@ -1052,11 +1160,7 @@ define(function(require, exports, module) {
 
 
 
-```
-名词：
-商品基本属性：品类，品牌，型号，颜色，是否度数，是否实物，是否效期
-商品扩展属性：自定义的属性，任意属性
-```
+
 
 
 

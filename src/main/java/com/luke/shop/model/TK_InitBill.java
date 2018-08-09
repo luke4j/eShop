@@ -9,12 +9,12 @@ import java.util.List;
  * 库存初始化单据
  */
 @Entity
-public class TK_Init extends _YW {
+public class TK_InitBill extends _YW {
 
 
-    public TK_Init(){}
+    public TK_InitBill(){}
 
-    public TK_Init(TU_Com com,TK_YW yw,TU_Store store,TU_User zd_user){
+    public TK_InitBill(TU_Com com, TK_YW yw, TU_Store store, TU_User zd_user){
         super(com,yw,store,zd_user);
         this.setZdTime(new Date());
     }
@@ -22,17 +22,17 @@ public class TK_Init extends _YW {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "djId",foreignKey = @ForeignKey(name = "fk_yw_djId"))
-    private List<TK_InitList> djmx ;
+    private List<TK_InitBillMX> djmx ;
 
     @Override
-    public List<TK_InitList> getDjmx() {
+    public List<TK_InitBillMX> getDjmx() {
         return this.djmx;
     }
 
 
 
     @Override
-    public void setDjmx(List<? extends _YWList> djmx) {
-        this.djmx = (List<TK_InitList>) djmx;
+    public void setDjmx(List<? extends _YWMX> djmx) {
+        this.djmx = (List<TK_InitBillMX>) djmx;
     }
 }

@@ -151,21 +151,6 @@ var goods_help = {
                                     success:function(d,res){
                                         lens_help.showLensWindow(d.id) ;
                                         $('#id',$("#fm_goodsInf")).val(d.id) ;
-
-                                        /**是否添加价格*/
-                                        if(LukeApp.info&&LukeApp.info.listSetupCom){
-                                            /**是否配置了在录入时录入价格*/
-                                            var setups = LukeApp.info.listSetupCom ;
-                                            for(var i in setups){
-                                                if(setups[i].name==="save_lens_add_kc"&&setups[i].val==="true"){
-                                                    console.dir(arguments) ;
-                                                    //J.ajax({
-                                                    //
-                                                    //}) ;
-                                                }
-                                            }
-                                        }
-
                                     }
                                 });
                             }

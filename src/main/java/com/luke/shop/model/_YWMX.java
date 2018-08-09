@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @MappedSuperclass
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class _YWList  extends Model {
+public class _YWMX extends Model {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "l_goodsId",nullable = false,foreignKey = @ForeignKey(name = "fk_bywl_goods"))

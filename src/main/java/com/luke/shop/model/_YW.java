@@ -44,6 +44,7 @@ public abstract class _YW extends Model {
     @JoinColumn(name = "y_ywId",nullable = false,foreignKey = @ForeignKey(name = "fk_byw_yw"))
     private TK_YW y_yw ;
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "y_storeId",nullable = false,foreignKey = @ForeignKey(name = "fk_byw_store"))
     private TU_Store y_store ;
@@ -152,7 +153,7 @@ public abstract class _YW extends Model {
         this.zxTime = zxTime;
     }
 
-    abstract  public List<? extends _YWList> getDjmx()  ;
+    abstract  public List<? extends _YWMX> getDjmx()  ;
 
-    abstract public void setDjmx(List< ? extends _YWList> djmx) ;
+    abstract public void setDjmx(List< ? extends _YWMX> djmx) ;
 }

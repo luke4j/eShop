@@ -1,6 +1,5 @@
 package com.luke.shop.eshop.goods.dao.impl;
 
-import antlr.collections.impl.LList;
 import com.luke.shop.eshop.base.BaseDao;
 import com.luke.shop.eshop.goods.dao.IGoodsDao;
 import com.luke.shop.eshop.goods.vo.VOGoods;
@@ -8,8 +7,8 @@ import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.model.*;
 import com.luke.shop.tool.Assertion;
 import com.luke.shop.tool.LK;
-import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.vo.VOId;
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +21,7 @@ import java.util.List;
 @Component
 public class GoodsDao extends BaseDao implements IGoodsDao {
 
+    private static final Logger log = Logger.getLogger(GoodsDao.class) ;
 
     @Override
     public TG_Price addGoods_1_price(TG_Goods goods, VOGoods vo) throws Exception {
@@ -35,8 +35,14 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
                 price.setCom(com);
                 price.setGoods(goods);
                 price.setPriceType(TG_Price.PriceType.normal);
-                if(LK.StrIsNotEmpty(sc.getExt1())) price.setPin(Double.parseDouble(sc.getExt1()));
-                if(LK.StrIsNotEmpty(sc.getExt2())) price.setPout(Double.parseDouble(sc.getExt2()));
+                if(price.getPin()==null||price.getPin().intValue()==0){
+                    Double pin = LK.ObjIsNull(sc.getExt1())?0.0:Double.parseDouble(sc.getExt1()) ;
+                    price.setPin(pin);
+                }
+                if(price.getPout()==null||price.getPout().doubleValue()==0){
+                    Double pout = LK.ObjIsNull(sc.getExt2())?0.0:Double.parseDouble(sc.getExt2()) ;
+                    price.setPin(pout);
+                }
                 this.save(price) ;
                 return price ;
             }
@@ -76,11 +82,11 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
         this.delete_jdbc("delete from tg_lenssetup where goodsId=?",vo.getGoodsId()) ;
         this.delete_jdbc("delete from tg_goodsattr where goodsId=?", vo.getGoodsId()) ;
 
-        List<TK_InitList> listInitLists = this.find("From TK_InitList il where il.l_goods.id=:goodsId", vo) ;
-        if(listInitLists.size()>0){
-            TK_InitList initList = listInitLists.get(0) ;
-            this.delete_jdbc("delete from tk_initlist where l_goodsId=?", vo.getGoodsId());
-            this.delete_jdbc("delete from tk_init where id=?", initList.getDj().getId());
+        List<TK_InitBillMX> listInitBillMX = this.find("From TK_InitBillMX il where il.l_goods.id=:goodsId", vo) ;
+        if(listInitBillMX.size()>0){
+            TK_InitBillMX initList = listInitBillMX.get(0) ;
+            this.delete_jdbc("delete from tk_initBillMX where l_goodsId=?", vo.getGoodsId());
+            this.delete_jdbc("delete from tk_initBill where id=?", initList.getDj().getId());
         }
         this.delete_jdbc("delete from tk_ywls where goodsId=?", vo.getGoodsId());
         this.delete_jdbc("delete from tk_kc where goodsId=?", vo.getGoodsId());
@@ -94,23 +100,14 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
         TU_Com com = goods.getCom() ;
         TSYS_SetupCom sc = this.getUnique("From TSYS_SetupCom sc where sc.name='save_lens_add_price' and sc.com.id=:id ", com) ;
         if(Boolean.valueOf(sc.getVal())){
-            List<TG_Lens> listLens = this.find("From TG_Lens l where l.goods.id=:id",goods) ;
-            TG_Price price = null ;
-            List<TG_Price> listPrice = new ArrayList<>(listLens.size()) ;
-            for(TG_Lens lens:listLens){
-                price = new TG_Price() ;
-                price.setGoods(goods);
-                price.setCom(com);
-                price.setPin(0.0);
-                price.setPout(0.0);
-                price.setSph(lens.getSph());
-                price.setCyl(lens.getCyl());
-                price.setPriceType(TG_Price.PriceType.normal);
-                if(LK.StrIsNotEmpty(sc.getExt1())) price.setPin(Double.parseDouble(sc.getExt1()));
-                if(LK.StrIsNotEmpty(sc.getExt2())) price.setPout(Double.parseDouble(sc.getExt2()));
-                listPrice.add(price) ;
-            }
-            this.saveAll(listPrice) ;
+            String pin = (String)LK.ObjIsNullDo(sc.getExt1(),"0") ;
+            String pout = (String)LK.ObjIsNullDo(sc.getExt2(),"0") ;
+
+            String mysqlJdbcInsertIntoSql = "insert into tg_price (b_isDel,b_wtime,goodsid,sph,cyl,pin,pout,priceType,comid)" +
+                    "select false,now(),g.id,l.sph,l.cyl,"+pin+","+pout+",'normal',g.comId from tg_goods g left join tg_lens l on g.id = l.goodsid where g.id =?" ;
+            log.info("GoodsDao.saveLens_6_price copy sql is :"+mysqlJdbcInsertIntoSql);
+            log.info("goods.id is "+goods.getId());
+            this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql,new Object[]{goods.getId()}) ;
         }
     }
 
@@ -125,11 +122,40 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
     }
 
     @Override
-    public List<TK_InitList> saveLensDefVal_7_dbCopy_dj(Long goodsId, Long num, Long djId) throws Exception {
-        String mysqlJdbcInsertIntoSql = "insert into tk_initlist (b_isDel,b_wtime,l_goodsId,sph,cyl,l_num,djid)" +
+    public List<TK_InitBillMX> saveLensDefVal_7_dbCopy_dj(Long goodsId, Long num, Long djId) throws Exception {
+        String mysqlJdbcInsertIntoSql = "insert into tk_initbillmx (b_isDel,b_wtime,l_goodsId,sph,cyl,l_num,djid)" +
                 "select false,now(),l.goodsId,l.sph,l.cyl,"+num+","+djId+" from  tg_lens l where l.goodsid=?" ;
-
+        log.info("GoodsDao.saveLensDefVal_7_dbCopy_dj copy sql is :"+mysqlJdbcInsertIntoSql);
+        log.info("djid.id is "+djId);
         this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql, new Object[]{goodsId}) ;
-        return this.find("From TK_InitList il where il.dj.id=:id",new VOId(djId)) ;
+        return this.find("From TK_InitBillMX m where m.dj.id=:id",new VOId(djId)) ;
     }
+
+    @Override
+    public void saveDefVal_dbCopy_kc_ls(TK_InitBill initBill,String tag) throws Exception {
+        /**保存库存*/
+        String mysqlJdbcInsertIntoSql = "insert into tk_kc (b_isDel,b_wtime,goodsId,sph,cyl,comid,storeid,num_zheng_pin,num_can_pin,num_ci_pin,num_need,num_zeng_pin)" +
+                "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0 from tk_initbill b left join tk_initbillmx m  on b.id = m.djid where b.id=?" ;
+        log.info("GoodsDao.saveLensDefVal_dbCopy_kc copy kc sql is :"+mysqlJdbcInsertIntoSql);
+        log.info("initBill.id is :"+initBill.getId());
+        this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql, new Object[]{initBill.getId()}) ;
+        /**更新单据明细中的*/
+        mysqlJdbcInsertIntoSql = "update tk_initbill b left join tk_initbillmx m  on b.id = m.djid left join tk_kc k on k.goodsId=m.l_goodsid "  ;
+                if("LensInit".equals(tag)){
+                    mysqlJdbcInsertIntoSql+= " and k.sph = m.sph and k.cyl = m.cyl " ;
+                }
+        mysqlJdbcInsertIntoSql+= "and k.storeid = b.y_storeid set m.l_kcid=k.id where b.id = ?" ;
+        log.info("GoodsDao.saveLensDefVal_dbCopy_kc update initBillMX.kcid sql is :"+mysqlJdbcInsertIntoSql);
+        log.info("initBill.id is :" + initBill.getId());
+        this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql, new Object[]{initBill.getId()}) ;
+        /**批量输入流水*/
+        mysqlJdbcInsertIntoSql = "insert into tk_ywls (b_isDel,b_wtime,goodsid,sph,cyl,kcid,ywid,ywtable,ywtableid,eidtnum,num_can_pin,num_ci_pin,num_zeng_pin,num_zheng_pin) " +
+                "select false,now(),m.l_goodsId,m.sph,m.cyl,k.id,b.y_ywId,'TK_InitBill',"+initBill.getId()+",m.l_num,k.num_can_pin,k.num_ci_pin,k.num_zeng_pin,k.num_zheng_pin from tk_initbill b " +
+                "left join tk_initbillmx m on b.id = m.djid " +
+                "left join tk_kc k on k.id=m.l_kcid where b.id =?" ;
+        log.info("GoodsDao.saveLensDefVal_dbCopy_ls sql is :"+mysqlJdbcInsertIntoSql);
+        log.info("initBill.id is :" + initBill.getId());
+        this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql,new Object[]{initBill.getId()}) ;
+    }
+
 }

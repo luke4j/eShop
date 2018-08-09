@@ -21,6 +21,15 @@ public interface IGoodsService {
     TG_Goods addGoods_1(LoginTuken sessionTuken, VOGoods vo) throws Exception;
 
     /**
+     * 查询公司配置，是否添加默认库存
+     * @param sessionTuken
+     * @param node
+     * @throws Exception
+     */
+    void addGoods_1_def_kc(LoginTuken sessionTuken, TG_Goods node)throws Exception;
+
+
+    /**
      *
      * @param actionResult
      * @param vo
@@ -30,5 +39,6 @@ public interface IGoodsService {
 
     void saveLens_6(LoginTuken sessionTuken, ActionResult actionResult, VOLens vo)throws Exception;
 
-    void saveLensDefVal_7(LoginTuken sessionTuken, ActionResult actionResult, VOId vo)throws Exception;
+
+    void saveLens_6_def_kc(LoginTuken sessionTuken, ActionResult actionResult, VOLens vo)throws Exception;
 }
