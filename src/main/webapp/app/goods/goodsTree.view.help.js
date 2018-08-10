@@ -85,7 +85,7 @@ var goodsTree_view_help = {
                     if(treeNode.count)
                         aObj.append("<span class='badge'>"+treeNode.count+"</span>") ;
 
-                    var $btn_del = $("<a>").addClass(" ztree_btn_del btn float_right a_btn").addClass(S.btn_add_tag_css).text("删除") ;
+                    var $btn_del = $("<a>").addClass("ztree_btn_del btn float_right a_btn").addClass(S.btn_add_tag_css).text("删除") ;
                     aObj.append($btn_del) ;
                     $btn_del.on("click",function(e){view.ztree_btn_del_click_handler(e,treeNode.id,treeNode) ;})
 
