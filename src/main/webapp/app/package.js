@@ -14,6 +14,7 @@ requirejs.config({
     "paths": {
         "J":"app/J",
         "S":"app/S",
+        "G":"app/G",
         "md5":"js/md5",
         "require": "js/require",
         "jquery": "js/jquery/jquery-1.12.4",
@@ -40,7 +41,6 @@ requirejs.config({
      * 配置js文件依赖关系
      * */
     shim:{
-
         ztree:{
             deps:['jquery','css!js/jquery/plugins/ztree/metroStyle/metroStyle.css'],
             exports:'ztree'

@@ -548,8 +548,8 @@ J.SelectOptions = function(type){
  * @param ele
  */
 J.formElement = function(ele){
-    var labelRowCss = "col-sm-4" ;
-    var elementRowCss = "col-sm-8" ;
+    var labelRowCss = "col-sm-5" ;
+    var elementRowCss = "col-sm-7" ;
     var $formGroup  = $("<div class='form-group'>") ;
     var $lable = $("<label  control-label'>").addClass(labelRowCss).attr("for",ele.id).text(ele.text) ;
     var $divElement = $("<div >").addClass(elementRowCss) ;

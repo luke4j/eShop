@@ -37,6 +37,7 @@ public interface IGoodsTreeAction {
 
 
     /**
+     * goodsTree/findNode.act<br>
      * 查询goodstree结点
      * @param request
      * @param response
