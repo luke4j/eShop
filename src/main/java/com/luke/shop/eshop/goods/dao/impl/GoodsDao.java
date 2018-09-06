@@ -23,32 +23,7 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
 
     private static final Logger log = Logger.getLogger(GoodsDao.class) ;
 
-    @Override
-    public TG_Price addGoods_1_price(TG_Goods goods, VOGoods vo) throws Exception {
-        TG_GoodsTree kindNode = goods.getKind() ;
-        if(!Boolean.valueOf(kindNode.getA1())){
-            TU_Com com = goods.getCom() ;
-            TSYS_SetupCom sc = this.getUnique("From TSYS_SetupCom sc where sc.name='save_not_lens_add_price' and sc.com.id=:id ",com) ;
-            if(Boolean.valueOf(sc.getVal())){
-                TG_Price price = new TG_Price() ;
-                BeanUtils.copyProperties(vo, price);
-                price.setCom(com);
-                price.setGoods(goods);
-                price.setPriceType(TG_Price.PriceType.normal);
-                if(price.getPin()==null||price.getPin().intValue()==0){
-                    Double pin = LK.ObjIsNull(sc.getExt1())?0.0:Double.parseDouble(sc.getExt1()) ;
-                    price.setPin(pin);
-                }
-                if(price.getPout()==null||price.getPout().doubleValue()==0){
-                    Double pout = LK.ObjIsNull(sc.getExt2())?0.0:Double.parseDouble(sc.getExt2()) ;
-                    price.setPin(pout);
-                }
-                this.save(price) ;
-                return price ;
-            }
-        }
-        return null ;
-    }
+
 
 
 
@@ -133,12 +108,20 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
 
     @Override
     public void saveDefVal_dbCopy_kc_ls(TK_InitBill initBill,String tag) throws Exception {
+
+
         /**保存库存*/
-        String mysqlJdbcInsertIntoSql = "insert into tk_kc (b_isDel,b_wtime,goodsId,sph,cyl,comid,storeid,num_zheng_pin,num_can_pin,num_ci_pin,num_need,num_zeng_pin)" +
-                "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0 from tk_initbill b left join tk_initbillmx m  on b.id = m.djid where b.id=?" ;
+        String mysqlJdbcInsertIntoSql = "insert into tk_kc (b_isDel,b_wtime,goodsId,sph,cyl,comid,storeid,num_zheng_pin,num_can_pin,num_ci_pin,num_need,num_zeng_pin,pin,pout)" ;
+        if("LensInit".equals(tag)){
+            mysqlJdbcInsertIntoSql+= "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0 ifnull(lens.pin,0),ifnull(lens.pout,0) from tk_initbill b left join tk_initbillmx m  on b.id = m.djid  left join tg_lens lens on lens.goodsId=m.l_goodsId and lens.sph=m.sph and lens.cyl=m.cyl  where b.id=?" ;
+        }else{
+            mysqlJdbcInsertIntoSql+= "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0 ifnull(g.pin,0),ifnull(g.out,0) from tk_initbill b left join tk_initbillmx m  on b.id = m.djid left join tg_goods g on g.id = m.l_goodsId where b.id=?" ;
+        }
+
         log.info("GoodsDao.saveLensDefVal_dbCopy_kc copy kc sql is :"+mysqlJdbcInsertIntoSql);
         log.info("initBill.id is :"+initBill.getId());
         this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql, new Object[]{initBill.getId()}) ;
+
         /**更新单据明细中的*/
         mysqlJdbcInsertIntoSql = "update tk_initbill b left join tk_initbillmx m  on b.id = m.djid left join tk_kc k on k.goodsId=m.l_goodsid "  ;
                 if("LensInit".equals(tag)){
@@ -148,6 +131,7 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
         log.info("GoodsDao.saveLensDefVal_dbCopy_kc update initBillMX.kcid sql is :"+mysqlJdbcInsertIntoSql);
         log.info("initBill.id is :" + initBill.getId());
         this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql, new Object[]{initBill.getId()}) ;
+
         /**批量输入流水*/
         mysqlJdbcInsertIntoSql = "insert into tk_ywls (b_isDel,b_wtime,goodsid,sph,cyl,kcid,ywid,ywtable,ywtableid,eidtnum,num_can_pin,num_ci_pin,num_zeng_pin,num_zheng_pin) " +
                 "select false,now(),m.l_goodsId,m.sph,m.cyl,k.id,b.y_ywId,'TK_InitBill',"+initBill.getId()+",m.l_num,k.num_can_pin,k.num_ci_pin,k.num_zeng_pin,k.num_zheng_pin from tk_initbill b " +

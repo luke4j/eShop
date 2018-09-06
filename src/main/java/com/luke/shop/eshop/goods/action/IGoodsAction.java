@@ -35,7 +35,7 @@ public interface IGoodsAction {
 
 
     /**
-     * 商品属性-添加商品信息
+     * 商品属性-添加商品信息,并做初始化库存工作
      * @param request
      * @param response
      * @param vo

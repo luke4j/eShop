@@ -64,6 +64,27 @@ public class TK_KC extends Model {
     /**最后盘点人ID*/
     private Long last_pd_userId ;
 
+    /**进货价*/
+    private Double pin ;
+    /**销售价*/
+    private Double pout ;
+
+
+    public Double getPin() {
+        return pin;
+    }
+
+    public void setPin(Double pin) {
+        this.pin = pin;
+    }
+
+    public Double getPout() {
+        return pout;
+    }
+
+    public void setPout(Double pout) {
+        this.pout = pout;
+    }
 
     public Float getSph() {
         return sph;

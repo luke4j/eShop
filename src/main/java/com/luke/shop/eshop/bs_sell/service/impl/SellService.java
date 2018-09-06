@@ -7,6 +7,7 @@ import com.luke.shop.eshop.bs_sell.dao.ISellDao;
 import com.luke.shop.eshop.bs_sell.service.ISellService;
 import com.luke.shop.eshop.bs_sell.vo.VOSellAdd;
 import com.luke.shop.model.TU_User;
+import com.luke.shop.model._YW;
 import com.luke.shop.tool.Assertion;
 import com.luke.shop.tool.vo.VOId;
 import org.springframework.stereotype.Service;
@@ -24,19 +25,8 @@ public class SellService extends BaseService implements ISellService,IBusiness {
 
     ISellDao sellDao ;
 
-
     @Override
-    public <T, V> T createBill(V bill, TU_User zdUser, String tag) throws Exception {
-        return null;
-    }
-
-    @Override
-    public <T> T affirmBill(T bill, TU_User qrUser, String tag) throws Exception {
-        return null;
-    }
-
-    @Override
-    public <T> T executeBill(T bill, TU_User zxUser, String tag) throws Exception {
+    public _YW executeBill(_YW bill, TU_User zxUser, String tag) throws Exception {
         return null;
     }
 

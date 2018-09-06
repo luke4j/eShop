@@ -15,13 +15,7 @@ public interface IGoodsDao extends IBaseDao {
 
 
 
-    /**
-     * 添加商品时，添加默认价格
-     * @param goods
-     * @return
-     * @throws Exception
-     */
-    TG_Price addGoods_1_price(TG_Goods goods, VOGoods vo)throws  Exception;
+
 
 
     /**

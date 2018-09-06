@@ -15,7 +15,7 @@ public class ProxyDao extends BaseDao implements IProxyDao {
 
 
     @Override
-    public void saveAll_proxyDao(List<TK_YWLS> listLs) throws Exception {
+    public void saveAll_proxyDao(List listLs) throws Exception {
         super.saveAll(listLs) ;
     }
 

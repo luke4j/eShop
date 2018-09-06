@@ -47,6 +47,26 @@ public class TG_Goods extends Model {
     @Column(length = 180,nullable = false)
     private String pinYin ;
 
+    /**标准进货价*/
+    private Double pin ;
+    /**标准销售价*/
+    private Double pout ;
+
+    public Double getPin() {
+        return pin;
+    }
+
+    public void setPin(Double pin) {
+        this.pin = pin;
+    }
+
+    public Double getPout() {
+        return pout;
+    }
+
+    public void setPout(Double pout) {
+        this.pout = pout;
+    }
 
     @Column(nullable = false)
     @Enumerated(EnumType.ORDINAL)

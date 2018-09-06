@@ -4,6 +4,7 @@ import com.luke.shop.eshop.base.BaseService;
 import com.luke.shop.eshop.base.service.IBusiness;
 import com.luke.shop.eshop.bs_ps.service.IPSService;
 import com.luke.shop.model.TU_User;
+import com.luke.shop.model._YW;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,17 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PSService extends BaseService implements IPSService,IBusiness{
     @Override
-    public <T, V> T createBill(V bill, TU_User zdUser, String tag) throws Exception {
-        return null;
-    }
-
-    @Override
-    public <T> T affirmBill(T bill, TU_User qrUser, String tag) throws Exception {
-        return null;
-    }
-
-    @Override
-    public <T> T executeBill(T bill, TU_User zxUser, String tag) throws Exception {
+    public _YW executeBill(_YW bill, TU_User zxUser, String tag) throws Exception {
         return null;
     }
 }

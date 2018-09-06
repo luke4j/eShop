@@ -12,6 +12,11 @@ public class TG_Lens extends Model {
     @JoinColumn(nullable = false)
     private Float cyl ;
 
+    /**标准进货价*/
+    private Double pin ;
+    /**标准销售价*/
+    private Double pout ;
+
     @ManyToOne
     @JoinColumn(name = "goodsId",nullable = false,foreignKey = @ForeignKey(name = "fk_lens_goods"))
     private TG_Goods goods ;
@@ -19,6 +24,22 @@ public class TG_Lens extends Model {
     @ManyToOne
     @JoinColumn(name = "lensSetupId",nullable = false,foreignKey = @ForeignKey(name = "fk_lens_lensSetup"))
     private TG_LensSetup lensSetup;
+
+    public Double getPin() {
+        return pin;
+    }
+
+    public void setPin(Double pin) {
+        this.pin = pin;
+    }
+
+    public Double getPout() {
+        return pout;
+    }
+
+    public void setPout(Double pout) {
+        this.pout = pout;
+    }
 
     public Float getSph() {
         return sph;

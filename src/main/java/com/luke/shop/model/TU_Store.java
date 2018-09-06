@@ -37,10 +37,22 @@ public class TU_Store extends Model{
     /**是否有库存*/
     private Boolean isHasKc = true ;
 
+    /**是否有库存*/
+    private Boolean isHasLensKc = true ;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="comId",foreignKey = @ForeignKey(name = "fk_store_com"))
     @JsonIgnore
     private TU_Com com ;
+
+
+    public Boolean getIsHasLensKc() {
+        return isHasLensKc;
+    }
+
+    public void setIsHasLensKc(Boolean isHasLensKc) {
+        this.isHasLensKc = isHasLensKc;
+    }
 
     public Boolean getIsHasKc() {
         return isHasKc;

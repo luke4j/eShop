@@ -9,6 +9,6 @@ import java.util.List;
  * Created by luke on 2018/7/26.
  */
 public interface IProxyDao extends IBaseDao{
-    void saveAll_proxyDao(List<TK_YWLS> listLs) throws Exception;
+    void saveAll_proxyDao(List listLs) throws Exception;
     void update_proxyDao(Object obj)throws Exception;
 }
