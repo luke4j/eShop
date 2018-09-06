@@ -36,7 +36,7 @@ UNLOCK TABLES;
 
 LOCK TABLES tu_store WRITE;
 INSERT INTO tu_store(id,b_isDel,b_wtime,addr,isCenter,isHasKc,isZhanDianJia,isZhiYing,name,phone,phote,pinYin,py,comid)
- VALUES (1,0,'2018-07-18 14:49:50.189000','北京shop-1',true,true,false,true,'ShopStore-1','186138061',NULL,'ShopStore-1','ShopStore-1',1) ;
+ VALUES (1,0,'2018-07-18 14:49:50.189000','北京shop-1',true,true,true,false,true,'ShopStore-1','186138061',NULL,'ShopStore-1','ShopStore-1',1) ;
 UNLOCK TABLES;
 
 
