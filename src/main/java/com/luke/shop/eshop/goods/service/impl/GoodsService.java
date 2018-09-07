@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,20 +32,6 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
     IGoodsDao goodsDao ;
     @Resource
     BusinessProxy proxy  ;
-
-
-    @Override
-    public _YW executeBill(_YW bill,TU_User zxUser,String tag) throws Exception {
-        if(LK.ObjIsNull(bill))Assertion.Error("GoodsService.executeBill 单据为空");
-        if(bill instanceof TK_InitBill){
-
-            TK_InitBill initBill = (TK_InitBill)bill ;
-            this.goodsDao.saveDefVal_dbCopy_kc_ls(initBill, tag) ;
-            return initBill ;
-        }
-        return null ;
-    }
-
 
 
     @Override
@@ -95,8 +80,8 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
             }
 
             TG_GoodsTree kindNode = goods.getKind() ;
-            /**只对现库级别并且非度数商品有效*/
-            if(TG_Goods.KcJb.xk.ordinal()==goods.getKcjb().ordinal()&&!Boolean.valueOf(kindNode.getA1())){
+            /**处理非度数商品业务*/
+            if(!Boolean.valueOf(kindNode.getA1())){
                 /**初始化库存业务*/
                 TK_YW yw = this.goodsDao.getUnique("From TK_YW yw where yw.bm=:bm", LKMap.create().putEx("bm", "0")) ;
                 TU_User user = this.goodsDao.get(TU_User.class, sessionTuken.getId()) ;
@@ -115,11 +100,13 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
                         initBillMX.setL_num(num);
                         listInitBillMx.add(initBillMX) ;
 
-                        proxy.getInstance(this).createBill(initBill,listInitBillMx, user, "NotLensInit");
-                        proxy.getInstance(this).affirmBill(initBill,user, "NotLensInit") ;
-                        proxy.getInstance(this).executeBill(initBill, user, "NotLensInit") ;
+                        proxy.getInstance(this).createBill(initBill,listInitBillMx, user,TK_InitBill.class.getSimpleName());
+                        proxy.getInstance(this).affirmBill(initBill,user, TK_InitBill.class.getSimpleName()) ;
+                        proxy.getInstance(this).executeBill(initBill, user,TK_InitBill.class.getSimpleName(),false) ;
                     }
                 }
+            }else{
+                Assertion.Error("商品品类配置异常："+kindNode.getText());
             }
         }
     }
@@ -168,11 +155,6 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
         }
         actionResult.setData(new LKMap<String, Object>().putEx("goodsLensSetup", lensSetup).putEx("goodsLens", goodsLens));
 
-        /**添加默认入库单，确认入库单，入默认库存0 */
-        //TODO 添加完成之后再做处理 用数据库批量处理
-        /**添加默认价格*/
-        this.goodsDao.saveLens_6_price(goods) ;
-
         actionResult.setZytz("修改度数配置会重置价格与库存，请重新盘点库存与设置价格");
     }
 
@@ -201,10 +183,10 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
                         initBill = new TK_InitBill(goods.getCom(),yw,store,user) ;
                         /**以商品id，商品对应的度数数据,系统配置的初始化库存数据，批量生成单据明细信息*/
                         listInitBillMX = this.goodsDao.saveLensDefVal_7_dbCopy_dj(goods.getId(), num,initBill.getId()) ;
-                        proxy.getInstance(this).createBill(initBill,listInitBillMX, user, "LensInit") ;
 
-                        proxy.getInstance(this).affirmBill(initBill,user, "LensInit") ;
-                        proxy.getInstance(this).executeBill(initBill,user, "LensInit") ;
+                        proxy.getInstance(this).createBill(initBill,listInitBillMX, user,  TK_InitBill.class.getSimpleName()) ;
+                        proxy.getInstance(this).affirmBill(initBill,user,TK_InitBill.class.getSimpleName()) ;
+                        proxy.getInstance(this).executeBill(initBill,user, TK_InitBill.class.getSimpleName(),true) ;
                     }
                 }
             }

@@ -44,9 +44,14 @@ public class BusinessProxy {
                     _YW yw = null ;
                     List<_YWMX> listYwmx = null ;
                     TU_User user = null ;
+                    String yw_tag = null ;
+                    Boolean isLens = false ;
                     Object obj = method.invoke(target, args);
 
                     for(Object arg :args){
+                        if(arg instanceof String){
+                            yw_tag = (String)arg ;
+                        }
                         if(arg instanceof List){
                             listYwmx = (List<_YWMX>)arg ;
                         }
@@ -56,32 +61,31 @@ public class BusinessProxy {
                         if(arg instanceof _YW){
                             yw = (_YW)arg ;
                         }
+                        if(arg instanceof Boolean){
+                            isLens = (Boolean)arg ;
+                        }
                     }
                     /**执行相应业务*/
                     /**完成之后在执行时记录流水*/
                     if(method.getName().equals("createBill")){
                         log.info("=============createBill================");
                         log.info("=============添加制单处理人与修改单据制单状态================");
+                        log.info("=============保存单据================");
                         this.dao.save(yw);
                         if(LK.ObjIsNull(listYwmx)) Assertion.Error("单据明细为空");
+                        log.info("=============保存单据明细================");
                         this.dao.saveAll_proxyDao(listYwmx);
                     }else if(method.getName().equals("affirmBill")){
                         log.info("=============affirmBill================");
                         log.info("=============添加确认处理人与修改单据确认状态================");
-
                         this.dao.update_proxyDao(yw);
-                    }else if(method.getName().equals("executeBill")){
+                    }else if(method.getName().equals("executeBill")) {
                         log.info("=============executeBill================");
                         log.info("=============添加执行处理人与修改单据确认状态================");
-
-                        if(LK.ObjIsNull(yw)) Assertion.Error("单据为空");
-                        if(LK.ObjIsNull(user)) Assertion.Error("单据处理人为空");
-                        yw.setZxTime(new Date());
-                        yw.setY_zx_user(user);
-                        yw.setY_bill_state(_YW.BillState.zx);
-
                         this.dao.update_proxyDao(yw);
-                        log.info("=============业务真正执行后流水记录================");
+                        log.info("=============修改库存与保存流水================");
+                        this.dao.save_ls_kc(yw,user,yw_tag,isLens) ;
+
                     }else{
                         Assertion.Error("代理方法不存在："+method.getName());
                     }

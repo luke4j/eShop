@@ -258,7 +258,7 @@ public class BaseDao {
      * @throws Exception
      */
     public <T> List<T> find(String ql) throws Exception{
-        return this.find(ql,null,null,null,null) ;
+        return this.find(ql, null, null, null, null) ;
     }
 
     /**
@@ -287,7 +287,7 @@ public class BaseDao {
     }
 
     public <T> T get(Class<T> clss,Long id) throws Exception {
-        return this.getSession().get(clss,id) ;
+        return this.getSession().get(clss, id) ;
     }
 
     public<T> T update(T obj) throws Exception {
@@ -324,5 +324,14 @@ public class BaseDao {
 
     public JdbcTemplate getJdbcTemplate() {
         return jdbcTemplate;
+    }
+
+    public String jdbcTemplateUpdate(String sql,Object[] objs)throws Exception{
+        log.info("jdbc sql is ->:"+sql);
+        for(Object obj :objs){
+            log.info("jdbc sql param is ->:"+obj.toString());
+        };
+        this.jdbcTemplate.update(sql,objs) ;
+        return "success" ;
     }
 }

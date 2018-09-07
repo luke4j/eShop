@@ -45,25 +45,14 @@ public interface IGoodsDao extends IBaseDao {
 
 
 
-    void saveLens_6_price(TG_Goods goods)throws  Exception;
 
 
 
 
-    List saveAll_GoodsDao(List listKc)throws  Exception;
 
 
-    <T> T update_GoodsDao(T  t)throws  Exception;
 
     List<TK_InitBillMX> saveLensDefVal_7_dbCopy_dj(Long goodsId, Long num, Long djId)throws  Exception;
-
-    /**
-     * 数据库以初始化单据批量copy库存
-     * @param initBill
-     * @param tag
-     * @throws Exception
-     */
-    void saveDefVal_dbCopy_kc_ls(TK_InitBill initBill,String tag)throws  Exception;
 
 
 }

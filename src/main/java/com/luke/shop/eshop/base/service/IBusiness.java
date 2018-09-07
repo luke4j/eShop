@@ -51,6 +51,11 @@ public interface IBusiness {
      * @return
      * @throws Exception
      */
-    _YW executeBill(_YW bill,TU_User zxUser,String tag) throws Exception ;
+    default _YW executeBill(_YW bill,TU_User zxUser,String tag,Boolean isLens) throws Exception {
+        bill.setQrTime(new Date());
+        bill.setY_qr_user(zxUser);
+        bill.setY_bill_state(_YW.BillState.zx);
+        return bill ;
+    }
 
 }
