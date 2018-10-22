@@ -10,7 +10,7 @@
   <packaging>war</packaging>
 
   <name>eshop Maven Webapp</name>
-  <!-- FIXME change it to the project's website -->
+
   <url>http://www.example.com</url>
 
   <properties>
@@ -139,8 +139,8 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <!--<version>5.1.38</version>-->
-      <version>8.0.11</version>
+      <version>5.1.38</version>
+      <!--<version>8.0.11</version>-->
     </dependency>
 
 
