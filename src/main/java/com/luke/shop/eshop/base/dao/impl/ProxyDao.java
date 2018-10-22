@@ -41,11 +41,11 @@ public class ProxyDao extends BaseDao implements IProxyDao {
                     if(isLens){
                         String priceInSql = "(select t.ext1 from tsys_setupcom t where t.name = 'save_lens_add_price' and t.comId=?)" ;
                         String priceOutSql = "(select t.ext2 from tsys_setupcom t where t.name = 'save_lens_add_price' and t.comId=?)" ;
-                        mysqlJdbcInsertIntoSql+= "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0, ifnull(lens.pin,"+priceInSql+",0),ifnull(lens.pout,"+priceOutSql+",0) from tk_initbill b left join tk_initbillmx m  on b.id = m.djid  left join tg_lens lens on lens.goodsId=m.l_goodsId and lens.sph=m.sph and lens.cyl=m.cyl  where b.id=?" ;
+                        mysqlJdbcInsertIntoSql+= "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0, isnull(lens.pin,"+priceInSql+",0),isnull(lens.pout,"+priceOutSql+",0) from tk_initbill b left join tk_initbillmx m  on b.id = m.djid  left join tg_lens lens on lens.goodsId=m.l_goodsId and lens.sph=m.sph and lens.cyl=m.cyl  where b.id=?" ;
                     }else{
                         String priceInSql = "(select t.ext1 from tsys_setupcom t where t.name = 'save_not_lens_add_price' and t.comId=?)" ;
                         String priceOutSql = "(select t.ext2 from tsys_setupcom t where t.name = 'save_not_lens_add_price' and t.comId=?)" ;
-                        mysqlJdbcInsertIntoSql+= "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0, ifnull(g.pin,"+priceInSql+",0),ifnull(g.out,"+priceOutSql+",0) from tk_initbill b left join tk_initbillmx m  on b.id = m.djid left join tg_goods g on g.id = m.l_goodsId where b.id=?" ;
+                        mysqlJdbcInsertIntoSql+= "select false,now(),m.l_goodsid,m.sph,m.cyl,b.y_comid,y_storeId,m.l_num,0,0,0,0, isnull(g.pin,"+priceInSql+",0),isnull(g.out,"+priceOutSql+",0) from tk_initbill b left join tk_initbillmx m  on b.id = m.djid left join tg_goods g on g.id = m.l_goodsId where b.id=?" ;
                     }
                     this.getJdbcTemplate().update(mysqlJdbcInsertIntoSql, new Object[]{user.getCom().getId(),user.getCom().getId(),bill.getId()}) ;
 

@@ -56,7 +56,7 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
     public void saveLens_6_delete(VOLens vo) throws Exception {
         Assertion.NotEmpty(vo.getGoodsId(), "商品ID为空，不能保存度数");
         /**做过业务的商品数据不能再次初始化*/
-        List<TK_YWLS> lstYwls = this.find ("From TK_YWLS ywls where ywls.goods.id=:goodsId and ywls.yw.bm<>:ywbm ",new LKMap<String,Object>().putEx("goodsId",vo.getGoodsId()).putEx("ywbm",0)) ;
+        List<TK_YWLS> lstYwls = this.find ("From TK_YWLS ywls where ywls.goods.id=:goodsId and ywls.yw.bm<>:ywbm ",new LKMap<String,Object>().putEx("goodsId",vo.getGoodsId()).putEx("ywbm","0")) ;
         if(lstYwls.size()>0)
             throw  AppMsgException.create("商品已经做过业务，不能初始化，如需要重新配置度数，请再建一个同名商品") ;
 
