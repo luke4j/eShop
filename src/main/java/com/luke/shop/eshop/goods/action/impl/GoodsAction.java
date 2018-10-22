@@ -41,9 +41,10 @@ public class GoodsAction extends BaseAction implements IGoodsAction {
 
     @Override
     public ActionResult editGoods_2(HttpServletRequest request, HttpServletResponse response, ActionResult actionResult,
-                                    @ApiParam(value = addGoods, required = true) @Valid @RequestBody VOGoodsEdit vo,
+                                    @ApiParam(value = editGoods, required = true) @Valid @RequestBody VOGoodsEdit vo,
                                     BindingResult bindingResult) throws Exception {
-
+        actionResult.setDoing(editGoods);
+        this.goodsService.editGoods_2(vo) ;
         return actionResult;
     }
 

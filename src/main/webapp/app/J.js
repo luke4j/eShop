@@ -685,8 +685,10 @@ J.a_btn = function(val,tag,text){
  * @param $RootForm
  * @param data
  */
-J.setFormValue = function($Form,data){
+J.setFormValue = function($Form,data,exception){
     for(var i in data){
+        if(exception&&exception==i)continue ;
+
         if($("#"+i,$Form).length>0){
             var $ele =  $("#"+i,$Form) ;
             if($ele.attr("eleType")=='time'){

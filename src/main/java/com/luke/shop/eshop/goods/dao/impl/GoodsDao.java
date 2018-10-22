@@ -3,10 +3,13 @@ package com.luke.shop.eshop.goods.dao.impl;
 import com.luke.shop.eshop.base.BaseDao;
 import com.luke.shop.eshop.goods.dao.IGoodsDao;
 import com.luke.shop.eshop.goods.vo.VOGoods;
+import com.luke.shop.eshop.goods.vo.VOGoodsEdit;
 import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.model.*;
+import com.luke.shop.tool.AppMsgException;
 import com.luke.shop.tool.Assertion;
 import com.luke.shop.tool.LK;
+import com.luke.shop.tool.LKMap;
 import com.luke.shop.tool.vo.VOId;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -52,10 +55,13 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
     @Override
     public void saveLens_6_delete(VOLens vo) throws Exception {
         Assertion.NotEmpty(vo.getGoodsId(), "商品ID为空，不能保存度数");
-        this.delete_jdbc("delete from tg_price where goodsId=?", vo.getGoodsId()) ;
+        /**做过业务的商品数据不能再次初始化*/
+        List<TK_YWLS> lstYwls = this.find ("From TK_YWLS ywls where ywls.goods.id=:goodsId and ywls.yw.bm<>:ywbm ",new LKMap<String,Object>().putEx("goodsId",vo.getGoodsId()).putEx("ywbm",0)) ;
+        if(lstYwls.size()>0)
+            throw  AppMsgException.create("商品已经做过业务，不能初始化，如需要重新配置度数，请再建一个同名商品") ;
+
         this.delete_jdbc("delete from tg_lens where goodsId=?",vo.getGoodsId()) ;
         this.delete_jdbc("delete from tg_lenssetup where goodsId=?",vo.getGoodsId()) ;
-        this.delete_jdbc("delete from tg_goodsattr where goodsId=?", vo.getGoodsId()) ;
 
         List<TK_InitBillMX> listInitBillMX = this.find("From TK_InitBillMX il where il.l_goods.id=:goodsId", vo) ;
         if(listInitBillMX.size()>0){
@@ -81,6 +87,28 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
         return this.find("From TK_InitBillMX m where m.dj.id=:id",new VOId(djId)) ;
     }
 
+    @Override
+    public void updateGoods(VOGoodsEdit vo) throws Exception {
+        TG_Goods goods = this.get(TG_Goods.class,vo.getId()) ;
+        BeanUtils.copyProperties(vo,goods);
+        this.update(goods) ;
+    }
 
-
+    @Override
+    public void saveOrUpdateGoods(VOGoodsEdit vo) throws Exception {
+        TG_GoodsAttr goodsAttr = this.getUnique("From TG_GoodsAttr ga where ga.goods.id=:goodsId",new LKMap<String,Object>().putEx("goodsId",vo.getId())) ;
+        TG_Goods goods = this.get(TG_Goods.class, vo.getId());
+        if(goods!=null&&goodsAttr!=null){
+            Long gaId = goodsAttr.getId() ;
+            BeanUtils.copyProperties(vo,goodsAttr);
+            goodsAttr.setId(gaId);
+            this.update(goodsAttr) ;
+        }else if(goods!=null&&goodsAttr==null){
+            TG_GoodsAttr ga = new TG_GoodsAttr() ;
+            ga.setGoods(goods);
+            BeanUtils.copyProperties(vo,ga);
+            ga.setId(null);
+            this.save(ga) ;
+        }
+    }
 }

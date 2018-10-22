@@ -2,6 +2,7 @@ package com.luke.shop.eshop.goods.dao;
 
 import com.luke.shop.eshop.base.IBaseDao;
 import com.luke.shop.eshop.goods.vo.VOGoods;
+import com.luke.shop.eshop.goods.vo.VOGoodsEdit;
 import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.model.*;
 import com.luke.shop.tool.vo.VOId;
@@ -55,4 +56,7 @@ public interface IGoodsDao extends IBaseDao {
     List<TK_InitBillMX> saveLensDefVal_7_dbCopy_dj(Long goodsId, Long num, Long djId)throws  Exception;
 
 
+    void updateGoods(VOGoodsEdit vo)throws  Exception;
+
+    void saveOrUpdateGoods(VOGoodsEdit vo)throws  Exception;
 }

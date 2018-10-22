@@ -93,7 +93,7 @@ var goods_help = {
             }
         }) ;
         J.setFormValue($("#fm_goodsInf"),goods) ;
-        J.setFormValue($("#fm_goodsInf"),param.ext.attrs) ;
+        J.setFormValue($("#fm_goodsInf"),param.ext.attrs,"id") ;
     },
     /**
      * 表单显示商品详细信息

@@ -6,6 +6,7 @@ import com.luke.shop.eshop.base.service.impl.BusinessProxy;
 import com.luke.shop.eshop.goods.dao.IGoodsDao;
 import com.luke.shop.eshop.goods.service.IGoodsService;
 import com.luke.shop.eshop.goods.vo.VOGoods;
+import com.luke.shop.eshop.goods.vo.VOGoodsEdit;
 import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.eshop.goods.vo.VOLensFindResult;
 import com.luke.shop.model.*;
@@ -194,5 +195,11 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
             }
         }
 
+    }
+
+    @Override
+    public void editGoods_2(VOGoodsEdit vo) throws Exception {
+        this.goodsDao.updateGoods(vo) ;
+        this.goodsDao.saveOrUpdateGoods(vo) ;
     }
 }

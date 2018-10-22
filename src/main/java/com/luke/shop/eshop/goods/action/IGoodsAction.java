@@ -66,7 +66,7 @@ public interface IGoodsAction {
     @RequestMapping(path = "editGoods.act",method= RequestMethod.POST)
     @ResponseBody
     ActionResult editGoods_2(HttpServletRequest request, HttpServletResponse response, ActionResult actionResult,
-                            @ApiParam(value = addGoods, required = true)  @Valid @RequestBody
+                            @ApiParam(value = editGoods, required = true)  @Valid @RequestBody
                             VOGoodsEdit vo,
                             BindingResult bindingResult)throws Exception ;
 

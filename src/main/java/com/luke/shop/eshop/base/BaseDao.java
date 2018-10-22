@@ -91,6 +91,7 @@ public class BaseDao {
      */
     public boolean delete_jdbc(String sql,Object... params) throws Exception{
         if(LK.StrIsEmpty(sql) ) Assertion.Error("delete_sql语句为空");
+        log.info("jdbcTemplate sql is =>"+sql);
         this.jdbcTemplate.update(sql,params) ;
         return true ;
     }

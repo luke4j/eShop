@@ -1,6 +1,7 @@
 package com.luke.shop.eshop.goods.service;
 
 import com.luke.shop.eshop.goods.vo.VOGoods;
+import com.luke.shop.eshop.goods.vo.VOGoodsEdit;
 import com.luke.shop.eshop.goods.vo.VOLens;
 import com.luke.shop.model.TG_Goods;
 import com.luke.shop.tool.ActionResult;
@@ -41,4 +42,6 @@ public interface IGoodsService {
 
 
     void saveLens_6_def_kc(LoginTuken sessionTuken, ActionResult actionResult, VOLens vo)throws Exception;
+
+    void editGoods_2(VOGoodsEdit vo)throws Exception;
 }
