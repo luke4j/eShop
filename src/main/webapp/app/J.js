@@ -695,7 +695,7 @@ J.setFormValue = function($Form,data){
                 //$("option",$ele).attr("selected",false) ;
                 $ele.val(data[i]) ;
                 $("option",$ele).each(function(n,element){
-                    if($(element).val()==data[i]||$(element).val()==(data[i]+'')){
+                    if(($(element).val()+'')===(data[i]+'')){
                         $(element).attr("selected",true) ;
                     }else{
                         $(element).attr("selected",false) ;

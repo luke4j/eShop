@@ -12,8 +12,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PSService extends BaseService implements IPSService,IBusiness{
-    @Override
-    public _YW executeBill(_YW bill, TU_User zxUser, String tag) throws Exception {
-        return null;
-    }
+
 }

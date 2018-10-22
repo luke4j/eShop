@@ -65,10 +65,10 @@ public interface IGoodsAction {
     @ApiOperation(value = editGoods)
     @RequestMapping(path = "editGoods.act",method= RequestMethod.POST)
     @ResponseBody
-    ActionResult editGoods_2(HttpServletRequest request, HttpServletResponse response,
+    ActionResult editGoods_2(HttpServletRequest request, HttpServletResponse response, ActionResult actionResult,
                             @ApiParam(value = addGoods, required = true)  @Valid @RequestBody
                             VOGoodsEdit vo,
-                            BindingResult bindingResult, ActionResult actionResult)throws Exception ;
+                            BindingResult bindingResult)throws Exception ;
 
     /**
      * 删除商品信息

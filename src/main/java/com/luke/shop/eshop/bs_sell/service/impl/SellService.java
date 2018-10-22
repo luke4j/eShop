@@ -25,10 +25,7 @@ public class SellService extends BaseService implements ISellService,IBusiness {
 
     ISellDao sellDao ;
 
-    @Override
-    public _YW executeBill(_YW bill, TU_User zxUser, String tag) throws Exception {
-        return null;
-    }
+
 
     @Override
     public void createSellBill(VOSellAdd sellAdd) throws Exception {

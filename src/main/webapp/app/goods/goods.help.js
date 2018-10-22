@@ -17,7 +17,7 @@ var goods_help = {
         }) ;
         return  {goodsExtAttr:goodsExtAttr,ext:ext} ;
     },
-    ajax_getGoodsById:function(colorId){
+    ajax_find_goods_attrsByGoodsId:function(colorId){
         var goodsExtAttr = []  ;
         var ext
         J.ajax({
@@ -35,6 +35,7 @@ var goods_help = {
         }) ;
         return  {goodsExtAttr:goodsExtAttr,ext:ext} ;
     },
+    /**弹出 添加商品窗*/
     alert_fm_addGoods:function(color){
         var param = this.ajax_getGoodsByColor(color.id) ;
         var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
@@ -65,7 +66,7 @@ var goods_help = {
     },
     /**修改商品信息*/
     alert_fm_editGoods:function(goods){
-        var param = this.ajax_getGoodsById(goods.id) ;
+        var param = this.ajax_find_goods_attrsByGoodsId(goods.id) ;
         var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
         var alt = J.alert({
             title:'修改商品信息',

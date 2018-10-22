@@ -105,6 +105,8 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
                         proxy.getInstance(this).executeBill(initBill, user,TK_InitBill.class.getSimpleName(),false) ;
                     }
                 }
+            }else if(Boolean.valueOf(kindNode.getA1())){
+
             }else{
                 Assertion.Error("商品品类配置异常："+kindNode.getText());
             }
