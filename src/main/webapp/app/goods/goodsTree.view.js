@@ -8,7 +8,7 @@ define(function(require, exports, module) {
     var View = Backbone.View.extend({
         el: $("body"),
         events: {
-
+            "click #btn_add_kind":"btn_add_kind_handler"
         },
         initialize: function () {
             this.render();
@@ -27,44 +27,74 @@ define(function(require, exports, module) {
             J.changeView(view,'app/goods/goodsAttrSetup.view',data,'app/goods/goodsTree.view') ;
         },
         /**弹出 商品 属性窗口*/
-        showAlert:function (data){
-        var $jFrom = goodsTree_view_help.fm_goodsBaseInfo() ;
-        J.alert({
-            title:'添加'+data.name,
-            btns:'YN',
-            msg:$jFrom.form,
-            okFunction:function(e,alt){
-                console.dir(e) ;
-                console.dir(alt) ;
-            }
-        }) ;
-        var $f_goodstree = $("#f_goodstree") ;
-        $f_goodstree[0].reset() ;
-        $("#ajaxdo",$f_goodstree).val("add") ;
+        showAlert:function (data,okCallBack){
+            var $jFrom = goodsTree_view_help.fm_goodsBaseInfo() ;
+            J.alert({
+                title:'添加'+data.name,
+                btns:'YN',
+                msg:$jFrom.form,
+                okFunction:function(e,alt){
+                    if(okCallBack&& (typeof(okCallBack)==='function') ){
+                        var $f = $("form",alt) ;
+                        okCallBack($f,alt) ;
+                    }
+                }
+            }) ;
+            var $f_goodstree = $("#f_goodstree") ;
+            $f_goodstree[0].reset() ;
+            $("#ajaxdo",$f_goodstree).val("add") ;
 
-        $("#c_group",$f_goodstree).addClass("disabled").attr("disabled","disabled") ;
-        $("#fname",$f_goodstree).addClass("disabled").attr("disabled","disabled") ;
+            $("#c_group",$f_goodstree).addClass("disabled").attr("disabled","disabled") ;
+            $("#fname",$f_goodstree).addClass("disabled").attr("disabled","disabled") ;
 
-        $("#a1",$f_goodstree).parent().parent().fadeOut("fast") ;
-        $("#a2",$f_goodstree).parent().parent().fadeOut("fast") ;
-        $("#a3",$f_goodstree).parent().parent().fadeOut("fast") ;
-        $("#fid",$f_goodstree).val(data.id) ;
-        return $f_goodstree ;
-    }  ,
+            $("#a1,#a2,#a3",$f_goodstree).parent().parent().fadeOut("fast") ;
+            $("#fid",$f_goodstree).val(data.id) ;
+            return $f_goodstree ;
+        }  ,
+        /**添加品类弹出窗事件*/
+        btn_add_kind_handler:function(){
+            var $jFrom = goodsTree_view_help.fm_goodsBaseInfo() ;
+            J.alert({
+                title:'添加品类',
+                btns:'YN',
+                msg:$jFrom.form,
+                okFunction:function(e,alt){
+                    var fv_add = J.formValues($jFrom.form) ;
+                    fv_add.fid = 0 ;
+                    J.ajax({
+                        url:'goodsTree/addNode.act',
+                        ajaxOk:true,
+                        data:fv_add,
+                        success:function(res,data){
+                            var treeObj = $.fn.zTree.getZTreeObj("tb_goodsTree");
+                            treeObj.reAsyncChildNodes(null, "refresh");
+                        }
+                    }) ;
+                }
+            }) ;
+            $("#c_group",$jFrom.form).attr('disabled',"disabled").val("品类")  ;
+            $("#fname",$jFrom.form).attr('disabled',"disabled") ;
+        },
         /**商品树中新增连接事件*/
         ztree_btn_add_click_handler:function(jqEvent,id,data){
-            console.dir(data.c_group) ;
-
+            function showAlertCallBack($f,alt){
+                var f_addVal = J.formValues($f) ;
+                J.ajax({
+                    url:'goodsTree/addNode.act',
+                    ajaxOk:true,
+                    data:f_addVal
+                }) ;
+            }
             if(data.c_group=='品类'){
-                var $f_goodstree = this.showAlert(data) ;
+                var $f_goodstree = this.showAlert(data,showAlertCallBack) ;
                 $("#c_group",$f_goodstree).val("品牌") ;
                 $("#fname",$f_goodstree).val("品类-"+data.text) ;
             }else if(data.c_group=='品牌'){
-                var $f_goodstree = this.showAlert(data) ;
+                var $f_goodstree = this.showAlert(data,showAlertCallBack) ;
                 $("#c_group",$f_goodstree).val("型号") ;
                 $("#fname",$f_goodstree).val("品类-"+data.getParentNode().text+"   品牌-"+data.text) ;
             }else if(data.c_group=='型号'){
-                var $f_goodstree = this.showAlert(data) ;
+                var $f_goodstree = this.showAlert(data,showAlertCallBack) ;
                 $("#c_group",$f_goodstree).val("颜色") ;
                 $("#fname",$f_goodstree).val("品类-"+data.getParentNode().getParentNode().text+"   品牌-"+data.getParentNode().text+"   型号-"+data.text) ;
             }else if(data.c_group=='颜色'){

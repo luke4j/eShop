@@ -38,6 +38,7 @@ J.objIsNull = function(obj){
  */
 
 J.alert = function(cfg){
+    var alt ;
     /**没有参数时，提示异常*/
     if(J.objIsNull(cfg)) J.error({msg:"请为J.alert函数添加json对象参数<br>" +
     "<br>{" +
@@ -64,7 +65,12 @@ J.alert = function(cfg){
         cfg.okFunction = cfg.okFunction?cfg.okFunction:function(){} ;
         //cfg.btnsGroup =  cfg.btnsGroup? cfg.btnsGroup:{} ;
     }
-    var alt = J.htmlTemp('app/common/alert.temp.html') ;
+    if(J.alterTemp==null){
+        alt = J.alterTemp = J.htmlTemp('app/common/alert.temp.html') ;
+    }else{
+        alt = J.alterTemp ;
+    }
+    //var alt = J.htmlTemp('app/common/alert.temp.html') ;
     alt = $(alt) ;
     $(".modal-title",alt).text(cfg.title) ;
     $(".modal-body",alt).html(cfg.msg) ;
@@ -133,6 +139,8 @@ J.copyJson= function(src,target,isAll){
  * 统一ajax方法
  * J.ajax({
                     url:'login/login',
+                    ajaxDebugger:true,   请求成功打印console.dir(res) ;
+                    ajaxOk:true,显示操作成功
                     data:fv,
                     success:function(a){
                         window.LukeApp = {} ;
@@ -143,7 +151,7 @@ J.copyJson= function(src,target,isAll){
  * @param settings
  */
 J.ajax = function(settings){
-    var param = {
+    var param = {}, defaults = {
         cache:false,
         url: '',
         type: 'POST',
@@ -152,54 +160,68 @@ J.ajax = function(settings){
         traditional: true,
         data: {j:Math.random()},
         error:function(XMLHttpRequest, textStatus,errorThrown){
-            J.alert("url is "+param.url+"\t"+XMLHttpRequest.status+":"+errorThrown) ;
+            if(XMLHttpRequest.status===0&&XMLHttpRequest.readyState===0&&textStatus==='error'){
+                J.alert("请求没有发出，请检查网络或服务器是否开启！！！") ;
+            }else{
+                J.alert("url is "+param.url+"\t"+XMLHttpRequest.status+":"+errorThrown) ;
+            }
         },
         success: function(res, status, xhr) {
-            console.dir(res) ;
-            if(settings.isMsg){
-                J.alert(res.data) ;
+            if(!res.errorMsg){
+                if(param.ajaxOk){
+                    if(param.ajaxDebugger){
+                        console.dir(res) ;
+                    }
+                    J.alert("操作成功") ;
+                }
+            }else{
+                console.dir(res) ;
+                J.alert(res.errorMsg) ;
             }
+
         }
     } ;
     if(typeof settings  == "string"){
+        param = $.extend(param,defaults) ;
         param.url = settings ;
     }
     if(typeof settings == "object"){
-        J.copyJson(settings,param) ;
+        param = $.extend(param,defaults,settings) ;
+        /**处理Url*/
         if(!param.url){
             J.error("ajax url is null") ;
         }
+        param.url= J.contextPath+param.url ;
+        if(param.url.indexOf(".act")<0){
+            param.url = param.url+".act" ;
+        }
+        /**处理成功返回方法*/
         if(settings.success&&typeof settings.success == "function"){
             //param.success = settings.success
             param.success = function(res, status, xhr){
                 if(res.success){
-                    console.dir(res) ;
+                    if(param.ajaxDebugger){
+                        console.dir(res) ;
+                    }
                     settings.success(res.data,res) ;
                 }else{
                     if(res.errorMsg.indexOf('请登录')>=0){
-                        window.location.href = J.contextPath ;
+                        J.alert({
+                            title:'登录提示',
+                            msg:res.errorMsg,
+                            btns:'YN',
+                            okFunction:function(e,alert){
+                                window.location.href = J.contextPath ;
+                            }
+                        }) ;
+                    }else{
+                        J.alert(res.doing+"</br>"+res.errorType+":</br>"+res.errorMsg) ; J.alert(res.doing+"</br>"+res.errorType+":</br>"+res.errorMsg) ;
                     }
-                    J.alert(res.doing+"</br>"+res.errorType+":</br>"+res.errorMsg) ;
                 }
             }
         }
-        if(settings.data){
-            J.copyJson(settings.data,param.data) ;
-            param.data =  JSON.stringify(param.data) ;
-        }else{
-            param.data =  JSON.stringify(param.data) ;
-        }
-        if(settings.async!=null){
-            param.async = settings.async ;
-        }
-        if(settings.timeout){
-            param.timeout = settings.timeout
-        }
-    }
-
-    param.url= J.contextPath+param.url ;
-    if(param.url.indexOf(".act")<0){
-        param.url = param.url+".act" ;
+        /**处理参数*/
+        param.data =  JSON.stringify($.extend({_jsession:Math.random()},param.data)) ;
     }
     $.ajax(param) ;
 } ;
