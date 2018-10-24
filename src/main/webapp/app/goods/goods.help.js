@@ -36,7 +36,7 @@ var goods_help = {
         return  {goodsExtAttr:goodsExtAttr,ext:ext} ;
     },
     /**弹出 添加商品窗*/
-    alert_fm_addGoods:function(color){
+    alert_fm_addGoods:function(color,callBack){
         var param = this.ajax_getGoodsByColor(color.id) ;
         var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
         var alt = J.alert({
@@ -55,8 +55,9 @@ var goods_help = {
                         data:valForm,
                         success:function(data,res){
                             if(res.success){
-                                J.alert("保存成功") ;
+                                J.alertOk() ;
                                 alt.modal('hide') ;
+                                if(callBack&&(typeof(callBack)==='function') ) callBack() ;
                             }
                         }
                     });
@@ -65,7 +66,7 @@ var goods_help = {
         }) ;
     },
     /**修改商品信息*/
-    alert_fm_editGoods:function(goods){
+    alert_fm_editGoods:function(goods,callBack){
         var param = this.ajax_find_goods_attrsByGoodsId(goods.id) ;
         var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
         var alt = J.alert({
@@ -84,8 +85,9 @@ var goods_help = {
                         data:valForm,
                         success:function(data,res){
                             if(res.success){
-                                J.alert("修改成功") ;
+                                J.alertOk() ;
                                 alt.modal('hide') ;
+                                if(callBack&&(typeof(callBack)==='function') ) callBack() ;
                             }
                         }
                     });

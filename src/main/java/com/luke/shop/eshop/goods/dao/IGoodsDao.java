@@ -15,7 +15,7 @@ import java.util.List;
 public interface IGoodsDao extends IBaseDao {
 
 
-
+    Boolean goodsIsLens(Long goodsId) throws  Exception;;
 
 
 

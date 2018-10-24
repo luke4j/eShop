@@ -29,9 +29,9 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
         VOGoodsNode node = null ;
         if(vo.getId().intValue()!=0){
             TG_GoodsTree treeNode = this.get(TG_GoodsTree.class, vo.getId()) ;
-            /**树展开颜色*/
+            /**树展开颜色,查询的是tg_goods表 其它的查询是tg_goodstree 表*/
             if("颜色".equals(treeNode.getC_group())){
-                List<TG_Goods> listGoods = this.find("From TG_Goods g where g.color.id=:id",vo) ;
+                List<TG_Goods> listGoods = this.find("From TG_Goods g where g.b_isDel = false and g.color.id=:id",vo) ;
                 for(TG_Goods goods :listGoods){
                     node = new VOGoodsNode() ;
                     node.setText(goods.getName());
@@ -42,19 +42,21 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
                     node.setIsParent(false);
                     node.setKcjb(goods.getKcjb().ordinal());
                     node.setC_code(goods.getC_code());
+                    node.setPin(goods.getPin());
+                    node.setPout(goods.getPout());
                     listVoGoodsNodes.add(node) ;
                 }
             }else{
                 /**树展开品类，品牌，型号*/
-                List<TG_GoodsTree> listGoodsNode = this.find("From TG_GoodsTree t where t.fid=:id",vo) ;
+                List<TG_GoodsTree> listGoodsNode = this.find("From TG_GoodsTree t where  t.b_isDel = false and t.fid=:id",vo) ;
                 for(TG_GoodsTree tmp :listGoodsNode){
                     node = new VOGoodsNode();
                     BeanUtils.copyProperties(tmp, node);
                     if("颜色".equals(tmp.getC_group())){
-                        Long count = this.getUnique("select count(g.id) From TG_Goods g where g.color.id=:id", tmp) ;
+                        Long count = this.getUnique("select count(g.id) From TG_Goods g where g.b_isDel = false and g.color.id=:id", tmp) ;
                         node.setCount(count);
                     }else{
-                        Long count = this.getUnique("select count(t.id) From TG_GoodsTree t where t.fid=:id", tmp) ;
+                        Long count = this.getUnique("select count(t.id) From TG_GoodsTree t where t.b_isDel = false and t.fid=:id", tmp) ;
                         node.setCount(count);
                     }
 
@@ -63,11 +65,11 @@ public class GoodsTreeDao extends BaseDao implements IGoodsTreeDao {
             }
         }else{
             /**初始化树的时候没有参数，默认为0，查询所有品类*/
-            List<TG_GoodsTree> listGoodsNode = this.find("From TG_GoodsTree t where t.c_group='品类'") ;
+            List<TG_GoodsTree> listGoodsNode = this.find("From TG_GoodsTree t where t.b_isDel = false and t.c_group='品类'") ;
             for(TG_GoodsTree tmp :listGoodsNode){
                 node = new VOGoodsNode() ;
                 BeanUtils.copyProperties(tmp, node);
-                Long count = this.getUnique("select count(t.id) From TG_GoodsTree t where t.fid=:id", tmp) ;
+                Long count = this.getUnique("select count(t.id) From TG_GoodsTree t where t.b_isDel = false and t.fid=:id", tmp) ;
                 node.setCount(count);
                 listVoGoodsNodes.add(node) ;
             }

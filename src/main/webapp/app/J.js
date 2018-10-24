@@ -16,6 +16,9 @@ J.emptyFun = function(){console.dir(arguments)} ;
  * @param msg
  */
 J.Debug = false ;
+J.debugPrint = function(obj){
+    console.dir(obj) ;
+} ;
 J.objIsNull = function(obj){
     return (obj)?false:true ;
 };
@@ -112,6 +115,9 @@ J.alert = function(cfg){
 J.error = function(msg){
     throw new Error(msg) ;
 } ;
+J.alertOk = function(){
+    J.alert("操作成功") ;
+} ;
 
 
 /**
@@ -172,7 +178,7 @@ J.ajax = function(settings){
                     if(param.ajaxDebugger){
                         console.dir(res) ;
                     }
-                    J.alert("操作成功") ;
+                    J.alertOk() ;
                 }
             }else{
                 console.dir(res) ;

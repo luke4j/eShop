@@ -1,6 +1,7 @@
 package com.luke.shop.eshop.goods.dao.impl;
 
 import com.luke.shop.eshop.base.BaseDao;
+import com.luke.shop.eshop.base.dao.ISystemSetupComDao;
 import com.luke.shop.eshop.goods.dao.IGoodsDao;
 import com.luke.shop.eshop.goods.vo.VOGoods;
 import com.luke.shop.eshop.goods.vo.VOGoodsEdit;
@@ -15,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +28,16 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
 
     private static final Logger log = Logger.getLogger(GoodsDao.class) ;
 
+    @Resource
+    ISystemSetupComDao scdao  ;
 
 
-
+    @Override
+    public Boolean goodsIsLens(Long goodsId) throws Exception {
+        TG_Goods goods = this.get(TG_Goods.class, goodsId) ;
+        if(LK.ObjIsNull(goods)) Assertion.Error("goods id is "+goodsId+"查询不到商品信息");
+        return Boolean.parseBoolean(goods.getKind().getA1());
+    }
 
     @Override
     public TG_LensSetup getGoodsLens_5_lensSetup(VOId vo) throws Exception {
@@ -90,8 +99,17 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
     @Override
     public void updateGoods(VOGoodsEdit vo) throws Exception {
         TG_Goods goods = this.get(TG_Goods.class,vo.getId()) ;
-        BeanUtils.copyProperties(vo,goods);
+        BeanUtils.copyProperties(vo, goods);
         this.update(goods) ;
+        if(this.goodsIsLens(goods.getId())){
+            /**度数价格是在保存价格中操作的，这里不涉及*/
+        }else{
+            if(Boolean.parseBoolean(scdao.save_not_lens_add_price(goods.getCom().getId()).getVal())){
+                /**更新价格是统一价格的站点，库存中指定Id的商品价格数据*/
+                String sql = "update tk_kc kc left join tu_store s on kc.storeId=s.id set kc.pin=? ,kc.pout = ? where kc.goodsId = ? and s.isZhanDianJia = false" ;
+                this.jdbcTemplateUpdate(sql,new Object[]{goods.getPin(),goods.getPout(),goods.getId()}) ;
+            }
+        }
     }
 
     @Override

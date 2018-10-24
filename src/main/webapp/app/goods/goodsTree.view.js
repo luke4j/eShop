@@ -9,6 +9,7 @@ define(function(require, exports, module) {
         el: $("body"),
         events: {
             "click #btn_add_kind":"btn_add_kind_handler"
+            /**因传递参数问题，ztree中的添加修改作废事件都在定义时添加*/
         },
         initialize: function () {
             this.render();
@@ -27,10 +28,10 @@ define(function(require, exports, module) {
             J.changeView(view,'app/goods/goodsAttrSetup.view',data,'app/goods/goodsTree.view') ;
         },
         /**弹出 商品 属性窗口*/
-        showAlert:function (data,okCallBack){
+        showAlert:function (title,data,okCallBack){
             var $jFrom = goodsTree_view_help.fm_goodsBaseInfo() ;
             J.alert({
-                title:'添加'+data.name,
+                title:title+data.name,
                 btns:'YN',
                 msg:$jFrom.form,
                 okFunction:function(e,alt){
@@ -84,17 +85,17 @@ define(function(require, exports, module) {
                     ajaxOk:true,
                     data:f_addVal
                 }) ;
-            }
+            } ;
             if(data.c_group=='品类'){
-                var $f_goodstree = this.showAlert(data,showAlertCallBack) ;
+                var $f_goodstree = this.showAlert("添加",data,showAlertCallBack) ;
                 $("#c_group",$f_goodstree).val("品牌") ;
                 $("#fname",$f_goodstree).val("品类-"+data.text) ;
             }else if(data.c_group=='品牌'){
-                var $f_goodstree = this.showAlert(data,showAlertCallBack) ;
+                var $f_goodstree = this.showAlert("添加",data,showAlertCallBack) ;
                 $("#c_group",$f_goodstree).val("型号") ;
                 $("#fname",$f_goodstree).val("品类-"+data.getParentNode().text+"   品牌-"+data.text) ;
             }else if(data.c_group=='型号'){
-                var $f_goodstree = this.showAlert(data,showAlertCallBack) ;
+                var $f_goodstree = this.showAlert("添加",data,showAlertCallBack) ;
                 $("#c_group",$f_goodstree).val("颜色") ;
                 $("#fname",$f_goodstree).val("品类-"+data.getParentNode().getParentNode().text+"   品牌-"+data.getParentNode().text+"   型号-"+data.text) ;
             }else if(data.c_group=='颜色'){
@@ -104,29 +105,47 @@ define(function(require, exports, module) {
             }else {
                 throw new Error("goodsTree.view error 001") ;
             }
-
-            $("#btn_goodsTreeSubmit",$f_goodstree).text(S.btn_add);
         },
 
         /**商品树中修改事件*/
         ztree_btn_edit_click_handler:function(jqEvent,id,data){
+            J.debugPrint(data) ;
+            function showAlertCallBack($f,alt){
+                var f_addVal = J.formValues($f) ;
+                J.ajax({
+                    url:'goodsTree/editNode',
+                    ajaxOk:true,
+                    data:f_addVal,
+                    success:function(res){
+                        J.alertOk() ;
+                        var treeObj = $.fn.zTree.getZTreeObj("tb_goodsTree");
+                        treeObj.reAsyncChildNodes(null, "refresh");
+                    }
+                }) ;
+            } ;
 
             if(data.c_group=='品类'){
+                var $f_goodstree = this.showAlert("修改",data,showAlertCallBack) ;
+                $f_goodstree[0].reset() ;
+                $("#ajaxdo",$f_goodstree).val("edit") ;
             }else if(data.c_group=='品牌'){
-                var $f_goodstree = this.showAlert(data) ;
+                var $f_goodstree = this.showAlert("修改",data,showAlertCallBack) ;
                 $f_goodstree[0].reset() ;
                 $("#ajaxdo",$f_goodstree).val("edit") ;
             }else if(data.c_group=='型号'){
-                var $f_goodstree = this.showAlert(data) ;
+                var $f_goodstree = this.showAlert("修改",data,showAlertCallBack) ;
                 $f_goodstree[0].reset() ;
                 $("#ajaxdo",$f_goodstree).val("edit") ;
             }else if(data.c_group=='颜色'){
-                var $f_goodstree = this.showAlert(data) ;
+                var $f_goodstree = this.showAlert("修改",data,showAlertCallBack) ;
                 $f_goodstree[0].reset() ;
                 $("#ajaxdo",$f_goodstree).val("edit") ;
             }else{
                 require(['app/goods/goods.help'],function(){
-                    goods_help.alert_fm_editGoods(data) ;
+                    goods_help.alert_fm_editGoods(data,function(){
+                        var treeObj = $.fn.zTree.getZTreeObj("tb_goodsTree");
+                        treeObj.reAsyncChildNodes(null, "refresh");
+                    }) ;
                 }) ;
             }
             if(data.c_group=='品类'){
@@ -138,10 +157,60 @@ define(function(require, exports, module) {
                 $("#fname",$f_goodstree).val("品类-"+data.getParentNode().getParentNode().getParentNode().text+"   品牌-"+data.getParentNode().getParentNode().text+"   型号-"+data.getParentNode().text) ;
             }
             J.setFormValue($("#f_goodstree"),data) ;
-            $("#btn_goodsTreeSubmit",$f_goodstree).text(S.btn_edit) ;
+        },
+
+        /**商品作废事件*/
+        ztree_btn_del_click_handler:function(jqEvent,id,data){
+            J.debugPrint(data) ;
+            function showAlertCallBack($f,alt){
+                var f_addVal = J.formValues($f) ;
+                var v_id = {id:f_addVal.id} ;
+                J.ajax({
+                    url:'goodsTree/delNode',
+                    ajaxOk:true,
+                    data:v_id,
+                    success:function(res){
+                        J.alertOk() ;
+                        var treeObj = $.fn.zTree.getZTreeObj("tb_goodsTree");
+                        treeObj.reAsyncChildNodes(null, "refresh");
+                    }
+                }) ;
+            } ;
+
+            if(data.c_group=='品类'){
+                var $f_goodstree = this.showAlert("作废",data,showAlertCallBack) ;
+                $f_goodstree[0].reset() ;
+                $("#ajaxdo",$f_goodstree).val("edit") ;
+            }else if(data.c_group=='品牌'){
+                var $f_goodstree = this.showAlert("作废",data,showAlertCallBack) ;
+                $f_goodstree[0].reset() ;
+                $("#ajaxdo",$f_goodstree).val("edit") ;
+            }else if(data.c_group=='型号'){
+                var $f_goodstree = this.showAlert("作废",data,showAlertCallBack) ;
+                $f_goodstree[0].reset() ;
+                $("#ajaxdo",$f_goodstree).val("edit") ;
+            }else if(data.c_group=='颜色'){
+                var $f_goodstree = this.showAlert("作废",data,showAlertCallBack) ;
+                $f_goodstree[0].reset() ;
+                $("#ajaxdo",$f_goodstree).val("edit") ;
+            }else{
+                require(['app/goods/goods.help'],function(){
+                    goods_help.alert_fm_editGoods(data,function(){
+                        var treeObj = $.fn.zTree.getZTreeObj("tb_goodsTree");
+                        treeObj.reAsyncChildNodes(null, "refresh");
+                    }) ;
+                }) ;
+            }
+            if(data.c_group=='品类'){
+            }else if(data.c_group=='品牌'){
+                $("#fname",$f_goodstree).val("品类-"+data.getParentNode().text) ;
+            }else if(data.c_group=='型号'){
+                $("#fname",$f_goodstree).val("品类-"+data.getParentNode().getParentNode().text+"   品牌-"+data.text) ;
+            }else if(data.c_group=='颜色'){
+                $("#fname",$f_goodstree).val("品类-"+data.getParentNode().getParentNode().getParentNode().text+"   品牌-"+data.getParentNode().getParentNode().text+"   型号-"+data.getParentNode().text) ;
+            }
+            J.setFormValue($("#f_goodstree"),data) ;
         }
-
-
     }) ;
 
 

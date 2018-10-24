@@ -1,6 +1,7 @@
 package com.luke.shop.eshop.goods.service.impl;
 
 import com.luke.shop.eshop.base.BaseService;
+import com.luke.shop.eshop.base.dao.ISystemSetupComDao;
 import com.luke.shop.eshop.base.service.IBusiness;
 import com.luke.shop.eshop.base.service.impl.BusinessProxy;
 import com.luke.shop.eshop.goods.dao.IGoodsDao;
@@ -33,6 +34,9 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
     IGoodsDao goodsDao ;
     @Resource
     BusinessProxy proxy  ;
+
+    @Resource
+    ISystemSetupComDao scDao ;
 
 
     @Override
@@ -72,9 +76,9 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
     public void addGoods_1_def_kc(LoginTuken sessionTuken, TG_Goods goods) throws Exception {
         /**添加商品时初始化库存*/
         TU_Com com = goods.getCom() ;
-        TSYS_SetupCom sc = this.goodsDao.getUnique("From TSYS_SetupCom sc where sc.name='save_not_lens_add_kc' and sc.com.id=:id ", com) ;
+        TSYS_SetupCom sc = scDao.save_not_lens_add_kc(com.getId()) ;
         /**系统配置了添加商品时初始化库存才执行*/
-        if(Boolean.parseBoolean(sc.getVal())){
+        if(Boolean.parseBoolean(sc.getExt1())){
             Long num = 0l ;
             if(LK.StrIsNotEmpty(sc.getExt1())){
                 num = Long.parseLong(sc.getExt1()) ;

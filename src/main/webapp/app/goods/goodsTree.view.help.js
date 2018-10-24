@@ -53,14 +53,14 @@ var goodsTree_view_help = {
                     if(treeNode.count)
                         aObj.append("<span class='badge'>"+treeNode.count+"</span>") ;
 
-                    var $btn_del = $("<a>").addClass("ztree_btn_del btn float_right a_btn").addClass(S.btn_add_tag_css).text("删除") ;
+                    var $btn_del = $("<a>").addClass("ztree_btn_del btn float_right a_btn").text("作废") ;
                     aObj.append($btn_del) ;
-                    $btn_del.on("click",function(e){view.ztree_btn_del_click_handler(e,treeNode.id,treeNode) ;})
+                    $btn_del.on("click",function(e){view.ztree_btn_del_click_handler(e,treeNode.id,treeNode) ;}) ;
 
 
                     var $btn_edit = $("<a>").addClass('ztree_btn_edit btn float_right a_btn').text("修改") ;
                     aObj.append($btn_edit) ;
-                    $btn_edit.on("click",function(e){view.ztree_btn_edit_click_handler(e,treeNode.id,treeNode)})
+                    $btn_edit.on("click",function(e){view.ztree_btn_edit_click_handler(e,treeNode.id,treeNode)}) ;
 
                     if(treeNode.c_group!='商品'){
                         var $btn_add = $("<a>").addClass("ztree_btn_add btn float_right a_btn").text("新增") ;
@@ -109,7 +109,6 @@ var goodsTree_view_help = {
             .append(J.formElement({id:'a3',name:'a3',text:'是否效期',type:'select',options: J.SelectOptions("是否")}))
             .append(J.formElement({id:'a4',name:'a4',text:'级别',type:'hidden'}))
             .append(J.formElement({id:'a5',name:'a5',text:'级别',type:'hidden'}))
-            //.append(J.formElement({id:'btn_goodsTreeSubmit',name:'btn_goodsTreeSubmit',text: S.btn_add,type:'btn',cls: S.btn_r5_tag_css})) ;
 
         return $jForm ;
     },
