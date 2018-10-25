@@ -19,21 +19,22 @@ define(function(require, exports, module) {
             J.render(function(view,$div_Row){
                 /**工作区添加一个查询框，下面是查询结果列表*/
                 require(['app/kc/goods.kc.view.help'],function(){
-                    goods_kc_view_help.fm_find(view,$div_Row) ;
-                    goods_kc_view_help.tbl_goods(view,$div_Row) ;
+                    var $divForm = $("<div>").addClass("container-fluid") ;
+                    var $divTable =  $("<div>").addClass("container-fluid") ;
+                    $div_Row.append($divForm).append($divTable) ; ;
+                    goods_kc_view_help.fm_find(view,$divForm) ;
+                    goods_kc_view_help.tbl_goods(view,$divTable) ;
                 }) ;
             },this) ;
         },
         // ------------------------------------事件代码区-----------------------------------------
         select_kind_change_handler:function(e){
             var kindId = $(e.currentTarget).val() ;
-            varJ.$selectBrand(kindId) ;
+
         }
         // ---------------------------------------------------------------------------------------
 
     }) ;
-
-
 
     return View ;
 }) ;

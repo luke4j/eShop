@@ -97,6 +97,7 @@ var goods_help = {
         J.setFormValue($("#fm_goodsInf"),goods) ;
         J.setFormValue($("#fm_goodsInf"),param.ext.attrs,"id") ;
     },
+    /**作废商品信息*/
     alert_fm_delGoods:function(goods,callBack){
         var param = this.ajax_find_goods_attrsByGoodsId(goods.id) ;
         var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
@@ -208,5 +209,92 @@ var goods_help = {
             }
         }
         return jFrom ;
+    },
+
+    /**商品查询表单*/
+    fm_findGoodsForm:function($element){
+        require(['G'],function(){
+            var div_container = $("<div>").addClass("container-fluid").css({'margin-top': '45px'}) ;
+            $element.append(div_container) ;
+            var JForm = J.createForm("fm_findGoodsForm","form-inline") ;
+            JForm.form.append($("<fieldset id='fm_fd_row_2'>")) ;
+            div_container.append(JForm.form) ;
+            JForm.fieldset.append(G.select_kind("kindId"))
+                .append(G.select_brand("brandId"))
+                .append(G.select_version("versionId"))
+                .append(G.select_color("colorId")) ;
+
+            $("#kindId",JForm.form).on("change",function(e){
+                var kindId = $(e.currentTarget).val() ;
+                if(kindId){
+                    var opts = G.ajax_select_goodsNode(kindId) ;
+                    J.debugPrint(opts) ;
+                    $("#brandId",JForm.form).empty() ;
+                    $.each(opts,function(i,d){
+                        $("#brandId",JForm.form).append($("<option>").val(d.val).text(d.text)) ;
+                    }) ;
+                    var setups = G.ajax_find_goodsAttr(kindId) ;
+                    J.debugPrint(setups) ;
+                    var row2 = $("#fm_fd_row_2",JForm.form) ;
+                    $.each(setups,function(i,d){
+                        if(d.columnValue){
+                            if(d.c_type==='select'){
+                                var arVal = d.defaults.split(";") ;
+                                var opts = [] ;
+                                opts.push(G.EmptyOpts) ;
+                                $.each(arVal,function(i,ar){
+                                    opts.push({val:ar,text:ar}) ;
+                                }) ;
+                                row2.append(J.formElement({id: d.columnName,name: d.columnName,text: d.columnValue,type:'select',options:opts})) ;
+                            }else{
+                                row2.append(J.formElement({id: d.columnName,name: d.columnName,text: d.columnValue})) ;
+                            }
+
+                        }
+                    }) ;
+                }else{
+                    $("#brandId",JForm.form).empty() ;
+                    $("#brandId",JForm.form).append($("<option>").val('').text("全部")) ;
+                    $("#brandId",JForm.form).change() ;
+                    $("#fm_fd_row_2",JForm.form).empty() ;
+                }
+            }) ;
+
+            $("#brandId",JForm.form).on("change",function(e){
+                var brandId = $(e.currentTarget).val() ;
+                if(brandId){
+                    var opts = G.ajax_select_goodsNode(brandId) ;
+                    J.debugPrint(opts) ;
+                    $("#versionId",JForm.form).empty() ;
+                    $.each(opts,function(i,d){
+                        $("#versionId",JForm.form).append($("<option>").val(d.val).text(d.text)) ;
+                    }) ;
+                }else{
+                    $("#versionId",JForm.form).empty() ;
+                    $("#versionId",JForm.form).append($("<option>").val('').text("全部")) ;
+                    $("#versionId",JForm.form).change() ;
+                }
+            }) ;
+
+            $("#versionId",JForm.form).on("change",function(e){
+                var versionId = $(e.currentTarget).val() ;
+                if(versionId){
+                    var opts = G.ajax_select_goodsNode(versionId) ;
+                    J.debugPrint(opts) ;
+                    $("#colorId",JForm.form).empty() ;
+                    $.each(opts,function(i,d){
+                        $("#colorId",JForm.form).append($("<option>").val(d.val).text(d.text)) ;
+                    }) ;
+                }else{
+                    $("#colorId",JForm.form).empty() ;
+                    $("#colorId",JForm.form).append($("<option>").val('').text("全部")) ;
+                    $("#colorId",JForm.form).change() ;
+                }
+            }) ;
+
+
+
+
+        }) ;
     }
 }

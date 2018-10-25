@@ -194,19 +194,15 @@ public class GoodsService extends BaseService implements IGoodsService,IBusiness
                 lstStore =  this.goodsDao.find("From TU_Store s where s.com.id=:id and s.isHasKc=true ", com) ;
             }
 
-
             /**是加工中心并且有库存的站点*/
             for(TU_Store store :lstStore){
-
-                /**以商品id，商品对应的度数数据,系统配置的初始化库存数据，批量生成单据明细信息*/
-
-
                 final Long finalNum = num;
                 TK_InitBill bill = (TK_InitBill) proxy.getInstance(this).createBill(()->{
                     TK_InitBill initBill = new TK_InitBill(goods.getCom(),yw,store,user) ;
                     this.goodsDao.save(initBill) ;
                     return initBill ;
                 },(ywdj)->{
+                    /**以商品id，商品对应的度数数据,系统配置的初始化库存数据，批量生成单据明细信息*/
                      this.goodsDao.saveLensDefVal_7_dbCopy_dj(goods.getId(), finalNum,ywdj.getId()) ;
                 }, user,  TK_InitBill.class.getSimpleName());
                 proxy.getInstance(this).affirmBill(bill,user,TK_InitBill.class.getSimpleName()) ;

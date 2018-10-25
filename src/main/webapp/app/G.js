@@ -32,6 +32,20 @@ G.ajax_select_store = function(){
     }) ;
     return opts ;
 } ;
+G.ajax_find_goodsAttr = function(kindId){
+    var setups = [] ;
+    J.ajax({
+        async:false,
+        data:{id:kindId},
+        url:'goodsAttrSetup/findGoodsAttrSetupByKindId.act',
+        success:function(data,res){
+            if(typeof (data)==='object'&&data.length){
+                setups = data ;
+            }
+        }
+    }) ;
+    return setups ;
+} ;
 
 G.select_store = function(eleId){
     var opts = this.ajax_select_store() ;
