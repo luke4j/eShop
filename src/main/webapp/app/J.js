@@ -576,17 +576,18 @@ J.SelectOptions = function(type){
  * @param ele
  */
 J.formElement = function(ele){
-    var labelRowCss = "col-xs-5 col-sm-5 col-md-5 col-lg-5" ;
-    var elementRowCss = "col-xs-7 col-sm-7 col-md-7 col-lg-7" ;
-    var $formGroup  = $("<div class='form-group col-xs-12 col-sm-6 col-md-3 col-lg-3'>") ;
+    var labelRowCss = "col-xs-5 col-sm-5 col-md-5 col-lg-5 row" ;
+    var elementRowCss = "col-xs-7 col-sm-7 col-md-7 col-lg-7 row" ;
+    var inputCss = "col-xs-11 col-sm-11 col-md-11 col-lg-11" ;
+    var $formGroup  = $("<div class='form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 row '>") ;
     var $lable = $("<label  control-label'>").addClass(labelRowCss).attr("for",ele.id).text(ele.text) ;
     var $divElement = $("<div >").addClass(elementRowCss) ;
     $formGroup.append($lable).append($divElement) ;
 
     if(!ele.type){
-        $divElement.append($("<input>").attr("id",ele.id).attr("name",ele.name).addClass(S.keypress).attr('autocomplete','off').attr("placeholder",ele.text).addClass("form-control")) ;
+        $divElement.append($("<input>").attr("id",ele.id).attr("name",ele.name).css({width:'100%'}).addClass(inputCss).addClass(S.keypress).attr('autocomplete','off').attr("placeholder",ele.text).addClass("form-control")) ;
     }else if(ele.type=='select'){
-        var $select  = $("<select>").addClass("form-control").attr('id',ele.id).attr("name",ele.name).attr("placeholder",ele.text).attr("eleType","select").addClass(S.keypress) ;
+        var $select  = $("<select>").addClass("form-control").attr('id',ele.id).attr("name",ele.name).attr("placeholder",ele.text).attr("eleType","select").css({width:'100%'}).addClass(inputCss).addClass(S.keypress) ;
         if(ele.options){
             for(var i in ele.options){
                 var opt = $("<option>") ;
@@ -597,11 +598,11 @@ J.formElement = function(ele){
         }
         $divElement.append($select) ;
     }else if(ele.type=='btn'){
-        $formGroup = $("<button >").addClass("btn btn-default").addClass(ele.cls).attr('id',ele.id).text(ele.text) ;
+        $formGroup = $("<button >").addClass(inputCss).addClass("btn btn-default").addClass(ele.cls).attr('id',ele.id).text(ele.text) ;
     }else if(ele.type=='hidden'){
         $formGroup = $("<input type='hidden'>").attr('autocomplete','off').attr("name",ele.name).attr("id",ele.id).attr("value",ele.value).addClass(S.keypress) ;
     }else if(ele.type=='time'){
-        var $element = $("<input>").addClass("form-control").attr('autocomplete','off').attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr("eleType","time") ;
+        var $element = $("<input>").addClass("form-control").attr('autocomplete','off').css({width:'100%'}).addClass(inputCss).attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr("eleType","time") ;
         $divElement.append($element) ;
         $element.datetimepicker({
             format:ele.format?ele.format: 'YYYY-MM-DD',//显示格式
@@ -609,7 +610,7 @@ J.formElement = function(ele){
     }else if(ele.type=='div'){
         return $formGroup ;
     }else{
-        var $element = $("<input>").addClass("form-control").attr('autocomplete','off').addClass(S.keypress).attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr('type',ele.type) ;
+        var $element = $("<input>").css({width:'100%'}).addClass("form-control").attr('autocomplete','off').addClass(S.keypress).attr("name",ele.name).attr('id',ele.id).attr("placeholder",ele.text).attr('type',ele.type) ;
         $divElement.append($element) ;
     }
     $formGroup.addClass("margin-top_2") ;
