@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 /**
  * Created by luke on 2018/8/7.
+ * 业务明细基类
  */
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @MappedSuperclass

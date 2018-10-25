@@ -44,4 +44,6 @@ public interface IGoodsService {
     void saveLens_6_def_kc(LoginTuken sessionTuken, ActionResult actionResult, VOLens vo)throws Exception;
 
     void editGoods_2(VOGoodsEdit vo)throws Exception;
+
+    void delGoods_3(VOId vo)throws Exception;
 }

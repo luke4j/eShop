@@ -1,5 +1,7 @@
 package com.luke.shop.eshop.base.service;
 
+import com.luke.shop.eshop.base.dao.ISaveBill;
+import com.luke.shop.eshop.base.dao.ISaveBillMx;
 import com.luke.shop.model.TU_User;
 import com.luke.shop.model._YW;
 import com.luke.shop.model._YWMX;
@@ -13,19 +15,21 @@ import java.util.List;
 public interface IBusiness {
 
     /**
-     * 制单 ，代理会保存单据，并保存单据明细
-     * @param bill
-     * @param listBillMx
+     * 制单，保存单据与单据明细，使用接口来实现
+     * @param saveBill
+     * @param saveBillMx
      * @param zdUser
      * @param tag
      * @return
      * @throws Exception
      */
-    default _YW createBill(_YW bill,List<? extends _YWMX> listBillMx, TU_User zdUser, String tag) throws Exception {
-        bill.setZdTime(new Date());
-        bill.setY_zd_user(zdUser);
-        bill.setY_bill_state(_YW.BillState.zd);
-        return bill;
+    default _YW createBill(ISaveBill saveBill,ISaveBillMx saveBillMx, TU_User zdUser, String tag) throws Exception {
+        _YW yw_bill = saveBill.save() ;
+        saveBillMx.save(yw_bill) ;
+        yw_bill.setZdTime(new Date());
+        yw_bill.setY_zd_user(zdUser);
+        yw_bill.setY_bill_state(_YW.BillState.zd);
+        return yw_bill;
     }
 
     /**

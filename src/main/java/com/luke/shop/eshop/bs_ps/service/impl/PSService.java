@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
  * Created by luke on 2018/7/26.
  */
 @Service
-public class PSService extends BaseService implements IPSService,IBusiness{
+public class PSService extends BaseService implements IPSService{
 
 }

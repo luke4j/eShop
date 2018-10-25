@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by luke on 2018/8/7.
+ * 业务单据基类
  */
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @MappedSuperclass

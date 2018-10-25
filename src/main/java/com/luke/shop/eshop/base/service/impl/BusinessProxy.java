@@ -1,5 +1,6 @@
 package com.luke.shop.eshop.base.service.impl;
 
+import com.luke.shop.eshop.base.BaseService;
 import com.luke.shop.eshop.base.dao.IProxyDao;
 import com.luke.shop.eshop.base.service.IBusiness;
 import com.luke.shop.eshop.goods.vo.VOKCNum;
@@ -41,7 +42,7 @@ public class BusinessProxy {
         Assertion.NotEmpty(target,"代理对象为空");
         Object proxy = Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(),
                 (proxy1, method, args) -> {
-                    _YW yw = null ;
+                    _YW ywdj = null ;
                     List<_YWMX> listYwmx = null ;
                     TU_User user = null ;
                     String yw_tag = null ;
@@ -59,7 +60,7 @@ public class BusinessProxy {
                             user = (TU_User) arg ;
                         }
                         if(arg instanceof _YW){
-                            yw = (_YW)arg ;
+                            ywdj = (_YW)arg ;
                         }
                         if(arg instanceof Boolean){
                             isLens = (Boolean)arg ;
@@ -69,23 +70,18 @@ public class BusinessProxy {
                     /**完成之后在执行时记录流水*/
                     if(method.getName().equals("createBill")){
                         log.info("=============createBill================");
-                        log.info("=============添加制单处理人与修改单据制单状态================");
-                        log.info("=============保存单据================");
-                        this.dao.save(yw);
-                        if(LK.ObjIsNull(listYwmx)) Assertion.Error("单据明细为空");
-                        log.info("=============保存单据明细================");
-                        this.dao.saveAll_proxyDao(listYwmx);
+                        log.info("=============单据已保存================");
+                        log.info("=============单据明细已保存================");
                     }else if(method.getName().equals("affirmBill")){
                         log.info("=============affirmBill================");
                         log.info("=============添加确认处理人与修改单据确认状态================");
-                        this.dao.update_proxyDao(yw);
+                        this.dao.update_proxyDao(ywdj);
                     }else if(method.getName().equals("executeBill")) {
                         log.info("=============executeBill================");
                         log.info("=============添加执行处理人与修改单据确认状态================");
-                        this.dao.update_proxyDao(yw);
+                        this.dao.update_proxyDao(ywdj);
                         log.info("=============修改库存与保存流水================");
-                        this.dao.save_ls_kc(yw,user,yw_tag,isLens) ;
-
+                        this.dao.save_ls_kc(ywdj,user,yw_tag,isLens) ;
                     }else{
                         Assertion.Error("代理方法不存在："+method.getName());
                     }

@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * Created by luke on 2018/7/26.
  */
 @Service
-public class SellService extends BaseService implements ISellService,IBusiness {
+public class SellService extends BaseService implements ISellService {
 
     @Resource
     BusinessProxy proxy ;

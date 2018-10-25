@@ -37,7 +37,7 @@ public class TU_Store extends Model{
     /**是否有库存*/
     private Boolean isHasKc = true ;
 
-    /**是否有库存*/
+    /**是否有镜片库存*/
     private Boolean isHasLensKc = true ;
 
     @ManyToOne(fetch = FetchType.LAZY)

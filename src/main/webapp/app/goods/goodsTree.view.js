@@ -69,6 +69,7 @@ define(function(require, exports, module) {
                         success:function(res,data){
                             var treeObj = $.fn.zTree.getZTreeObj("tb_goodsTree");
                             treeObj.reAsyncChildNodes(null, "refresh");
+                            J.alertOk() ;
                         }
                     }) ;
                 }
@@ -195,7 +196,7 @@ define(function(require, exports, module) {
                 $("#ajaxdo",$f_goodstree).val("edit") ;
             }else{
                 require(['app/goods/goods.help'],function(){
-                    goods_help.alert_fm_editGoods(data,function(){
+                    goods_help.alert_fm_delGoods(data,function(){
                         var treeObj = $.fn.zTree.getZTreeObj("tb_goodsTree");
                         treeObj.reAsyncChildNodes(null, "refresh");
                     }) ;

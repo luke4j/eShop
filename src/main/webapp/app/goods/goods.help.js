@@ -97,6 +97,37 @@ var goods_help = {
         J.setFormValue($("#fm_goodsInf"),goods) ;
         J.setFormValue($("#fm_goodsInf"),param.ext.attrs,"id") ;
     },
+    alert_fm_delGoods:function(goods,callBack){
+        var param = this.ajax_find_goods_attrsByGoodsId(goods.id) ;
+        var $fm_goods = this.fm_goodsInfo(param.goodsExtAttr,param.ext) ;
+        var alt = J.alert({
+            title:'修改商品信息',
+            msg:$fm_goods.form,
+            btns:'YN',
+            okFunction:function(e,alert){
+                var valForm = J.formValues($("#fm_goodsInf")) ;
+                var jId = {id:valForm.id} ;
+                var validate = J.validate(jId,{
+                    id:{null_able:false,msg:'商品id不能为空'}
+                }) ;
+                if(validate){
+                    J.ajax({
+                        url:'goods/delGoods',
+                        data:jId,
+                        success:function(data,res){
+                            if(res.success){
+                                J.alertOk() ;
+                                alt.modal('hide') ;
+                                if(callBack&&(typeof(callBack)==='function') ) callBack() ;
+                            }
+                        }
+                    });
+                }
+            }
+        }) ;
+        J.setFormValue($("#fm_goodsInf"),goods) ;
+        J.setFormValue($("#fm_goodsInf"),param.ext.attrs,"id") ;
+    },
     /**
      * 表单显示商品详细信息
      * @param goodsExtAttr  商品扩展属性

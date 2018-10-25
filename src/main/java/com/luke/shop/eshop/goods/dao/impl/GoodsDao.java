@@ -129,4 +129,10 @@ public class GoodsDao extends BaseDao implements IGoodsDao {
             this.save(ga) ;
         }
     }
+
+    @Override
+    public void delGoods_3(VOId vo) throws Exception {
+        TG_Goods goods = this.get(TG_Goods.class, vo.getId()) ;
+        this.delObj(goods) ;
+    }
 }

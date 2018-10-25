@@ -52,7 +52,9 @@ public class GoodsAction extends BaseAction implements IGoodsAction {
     public ActionResult delGoods_3(HttpServletRequest request, HttpServletResponse response,
                                    @ApiParam(value = delGoods, required = true) @Valid @RequestBody VOId vo,
                                    BindingResult bindingResult, ActionResult actionResult) throws Exception {
-        return null;
+        actionResult.setDoing(delGoods);
+        this.goodsService.delGoods_3(vo) ;
+        return actionResult;
     }
 
     @Override
