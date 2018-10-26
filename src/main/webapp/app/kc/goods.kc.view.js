@@ -19,9 +19,10 @@ define(function(require, exports, module) {
             J.render(function(view,$div_Row){
                 /**工作区添加一个查询框，下面是查询结果列表*/
                 require(['app/kc/goods.kc.view.help'],function(){
-                    var $divForm = $("<div>").addClass("container-fluid") ;
-                    var $divTable =  $("<div>").addClass("container-fluid") ;
-                    $div_Row.append($divForm).append($divTable) ; ;
+                    var $divForm = $("<div id='div_fm_findGoods'>").addClass("container-fluid") ;
+                    var $divTable =  $("<div id='div_tbl_goodsTable'>").addClass("container-fluid") ;
+                    $div_Row.append($divForm) ;
+                    $div_Row.append($divTable) ;
                     goods_kc_view_help.fm_find(view,$divForm) ;
                     goods_kc_view_help.tbl_goods(view,$divTable) ;
                 }) ;

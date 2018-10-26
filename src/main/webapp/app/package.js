@@ -22,6 +22,7 @@ requirejs.config({
         "backbone": "js/backbone",
         "bootstrap": "js/bootstrap/js/bootstrap",
         "bootstrap-table":"js/bootstrap/plugins/bootstrap-table/bootstrap-table",
+        "table-zh":"js/bootstrap/plugins/bootstrap-table/locale/bootstrap-table-zh-CN",
         "bootstrap-editable":"js/bootstrap/plugins/bootstrap-table/extensions/editable/bootstrap-editable",
         "bootstrap-table-editable":"js/bootstrap/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable",
 
@@ -71,6 +72,10 @@ requirejs.config({
             deps:['jquery','bootstrap',
                 'css!js/bootstrap/plugins/bootstrap-table/bootstrap-table.min'],
             exports:'bootstrap-table'
+        },
+        'bootstrap-table-zh':{
+            deps:['bootstrap-table'],
+            exportss:'bootstrap-table-zh'
         },
         'bootstrap-table-editable':{
             deps:['jquery','bootstrap','bootstrap-table','bootstrap-editable',

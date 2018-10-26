@@ -400,6 +400,7 @@ J.jForm = function(cfg){
  * @param bootstrapTableSetup
  */
 J.bpTable = function(tableId,bootstrapTableSetup){
+
     var defaults = {
         onLoadError:function(status, res){
             if(status=='404')
@@ -421,39 +422,44 @@ J.bpTable = function(tableId,bootstrapTableSetup){
             dataField:'data',
             method:'post',
             ajaxOptions:{
-            contentType: 'application/json', //很重要
-            traditional: true
-        },
-        rowStyle:function(row, index){
-            if(index%2==0){
-                return {classes:"info"} ;
-            }else{
-                return {} ;
-            }
-        },
-        responseHandler:function(res){
-            if(res.success){
-                return res ;
-            }else{
-                J.alert({
-                    title:'异常问题',
-                    msg: res.errorMsg,
-                    btns:'YN',
-                    okFunction:function(e,$alert1){
-                        if(res.errorMsg.indexOf('请登录')>=0){
-                            window.location.href = J.contextPath ;
+                contentType: 'application/json', //很重要
+                traditional: true
+            },
+            rowStyle:function(row, index){
+                if(index%2==0){
+                    return {classes:"info"} ;
+                }else{
+                    return {} ;
+                }
+            },
+            responseHandler:function(res){
+                if(res.success){
+                    return res ;
+                }else{
+                    J.alert({
+                        title:'异常问题',
+                        msg: res.errorMsg,
+                        btns:'YN',
+                        okFunction:function(e,$alert1){
+                            if(res.errorMsg.indexOf('请登录')>=0){
+                                window.location.href = J.contextPath ;
+                            }
                         }
-                    }
-                }) ;
-                return res ;
+                    }) ;
+                    return res ;
+                }
             }
-        }
     } ;
 
     var setup = $.extend({},defaults,bootstrapTableSetup) ;
+    if(!setup.url){
+        J.alert("请填写URL参数") ;
+        return false ;
+    }
     setup.url = J.contextPath+setup.url ;
-    $("#"+tableId).bootstrapTable(setup) ;
-
+    require(['bootstrap-table','js/bootstrap/plugins/bootstrap-table/locale/bootstrap-table-zh-CN'],function(){
+        $("#"+tableId).bootstrapTable(setup) ;
+    }) ;
 } ;
 /**
  *

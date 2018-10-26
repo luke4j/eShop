@@ -211,14 +211,26 @@ var goods_help = {
         return jFrom ;
     },
 
-    /**商品查询表单*/
+    /**
+     * 商品查询表单
+     *$element 这个form添加到的容器
+     * */
     fm_findGoodsForm:function($element){
         require(['G'],function(){
-            var div_container = $("<div>").addClass("container-fluid").css({'margin-top': '45px'}) ;
+            var div_container = $("<div id='id_fm_goods_find_title'>").addClass(" panel-group container-fluid").css({'margin-top': '45px'})
+                .append($("<div>").addClass("panel panel-default")
+                    .append($("<div>").addClass("panel-heading")
+                        .append($("<h>").addClass("panel-title")
+                            .append($("<a>").attr("data-toggle",'collapse').attr("data-parent",'#id_fm_goods_find_title').attr("href","#id_fm_goods_find_container").append($("<span>").addClass("glyphicon glyphicon-search")).append("查询")
+                        )))
+                    .append($("<div id='id_fm_goods_find_container'>").addClass("panel-collapse collapse in")
+                        .append($("<div id='id_fm_goods_find_container_body'>").addClass("panel-body"))
+                )
+            ) ;
             $element.append(div_container) ;
             var JForm = J.createForm("fm_findGoodsForm","form-inline") ;
             JForm.form.append($("<fieldset id='fm_fd_row_2'>")) ;
-            div_container.append(JForm.form) ;
+            $("#id_fm_goods_find_container_body",div_container).append(JForm.form) ;
             JForm.fieldset.append(G.select_kind("kindId"))
                 .append(G.select_brand("brandId"))
                 .append(G.select_version("versionId"))
@@ -291,10 +303,16 @@ var goods_help = {
                     $("#colorId",JForm.form).change() ;
                 }
             }) ;
-
-
-
-
         }) ;
+    },
+    /**
+     * 商品显示列表
+     * 返回table的ID
+     * @param $element
+     */
+    tbl_findGoodsTable:function($table,extSet){
+        var $tbl = $table ;
+        J.bpTable($tbl.attr("id"),extSet) ;
+        return "tbl_findGoodsTable" ;
     }
 }
