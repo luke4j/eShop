@@ -215,7 +215,7 @@ var goods_help = {
      * 商品查询表单
      *$element 这个form添加到的容器
      * */
-    fm_findGoodsForm:function($element){
+    fm_findGoodsForm:function($element,callBackFindBtn){
         require(['G'],function(){
             var div_container = $("<div id='id_fm_goods_find_title'>").addClass(" panel-group container-fluid").css({'margin-top': '45px'})
                 .append($("<div>").addClass("panel panel-default")
@@ -230,12 +230,18 @@ var goods_help = {
             $element.append(div_container) ;
             var JForm = J.createForm("fm_findGoodsForm","form-inline") ;
             JForm.form.append($("<fieldset id='fm_fd_row_2'>")) ;
+            JForm.form.append($("<fieldset id='fm_fd_row_3'>").append(J.formElement({type:'btn',id:'btn_findForm',text:'查询'})) ) ;
             $("#id_fm_goods_find_container_body",div_container).append(JForm.form) ;
             JForm.fieldset.append(G.select_kind("kindId"))
                 .append(G.select_brand("brandId"))
                 .append(G.select_version("versionId"))
                 .append(G.select_color("colorId")) ;
 
+            $("#btn_findForm",JForm.form).click(function(e){
+                if(callBackFindBtn&& (typeof (callBackFindBtn)==='function')){
+                    callBackFindBtn($(e.target),J.formValues(JForm.form)) ;
+                }
+            }) ;
             $("#kindId",JForm.form).on("change",function(e){
                 var kindId = $(e.currentTarget).val() ;
                 if(kindId){

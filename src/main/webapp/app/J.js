@@ -457,7 +457,7 @@ J.bpTable = function(tableId,bootstrapTableSetup){
         return false ;
     }
     setup.url = J.contextPath+setup.url ;
-    require(['bootstrap-table','js/bootstrap/plugins/bootstrap-table/locale/bootstrap-table-zh-CN'],function(){
+    require(['bootstrap-table'],function(){
         $("#"+tableId).bootstrapTable(setup) ;
     }) ;
 } ;
@@ -604,7 +604,7 @@ J.formElement = function(ele){
         }
         $divElement.append($select) ;
     }else if(ele.type=='btn'){
-        $formGroup = $("<button >").addClass(inputCss).addClass("btn btn-default").addClass(ele.cls).attr('id',ele.id).text(ele.text) ;
+        $formGroup = $("<a >").addClass(inputCss).addClass("btn btn-default").addClass(ele.cls).attr('id',ele.id).text(ele.text) ;
     }else if(ele.type=='hidden'){
         $formGroup = $("<input type='hidden'>").attr('autocomplete','off').attr("name",ele.name).attr("id",ele.id).attr("value",ele.value).addClass(S.keypress) ;
     }else if(ele.type=='time'){
